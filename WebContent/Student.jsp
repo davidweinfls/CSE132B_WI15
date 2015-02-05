@@ -66,6 +66,60 @@
                 }
             %>
             
+            <%-- -------- UPDATE Code -------- --%>
+            <%
+                // Check if an update is requested
+                if (action != null && action.equals("update")) {
+
+                    // Begin transaction
+                    conn.setAutoCommit(false);
+
+                    // Create the prepared statement and use it to
+                    // UPDATE student values in the Students table.
+                    pstmt = conn
+                        .prepareStatement("UPDATE Student SET student_id = ?, first = ?, "
+                            + "middle = ?, last = ?, ssn = ?, enrollment = ?, residency = ?, " + 
+                        "five_year_program = ? WHERE student_id = ?");
+
+                    pstmt.setInt(1, Integer.parseInt(request.getParameter("student_id")));
+                    pstmt.setString(2, request.getParameter("first"));
+                    pstmt.setString(3, request.getParameter("middle"));
+                    pstmt.setString(4, request.getParameter("last"));
+                    pstmt.setString(5, request.getParameter("ssn"));
+                    pstmt.setBoolean(6, Boolean.parseBoolean(request.getParameter("enrollment")));
+                    pstmt.setString(7, request.getParameter("residency"));
+                    pstmt.setBoolean(8, Boolean.parseBoolean(request.getParameter("five_year_program")));
+                    pstmt.setInt(9, Integer.parseInt(request.getParameter("id")));
+                    int rowCount = pstmt.executeUpdate();
+
+                    // Commit transaction
+                    conn.commit();
+                    conn.setAutoCommit(true);
+                }
+            %>
+            
+            <%-- -------- DELETE Code -------- --%>
+            <%
+                // Check if a delete is requested
+                if (action != null && action.equals("delete")) {
+
+                    // Begin transaction
+                    conn.setAutoCommit(false);
+
+                    // Create the prepared statement and use it to
+                    // DELETE students FROM the Students table.
+                    pstmt = conn
+                        .prepareStatement("DELETE FROM Student WHERE student_id = ?");
+
+                    pstmt.setInt(1, Integer.parseInt(request.getParameter("id")));
+                    int rowCount = pstmt.executeUpdate();
+
+                    // Commit transaction
+                    conn.commit();
+                    conn.setAutoCommit(true);
+                }
+            %>
+            
             <%-- -------- SELECT Statement Code -------- --%>
             <%
                 // Create the statement
@@ -133,7 +187,7 @@
 					<!-- Update button -->
 					<td><input type="submit" value="Update"></td>
 				</form>
-				<form action="attempt3/students.jsp" method="POST">
+				<form action="Student.jsp" method="POST">
 					<input type="hidden" name="action" value="delete" /> 
 					<input type="hidden" value="<%=rs.getInt("student_id")%>" name="id"/>
 					<%-- Delete Button --%>
