@@ -8,7 +8,7 @@
 </head>
 <body>
 
-	<%= "Milestone 2 - David" %>
+	<%= "Milestone 2 - David - solve conflict" %>
 
 </body>
 </html>
