@@ -7,6 +7,6 @@
 <title>Welcome to CSE132B</title>
 </head>
 <body>
-	<%= "Milestone 2" %>
+	<%= "Milestone 2 - David" %>
 </body>
 </html>
