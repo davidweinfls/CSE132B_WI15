@@ -153,9 +153,9 @@
 					<%-- Get the student_id --%>
 					<td><input value=<%=rs.getInt("student_id")%> name="student_id" size="10"/></td>
 					<%-- Get the class_id --%>
-					<td><input value=<%=rs.getInt("class_id")%> name="first" size="10"/></td>
+					<td><input value=<%=rs.getInt("class_id")%> name="class_id" size="10"/></td>
 					<%-- Get the grade --%>
-					<td><input value=<%=rs.getString("grade")%> name="middle" size="10"/></td>
+					<td><input value=<%=rs.getString("grade")%> name="grade" size="10"/></td>
 					<!-- Update button -->
 					<td><input type="submit" value="Update"></td>
 				</form>
