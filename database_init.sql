@@ -51,3 +51,13 @@ CREATE TABLE Prerequisite (
 );
 
 INSERT INTO Prerequisite VALUES (1, 4);
+
+CREATE TABLE Faculty (
+	ssn			TEXT PRIMARY KEY,
+	title		TEXT	NOT NULL,
+	first		TEXT	NOT NULL,
+	last		TEXT	NOT NULL,
+	dept_name	TEXT	NOT NULL REFERENCES	Department (dept_name) ON DELETE CASCADE
+);
+
+INSERT INTO Faculty VALUES ('123-45-6789', 'Professor', 'George', 'Porter', 'Computer_Science'); 
