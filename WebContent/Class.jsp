@@ -175,7 +175,7 @@
 					<td><input value=<%=rs.getInt("class_id")%> name="class_id" size="5"/></td>
 					<td>
 					<select name = "dropdown">
-                    <option value = ""><%=rs.getString("class_name")%></option>
+                    <option value = <%=rs.getString("class_name")%>><%=rs.getString("class_name")%></option>
                     <% for (int i = 0; i < course_names.size(); ++i) { %>
                     	<option value=<%= course_names.get(i)%>><%= course_names.get(i)%></option>
                     <% } %>

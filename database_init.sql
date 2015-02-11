@@ -18,7 +18,7 @@ CREATE TABLE Department (
     dept_name       TEXT    PRIMARY KEY
 );
 
-INSERT INTO Department VALUES ('Computer Science');
+INSERT INTO Department VALUES ('Computer_Science');
 
 CREATE TABLE Course (
     course_id       SERIAL  PRIMARY KEY,
