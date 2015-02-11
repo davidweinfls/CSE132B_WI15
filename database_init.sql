@@ -37,13 +37,12 @@ INSERT INTO Course (course_name, unit_low, unit_high, letter_su, lab, title, con
 
 CREATE TABLE Class (
     class_id        SERIAL  PRIMARY KEY,
-    class_name      TEXT    NOT NULL    UNIQUE,
+    class_name      TEXT    NOT NULL	REFERENCES Course (course_name) ON DELETE CASCADE,
     quarter         TEXT    NOT NULL,
-    year            INTEGER NOT NULL,
-    course_id       INTEGER REFERENCES Course (course_id) ON DELETE CASCADE
+    year            INTEGER NOT NULL
 );
 
-INSERT INTO Class (class_name, quarter, year, course_id) VALUES ('CSE132B', 'Winter', 2015, 1);
+INSERT INTO Class (class_name, quarter, year) VALUES ('CSE132B', 'Winter', 2015);
 
 CREATE TABLE Prerequisite (
     course_id       INTEGER REFERENCES Course (course_id) ON DELETE CASCADE,

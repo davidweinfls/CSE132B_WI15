@@ -4,11 +4,11 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Course Page</title>
+<title>Class Page</title>
 </head>
 <body>
 
-<h2>Course Entry Form</h2>
+<h2>Class Entry Form</h2>
 <table>
     <tr>
         <td valign="top">
@@ -18,12 +18,14 @@
         <td>
             <%-- Import the java.sql package --%>
             <%@ page import="java.sql.*"%>
+            <%@ page import="java.util.*"%>
             <%-- -------- Open Connection Code -------- --%>
             <%
             
             Connection conn = null;
             PreparedStatement pstmt = null;
             ResultSet rs = null;
+            ResultSet rs1 = null;
             
             try {
                 // Registering Postgresql JDBC driver with the DriverManager
@@ -45,18 +47,19 @@
                     conn.setAutoCommit(false);
 
                     pstmt = conn
-                    .prepareStatement("INSERT INTO Course (course_name, unit_low, unit_high, letter_su, lab, title, consent_of_instructor, dept_name)" + 
-                    " VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+                    .prepareStatement("INSERT INTO Class (class_name, quarter, year)" + 
+                    " VALUES (?, ?, ?)");
 
-                    //pstmt.setInt(1, Integer.parseInt(request.getParameter("course_id")));
-                    pstmt.setString(1, request.getParameter("course_name"));
-                    pstmt.setInt(2, Integer.parseInt(request.getParameter("unit_low")));
-                    pstmt.setInt(3, Integer.parseInt(request.getParameter("unit_high")));
-                    pstmt.setString(4, request.getParameter("letter_su"));
-                    pstmt.setBoolean(5, Boolean.parseBoolean(request.getParameter("lab")));
-                    pstmt.setString(6, request.getParameter("title"));
-                    pstmt.setBoolean(7, Boolean.parseBoolean(request.getParameter("consent_of_instructor")));
-                    pstmt.setString(8, request.getParameter("dept_name"));
+                    String name = request.getParameter("dropdown");
+                    if (name != null) {
+                    	pstmt.setString(1, request.getParameter("dropdown"));
+                    }
+                    else {
+						// output error message to page;
+						// return
+                    }
+                    pstmt.setString(2, request.getParameter("quarter"));
+                    pstmt.setInt(3, Integer.parseInt(request.getParameter("year")));
                     int rowCount = pstmt.executeUpdate();
 
                     // Commit transaction
@@ -74,20 +77,20 @@
                     conn.setAutoCommit(false);
 
                     pstmt = conn
-                        .prepareStatement("UPDATE Course SET course_id = ?, course_name = ?, "
-                            + "unit_low = ?, unit_high = ?, letter_su = ?, lab = ?, title = ?, " + 
-                        "consent_of_instructor = ? WHERE course_id = ?");
+                        .prepareStatement("UPDATE Class SET class_name = ?, quarter = ?, "
+                            + "year = ? WHERE class_id = ?");
 
-                    pstmt.setInt(1, Integer.parseInt(request.getParameter("course_id")));
-                    pstmt.setString(2, request.getParameter("course_name"));
-                    pstmt.setInt(3, Integer.parseInt(request.getParameter("unit_low")));
-                    pstmt.setInt(4, Integer.parseInt(request.getParameter("unit_high")));
-                    pstmt.setString(5, request.getParameter("letter_su"));
-                    pstmt.setBoolean(6, Boolean.parseBoolean(request.getParameter("lab")));
-                    pstmt.setString(7, request.getParameter("title"));
-                    pstmt.setBoolean(8, Boolean.parseBoolean(request.getParameter("consent_of_instructor")));
-                    pstmt.setString(9, request.getParameter("dept_name"));
-                    pstmt.setInt(9, Integer.parseInt(request.getParameter("id")));
+                    String name = request.getParameter("dropdown");
+                    if (name != null) {
+                    	pstmt.setString(1, request.getParameter("dropdown"));
+                    }
+                    else {
+						// output error message to page;
+						// return
+                    }
+                    pstmt.setString(2, request.getParameter("quarter"));
+                    pstmt.setInt(3, Integer.parseInt(request.getParameter("year")));
+                    pstmt.setInt(4, Integer.parseInt(request.getParameter("id")));
                     int rowCount = pstmt.executeUpdate();
 
                     // Commit transaction
@@ -105,7 +108,7 @@
                     conn.setAutoCommit(false);
 
                     pstmt = conn
-                        .prepareStatement("DELETE FROM Course WHERE course_id = ?");
+                        .prepareStatement("DELETE FROM Class WHERE class_id = ?");
 
                     pstmt.setInt(1, Integer.parseInt(request.getParameter("id")));
                     int rowCount = pstmt.executeUpdate();
@@ -120,40 +123,42 @@
             <%
                 // Create the statement
                 Statement statement = conn.createStatement();
+            	Statement statement1 = conn.createStatement();
 
                 // Use the created statement to SELECT
                 // the student attributes FROM the Student table.
-                rs = statement.executeQuery("SELECT * FROM Course");
-                
+                rs = statement.executeQuery("SELECT * FROM Class");
+                rs1 = statement1.executeQuery("SELECT course_name FROM Course");
+                ArrayList<String> course_names = new ArrayList<String>();
+                while (rs1.next()) {
+                	course_names.add(rs1.getString("course_name"));
+                }
             %>
             
             <!-- Add an HTML table header row to format the results -->
             <table border="2">
             <tr>
-                <th>Course_ID</th>
-                <th>Course Name</th>
-                <th>Minimum Unit</th>
-                <th>Maximum Unit</th>
-                <th>Grade Option</th>
-                <th>Lab</th>
-                <th>Title</th>
-                <th>Consent of Instructor</th>
-                <th>Department</th>
+                <th>Class_ID</th>
+                <th>Class Name</th>
+                <th>Quarter</th>
+                <th>Year</th>
             </tr>
             
             <!-- An empty row with blankets for user to type in -->
             <tr>
-                <form action="Course.jsp" method="POST">
+                <form action="Class.jsp" method="POST">
                     <input type="hidden" name="action" value="insert"/>
                     <th>&nbsp;</th>
-                    <th><input value="" name="course_name" size="10"/></th>
-                    <th><input value="" name="unit_low" size="5"/></th>
-                    <th><input value="" name="unit_high" size="5"/></th>
-                    <th><input value="" name="letter_su" size="5"/></th>
-                    <th><input value="" name="lab" size="5"/></th>
-                    <th><input value="" name="title" size="10"/></th>
-                    <th><input value="" name="consent_of_instructor" size="5"/></th>
-                    <th><input value="" name="dept_name" size="10"/></th>
+                    <th> 
+                    <select name = "dropdown">
+                    <option value = "">Select Course</option>
+                    <% for (int i = 0; i < course_names.size(); ++i) { %>
+                    	<option value=<%= course_names.get(i)%>><%= course_names.get(i)%></option>
+                    <% } %>
+                    </select>
+                    </th>
+                    <th><input value="" name="quarter" size="5"/></th>
+                    <th><input value="" name="year" size="5"/></th>
                     <th><input type="submit" value="Insert"/></th>
                 </form>
             </tr>
@@ -166,23 +171,24 @@
 			<tr>
 				<form>
 					<input type="hidden" name="action" value="update"/>
-                  		<input type="hidden" name="id" value="<%=rs.getInt("course_id")%>"/>
-					<%-- Get the student_id --%>
-					<td><input value=<%=rs.getInt("course_id")%> name="course_id" size="5"/></td>
-					<td><input value=<%=rs.getString("course_name")%> name="course_name" size="10"/></td>
-					<td><input value=<%=rs.getInt("unit_low")%> name="unit_low" size="5"/></td>
-					<td><input value=<%=rs.getInt("unit_high")%> name="unit_high" size="5"/></td>
-					<td><input value=<%=rs.getString("letter_su")%> name="letter_su" size="5"/></td>
-					<td><input value=<%=rs.getBoolean("lab")%> name="lab" size="5"/></td>
-					<td><input value=<%=rs.getString("title")%> name="title" size="20"/></td>
-					<td><input value=<%=rs.getBoolean("consent_of_instructor")%> name="consent_of_instructor" size="5"/></td>
-					<td><input value=<%=rs.getString("dept_name")%> name="dept_name" size="15"/></td>
+                  		<input type="hidden" name="id" value="<%=rs.getInt("class_id")%>"/>
+					<td><input value=<%=rs.getInt("class_id")%> name="class_id" size="5"/></td>
+					<td>
+					<select name = "dropdown">
+                    <option value = ""><%=rs.getString("class_name")%></option>
+                    <% for (int i = 0; i < course_names.size(); ++i) { %>
+                    	<option value=<%= course_names.get(i)%>><%= course_names.get(i)%></option>
+                    <% } %>
+                    </select>
+                    </td>
+					<td><input value=<%=rs.getString("quarter")%> name="quarter" size="5"/></td>
+					<td><input value=<%=rs.getInt("year")%> name="year" size="5"/></td>
 					<!-- Update button -->
 					<td><input type="submit" value="Update"></td>
 				</form>
-				<form action="Course.jsp" method="POST">
+				<form action="Class.jsp" method="POST">
 					<input type="hidden" name="action" value="delete" /> 
-					<input type="hidden" value="<%=rs.getInt("course_id")%>" name="id"/>
+					<input type="hidden" value="<%=rs.getInt("class_id")%>" name="id"/>
 					<%-- Delete Button --%>
 					<td><input type="submit" value="Delete" /></td>
 				</form>
@@ -195,6 +201,7 @@
             <%
             	// Close the ResultSet
             		rs.close();
+            		rs1.close();
 
             		// Close the Statement
             		statement.close();
@@ -216,6 +223,13 @@
             			} catch (SQLException e) {
             			} // Ignore
             			rs = null;
+            		}
+            		if (rs1 != null) {
+            			try {
+            				rs1.close();
+            			} catch (SQLException e) {
+            			} // Ignore
+            			rs1 = null;
             		}
             		if (pstmt != null) {
             			try {
