@@ -233,7 +233,7 @@
 			<%
 				}
 			%>
-
+			
             <%-- -------- Close Connection Code -------- --%>
             <%
             	// Close the ResultSet
@@ -289,6 +289,7 @@
     </tr>
 </table>
 
+<a href="Welcome.html">Back</a>
 
 </body>
 </html>
