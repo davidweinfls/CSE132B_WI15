@@ -51,16 +51,24 @@
                     " VALUES (?, ?, ?, ?, ?)");
 
                     pstmt.setString(1, request.getParameter("ssn"));
-                    String name = request.getParameter("dropdown");
-                    if (name != null) {
-                    	pstmt.setString(1, request.getParameter("dropdown"));
+                    String title = request.getParameter("title_dropdown");
+                    if (title != null) {
+                    	pstmt.setString(2, title);
                     }
                     else {
 						// output error message to page;
 						// return
                     }
-                    pstmt.setString(2, request.getParameter("quarter"));
-                    pstmt.setInt(3, Integer.parseInt(request.getParameter("year")));
+                    pstmt.setString(3, request.getParameter("first"));
+                    pstmt.setString(4, request.getParameter("last"));
+                    String dept = request.getParameter("dept_dropdown");
+                    if (title != null) {
+                    	pstmt.setString(5, dept);
+                    }
+                    else {
+						// output error message to page;
+						// return
+                    }
                     int rowCount = pstmt.executeUpdate();
 
                     // Commit transaction
@@ -78,20 +86,29 @@
                     conn.setAutoCommit(false);
 
                     pstmt = conn
-                        .prepareStatement("UPDATE Class SET class_name = ?, quarter = ?, "
-                            + "year = ? WHERE class_id = ?");
+                        .prepareStatement("UPDATE Faculty SET ssn = ?, title = ?, "
+                            + "first = ?, last = ?, dept_name = ? WHERE ssn = ?");
 
-                    String name = request.getParameter("dropdown");
-                    if (name != null) {
-                    	pstmt.setString(1, request.getParameter("dropdown"));
+                    pstmt.setString(1, request.getParameter("ssn"));
+                    String title = request.getParameter("title_dropdown");
+                    if (title != null) {
+                    	pstmt.setString(2, title);
                     }
                     else {
 						// output error message to page;
 						// return
                     }
-                    pstmt.setString(2, request.getParameter("quarter"));
-                    pstmt.setInt(3, Integer.parseInt(request.getParameter("year")));
-                    pstmt.setInt(4, Integer.parseInt(request.getParameter("id")));
+                    pstmt.setString(3, request.getParameter("first"));
+                    pstmt.setString(4, request.getParameter("last"));
+                    String dept = request.getParameter("dept_dropdown");
+                    if (title != null) {
+                    	pstmt.setString(5, dept);
+                    }
+                    else {
+						// output error message to page;
+						// return
+                    }
+                    pstmt.setString(6, request.getParameter("id"));
                     int rowCount = pstmt.executeUpdate();
 
                     // Commit transaction
@@ -109,9 +126,9 @@
                     conn.setAutoCommit(false);
 
                     pstmt = conn
-                        .prepareStatement("DELETE FROM Class WHERE class_id = ?");
+                        .prepareStatement("DELETE FROM Faculty WHERE ssn = ?");
 
-                    pstmt.setInt(1, Integer.parseInt(request.getParameter("id")));
+                    pstmt.setString(1, request.getParameter("id"));
                     int rowCount = pstmt.executeUpdate();
 
                     // Commit transaction
@@ -139,7 +156,7 @@
             <!-- Add an HTML table header row to format the results -->
             <table border="2">
             <tr>
-                <th>SSN</th>
+                <th>SSN (xxx-xx-xxxx)</th>
                 <th>Title</th>
                 <th>First Name</th>
                 <th>Last Name</th>
