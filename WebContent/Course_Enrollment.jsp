@@ -24,6 +24,7 @@
           
           Connection conn = null;
           PreparedStatement pstmt = null;
+          PreparedStatement pstmt1 = null;
           ResultSet rs = null;
           ResultSet rs1 = null;
           
@@ -50,6 +51,12 @@
               if (action != null && action.equals("add_to_class")) {
               	String class_name = request.getParameter("course_dropdown");
               	int student_id = Integer.parseInt(request.getParameter("student_id"));
+              	
+              	// check prerequisite
+              	/* String q = "SELECT prerequisite_id FROM Prerequisite p, Course c WHERE p.course_id = " + 
+              				"c.course_id AND c.course_name = " + class_name;
+              	rs = statement.executeQuery(q); */
+              	
               	rs = statement.executeQuery("SELECT * FROM Class WHERE class_name = '" + class_name + "'" + 
               			" AND quarter = 'Winter' AND year = 2015");
               	// open a new class if not exists
@@ -61,45 +68,22 @@
               		int rowCount = pstmt.executeUpdate();
               	}
               	
-              	// Begin transaction
-                  conn.setAutoCommit(false);
+                  String select_query = "Select class_id FROM Class WHERE class_name = '" + class_name + "'" + 
+							" AND quarter = 'Winter' AND year = 2015";
+				  rs = statement.executeQuery(select_query);
+				  rs.next();
+				  int class_id = rs.getInt("class_id");
               	
-              	// add relationship to Student_Class table
-              	String select_query = "Select class_id FROM Class WHERE class_name = '" + class_name + "'" + 
-              							" AND quarter = 'Winter' AND year = 2015";
-              	rs = statement.executeQuery(select_query);
-              	rs.next();
-              	int class_id = rs.getInt("class_id");
-              	
-              	// check if student already enrolled
-              	String q1 = "Select * FROM Student_Class Where student_id = " + student_id + " AND " + 
-              	"class_id = " + class_id;
-              	rs = statement.executeQuery(q1);
-              	int rowCount = 0;
-              	if (!rs.next()) {
-              		String query = "INSERT INTO Student_Class VALUES (" + student_id + ", " + class_id + ", " + "'WIP'" + ")";
-              		System.out.println("insert into Student_Class: " + query);
-              		pstmt = conn.prepareStatement(query);
-              		rowCount = pstmt.executeUpdate();
-              	} else {
-              		out.println("<font color='#ff0000'>Student already enrolled in this class");
-              	}
-              	
-              	if (rowCount > 0) {
             %>
-            			<h3>Class found. Please select section.</h3>
+            		<h3>Class found. Please select section.</h3>
              		<form action="Course_Enrollment.jsp" method="POST">
                        <input type="hidden" name="action" value="choose_section"/>
                        <input type="hidden" value="<%=class_id%>" name="id"/>
                        <input type="hidden" name="student_id" value="<%=student_id%>"/>
                        <th><input type="submit" value="Choose Section"/></th>
                 </form>
-     		<% } %>   
              
           <%
-              	// Commit transaction
-                  conn.commit();
-                  conn.setAutoCommit(true);
               }
           %>
           
@@ -108,7 +92,6 @@
           	if (action != null && action.equals("choose_section")) {
           		int class_id = Integer.parseInt(request.getParameter("id"));
           		int student_id = Integer.parseInt(request.getParameter("student_id"));
-          		System.out.println("student_id:" + student_id);
           		rs = statement.executeQuery("SELECT * FROM Section WHERE class_id = " + class_id);
           %>
           
@@ -129,6 +112,7 @@
 		<form>
 			<input type="hidden" name="action" value="enroll_section"/>
             <input type="hidden" name="id" value="<%=rs.getInt("section_id")%>"/>
+            <input type="hidden" name="class_id" value="<%=class_id%>"/>
             <input type="hidden" name="student_id" value="<%=student_id%>"/>
 			<td><%=rs.getInt("section_id")%></td>
 			<td><%=rs.getInt("enroll_limit")%></td>
@@ -150,6 +134,7 @@
           	if (action != null && action.equals("enroll_section")) {
           		int section_id = Integer.parseInt(request.getParameter("id"));
           		int student_id = Integer.parseInt(request.getParameter("student_id"));
+          		int class_id = Integer.parseInt(request.getParameter("class_id"));
           		rs = statement.executeQuery("SELECT * FROM Section WHERE section_id = " + section_id);
           		rs.next();
           		int limit = rs.getInt("enroll_limit");
@@ -179,8 +164,23 @@
               	} else {
         	    	out.println("<font color='#ff0000'>Failed to enroll in section. Already enrolled");
            		}
+              	
+             	// add relationship to Student_Class table
+              	// check if student already enrolled
+              	String q2 = "Select * FROM Student_Class Where student_id = " + student_id + " AND " + 
+              	"class_id = " + class_id;
+              	rs = statement.executeQuery(q2);
+              	int rowCount1 = 0;
+              	if (!rs.next()) {
+              		String query1 = "INSERT INTO Student_Class VALUES (" + student_id + ", " + class_id + ", " + "'WIP'" + ")";
+              		System.out.println("insert into Student_Class: " + query1);
+              		pstmt1 = conn.prepareStatement(query1);
+              		rowCount1 = pstmt1.executeUpdate();
+              	} else {
+              		out.println("<font color='#ff0000'>Student already enrolled in this class");
+              	}
           		
-          		if (rowCount > 0) {
+          		if (rowCount > 0 && rowCount1 > 0) {
                     %>
            			<h3>Last step before enroll. Select your grade option</h3>
             		<form action="Course_Enrollment.jsp" method="POST">
