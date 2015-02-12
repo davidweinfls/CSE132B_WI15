@@ -71,3 +71,12 @@ CREATE TABLE Student_Class (
 
 INSERT INTO Student_Class VALUES (1, 1, 'A');
 
+CREATE TABLE Section (
+	section_id		SERIAL	PRIMARY KEY,
+	enroll_limit			INTEGER,
+	grade_option	TEXT	NOT NULL,
+	instructor_ssn	TEXT	NOT NULL REFERENCES Faculty (ssn),
+	class_id		INTEGER	NOT NULL REFERENCES Class (class_id)
+);
+
+INSERT INTO Section (enroll_limit, grade_option, instructor_ssn, class_id) VALUES (100, 'L/SU', '123-45-0000', 29);

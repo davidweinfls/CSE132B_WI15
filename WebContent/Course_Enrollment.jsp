@@ -63,6 +63,7 @@
                 	// Begin transaction
                     conn.setAutoCommit(false);
                 	
+                	
                 	// add relationship to Student_Class table
                 	String select_query = "Select class_id FROM Class WHERE class_name = '" + class_name + "'" + 
                 							" AND quarter = 'Winter' AND year = 2015";
@@ -70,14 +71,26 @@
                 	rs.next();
                 	int class_id = rs.getInt("class_id");
                 	int student_id = Integer.parseInt(request.getParameter("student_id"));
-                	String query = "INSERT INTO Student_Class VALUES (" + student_id + ", " + class_id + ", " + "'WIP'" + ")";
-                	System.out.println("insert into Student_Class: " + query);
-                	pstmt = conn.prepareStatement(query);
-                	int rowCount = pstmt.executeUpdate();
+                	// check if student already enrolled
+                	String q1 = "Select * FROM Student_Class Where student_id = " + student_id + " AND " + 
+                	"class_id = " + class_id;
+                	rs = statement.executeQuery(q1);
+                	int rowCount = 0;
+                	if (!rs.next()) {
+                		String query = "INSERT INTO Student_Class VALUES (" + student_id + ", " + class_id + ", " + "'WIP'" + ")";
+                		System.out.println("insert into Student_Class: " + query);
+                		pstmt = conn.prepareStatement(query);
+                		rowCount = pstmt.executeUpdate();
+                	} else {
+                		out.println("<font color='#ff0000'>Student already enrolled in this class");
+                	}
+                	
                 	if (rowCount > 0) {
               %>
+              			<h3>Class found. Please select section.</h3>
 	              		<form action="Course_Enrollment.jsp" method="POST">
 	                        <input type="hidden" name="action" value="choose_section"/>
+	                        <input type="hidden" value="<%=class_id%>" name="id"/>
 	                        <th><input type="submit" value="Choose Section"/></th>
 		                </form>
 		     		<% } %>   
@@ -92,7 +105,39 @@
             <%-- -------- Choose Section -------- --%>
             <%
             	if (action != null && action.equals("choose_section")) {
-            		out.println("lalala");
+            		int class_id = Integer.parseInt(request.getParameter("id"));
+            		rs = statement.executeQuery("SELECT * FROM Section WHERE class_id = " + class_id);
+            %>
+            
+            <table border="2">
+	            <tr>
+	                <th>Section ID</th>
+	                <th>Enroll Limit</th>
+	                <th>Grade Option</th>
+	                <th>Instructor SSN</th>
+	                <th>Class ID</th>
+	            </tr>
+            <tr>
+            
+            <%
+            		while (rs.next()) {
+            %>
+            
+				<form>
+					<input type="hidden" name="action" value="enroll_section"/>
+                  	<input type="hidden" name="id" value="<%=rs.getInt("section_id")%>"/>
+					<td><%=rs.getInt("section_id")%></td>
+					<td><%=rs.getInt("enroll_limit")%></td>
+					<td><%=rs.getString("grade_option")%></td>
+					<td><%=rs.getString("instructor_ssn")%></td>
+					<td><%=rs.getInt("class_id")%></td>
+					<%-- Delete Button --%>
+					<td><input type="submit" value="Enroll" /></td>
+				</form>
+			</tr>
+            			
+            <%
+            		}
             	}
             %>
             
