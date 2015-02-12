@@ -18,7 +18,12 @@ CREATE TABLE Department (
     dept_name       TEXT    PRIMARY KEY
 );
 
-INSERT INTO Department VALUES ('Computer Science');
+INSERT INTO Department VALUES ('Computer_Science');
+INSERT INTO Department VALUES ('Cognitive_Science');
+INSERT INTO Department VALUES ('Economics');
+INSERT INTO Department VALUES ('Physics');
+INSERT INTO Department VALUES ('Biology');
+
 
 CREATE TABLE Course (
     course_id       SERIAL  PRIMARY KEY,
@@ -32,8 +37,8 @@ CREATE TABLE Course (
     dept_name       TEXT    REFERENCES  Department (dept_name) ON DELETE CASCADE
 );
 
-INSERT INTO Course (course_name, unit_low, unit_high, letter_su, lab, title, consent_of_instructor, dept_name)  VALUES ('CSE132B', 4, 4, 'L_SU', false, 'Database APplication', false, 'Computer Science');
-INSERT INTO Course (course_name, unit_low, unit_high, letter_su, lab, title, consent_of_instructor, dept_name)  VALUES ('CSE132A', 4, 4, 'L_SU', false, 'Database Principle', false, 'Computer Science');
+INSERT INTO Course (course_name, unit_low, unit_high, letter_su, lab, title, consent_of_instructor, dept_name)  VALUES ('CSE132B', 4, 4, 'L_SU', false, 'Database APplication', false, 'Computer_Science');
+INSERT INTO Course (course_name, unit_low, unit_high, letter_su, lab, title, consent_of_instructor, dept_name)  VALUES ('CSE132A', 4, 4, 'L_SU', false, 'Database Principle', false, 'Computer_Science');
 
 CREATE TABLE Class (
     class_id        SERIAL  PRIMARY KEY,

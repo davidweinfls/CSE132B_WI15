@@ -154,7 +154,7 @@
                     <th><input value="" name="ssn" size="10"/></th>
                     <th><input value="" name="enrollment" size="5"/></th>
                     <th><input value="" name="residency" size="5"/></th>
-                    <th><input value="" name="lfive_year_program" size="5"/></th>
+                    <th><input value="" name="five_year_program" size="5"/></th>
                     <th><input type="submit" value="Insert"/></th>
                 </form>
             </tr>
