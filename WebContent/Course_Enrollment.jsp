@@ -37,14 +37,30 @@
                     "user=postgres&password=postgres");
             %>
             
-            <%-- -------- INSERT Code -------- --%>
+            <%
+            	Statement statement = conn.createStatement();
+            	Statement statement1 = conn.createStatement();
+            %>
+            
+            <%-- -------- add_to_class -------- --%>
             <%
                 String action = request.getParameter("action");
+            	
                 // Check if an insertion is requested
-                if (action != null && action.equals("insert")) {
-
+                if (action != null && action.equals("add_to_class")) {
+                	String class_name = request.getParameter("course_dropdown");
+                	rs = statement.executeQuery("SELECT * FROM Class WHERE class_name = '" + class_name + "'");
+                	// open a new class if not exists
+                	if (!rs.next()) {
+                		String query = "INSERT INTO Class (class_name, quarter, year) " + 
+								"VALUES ('" + class_name + "', 'Winter', 2015)";
+                		System.out.println("query: " + query);
+                		pstmt = conn.prepareStatement(query);
+                		int rowCount = pstmt.executeUpdate();
+                	}
+                	
                     // Begin transaction
-                    conn.setAutoCommit(false);
+                    /* conn.setAutoCommit(false);
 
                     pstmt = conn
                     .prepareStatement("INSERT INTO Faculty (ssn, title, first, last, dept_name)" + 
@@ -73,81 +89,17 @@
 
                     // Commit transaction
                     conn.commit();
-                    conn.setAutoCommit(true);
-                }
-            %>
-            
-            <%-- -------- UPDATE Code -------- --%>
-            <%
-                // Check if an update is requested
-                if (action != null && action.equals("update")) {
-
-                    // Begin transaction
-                    conn.setAutoCommit(false);
-
-                    pstmt = conn
-                        .prepareStatement("UPDATE Faculty SET ssn = ?, title = ?, "
-                            + "first = ?, last = ?, dept_name = ? WHERE ssn = ?");
-
-                    pstmt.setString(1, request.getParameter("ssn"));
-                    String title = request.getParameter("title_dropdown");
-                    if (title != null) {
-                    	pstmt.setString(2, title);
-                    }
-                    else {
-						// output error message to page;
-						// return
-                    }
-                    pstmt.setString(3, request.getParameter("first"));
-                    pstmt.setString(4, request.getParameter("last"));
-                    String dept = request.getParameter("dept_dropdown");
-                    if (title != null) {
-                    	pstmt.setString(5, dept);
-                    }
-                    else {
-						// output error message to page;
-						// return
-                    }
-                    pstmt.setString(6, request.getParameter("id"));
-                    int rowCount = pstmt.executeUpdate();
-
-                    // Commit transaction
-                    conn.commit();
-                    conn.setAutoCommit(true);
-                }
-            %>
-            
-            <%-- -------- DELETE Code -------- --%>
-            <%
-                // Check if a delete is requested
-                if (action != null && action.equals("delete")) {
-
-                    // Begin transaction
-                    conn.setAutoCommit(false);
-
-                    pstmt = conn
-                        .prepareStatement("DELETE FROM Faculty WHERE ssn = ?");
-
-                    pstmt.setString(1, request.getParameter("id"));
-                    int rowCount = pstmt.executeUpdate();
-
-                    // Commit transaction
-                    conn.commit();
-                    conn.setAutoCommit(true);
+                    conn.setAutoCommit(true); */
                 }
             %>
             
             <%-- -------- Original Form -------- --%>
-            <%
-            	Statement statement = conn.createStatement();
-        		Statement statement1 = conn.createStatement();
-            
+            <%            
             	if (action == null) {
-	                rs = statement.executeQuery("SELECT * FROM Faculty");
-	                rs1 = statement1.executeQuery("SELECT distinct dept_name FROM Department");
+	                rs1 = statement1.executeQuery("SELECT distinct course_name FROM Course");
 	                ArrayList<String> course_names = new ArrayList<String>();
 	                while (rs1.next()) {
-	                	course_names.add(rs1.getString("dept_name"));
+	                	course_names.add(rs1.getString("course_name"));
 	                }
 	       	%>
 	                <table border="2">
@@ -159,7 +111,7 @@
 	                <!-- An empty row with blankets for user to type in -->
 	                <tr>
 	                    <form action="Course_Enrollment.jsp" method="POST">
-	                        <input type="hidden" name="action" value="add_course"/>
+	                        <input type="hidden" name="action" value="add_to_class"/>
 	                        <th><input value="" name="student_id" size="15"/></th>
 	                        <th>
 	                        <select name = "course_dropdown">
@@ -177,11 +129,14 @@
             <%-- -------- Close Connection Code -------- --%>
             <%
             	// Close the ResultSet
-            		rs.close();
-            		rs1.close();
+            	if (rs != null) rs.close();
+            	if (rs1 != null) rs1.close();
 
             		// Close the Statement
-            		statement.close();
+            		if (statement != null)
+            			statement.close();
+            		if (statement1 != null)
+            			statement1.close();
 
             		// Close the Connection
             		conn.close();

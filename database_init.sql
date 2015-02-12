@@ -61,3 +61,12 @@ CREATE TABLE Faculty (
 );
 
 INSERT INTO Faculty VALUES ('123-45-6789', 'Professor', 'George', 'Porter', 'Computer_Science'); 
+
+CREATE TABLE Student_Class (
+	student_id		INTEGER	NOT NULL	REFERENCES Student (student_id) ON DELETE CASCADE,
+	class_id		INTEGER	NOT NULL	REFERENCES Class (class_id) ON DELETE CASCADE,
+	grade			TEXT	NOT NULL
+);
+
+INSERT INTO Student_Class VALUES (1, 1, 'A');
+
