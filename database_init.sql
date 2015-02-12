@@ -32,8 +32,8 @@ CREATE TABLE Course (
     dept_name       TEXT    REFERENCES  Department (dept_name) ON DELETE CASCADE
 );
 
-INSERT INTO Course (course_name, unit_low, unit_high, letter_su, lab, title, consent_of_instructor, dept_name)  VALUES ('CSE132B', 4, 4, 'L_SU', false, 'Database APplication', false, 'Computer Science');
-INSERT INTO Course (course_name, unit_low, unit_high, letter_su, lab, title, consent_of_instructor, dept_name)  VALUES ('CSE132A', 4, 4, 'L_SU', false, 'Database Principle', false, 'Computer Science');
+INSERT INTO Course (course_name, unit_low, unit_high, letter_su, lab, title, consent_of_instructor, dept_name)  VALUES ('CSE132B', 4, 4, 'L_SU', false, 'Database APplication', false, 'Computer_Science');
+INSERT INTO Course (course_name, unit_low, unit_high, letter_su, lab, title, consent_of_instructor, dept_name)  VALUES ('CSE132A', 4, 4, 'L_SU', false, 'Database Principle', false, 'Computer_Science');
 
 CREATE TABLE Class (
     class_id        SERIAL  PRIMARY KEY,
@@ -70,4 +70,14 @@ CREATE TABLE Student_Class (
 );
 
 INSERT INTO Student_Class VALUES (1, 1, 'A');
+
+CREATE TABLE Section (
+	section_id		SERIAL	PRIMARY KEY,
+	enroll_limit			INTEGER,
+	grade_option	TEXT	NOT NULL,
+	instructor_ssn	TEXT	NOT NULL REFERENCES Faculty (ssn),
+	class_id		INTEGER	NOT NULL REFERENCES Class (class_id)
+);
+
+INSERT INTO Section (enroll_limit, grade_option, instructor_ssn, class_id) VALUES (100, 'L/SU', '123-45-6789', 29);
 
