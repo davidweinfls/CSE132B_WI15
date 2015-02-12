@@ -53,37 +53,65 @@
               	int student_id = Integer.parseInt(request.getParameter("student_id"));
               	
               	// check prerequisite
-              	/* String q = "SELECT prerequisite_id FROM Prerequisite p, Course c WHERE p.course_id = " + 
-              				"c.course_id AND c.course_name = " + class_name;
-              	rs = statement.executeQuery(q); */
-              	
-              	rs = statement.executeQuery("SELECT * FROM Class WHERE class_name = '" + class_name + "'" + 
-              			" AND quarter = 'Winter' AND year = 2015");
-              	// open a new class if not exists
-              	if (!rs.next()) {
-              		String query = "INSERT INTO Class (class_name, quarter, year) " + 
-						"VALUES ('" + class_name + "', 'Winter', 2015)";
-              		System.out.println("insert into Class: " + query);
-              		pstmt = conn.prepareStatement(query);
-              		int rowCount = pstmt.executeUpdate();
+              	// get all classes this student took
+              	String w = "SELECT course_id FROM Course, Class c, Student_Class s WHERE " + 
+              				"class_name = course_name AND c.class_id = s.class_id AND " + 
+              				"student_id = " + student_id;
+              	rs = statement.executeQuery(w);
+              	ArrayList<Integer> course_taken = new ArrayList<Integer>();
+              	while (rs.next()) {
+              		course_taken.add(rs.getInt("course_id"));
               	}
               	
-                  String select_query = "Select class_id FROM Class WHERE class_name = '" + class_name + "'" + 
-							" AND quarter = 'Winter' AND year = 2015";
-				  rs = statement.executeQuery(select_query);
-				  rs.next();
-				  int class_id = rs.getInt("class_id");
+              	// get prerequisite of this certain class
+              	String q = "SELECT prerequisite_id FROM Prerequisite p, Course c WHERE p.course_id = " + 
+              				"c.course_id AND c.course_name = '" + class_name + "'";
+              	rs = statement.executeQuery(q);
+              	int clear = 0;
+              	int count = 0;
+              	while (rs.next()) {
+              		count++;
+              		int pre_id = rs.getInt("prerequisite_id");
+              		for (int i = 0; i < course_taken.size(); ++i) {
+              			if (pre_id == course_taken.get(i)) {
+              				clear++;
+              				break;
+              			}
+              		}
+              	}
+              	if (clear == count) {
               	
-            %>
-            		<h3>Class found. Please select section.</h3>
-             		<form action="Course_Enrollment.jsp" method="POST">
-                       <input type="hidden" name="action" value="choose_section"/>
-                       <input type="hidden" value="<%=class_id%>" name="id"/>
-                       <input type="hidden" name="student_id" value="<%=student_id%>"/>
-                       <th><input type="submit" value="Choose Section"/></th>
-                </form>
-             
-          <%
+              	
+	              	rs = statement.executeQuery("SELECT * FROM Class WHERE class_name = '" + class_name + "'" + 
+	              			" AND quarter = 'Winter' AND year = 2015");
+	              	// open a new class if not exists
+	              	if (!rs.next()) {
+	              		String query = "INSERT INTO Class (class_name, quarter, year) " + 
+							"VALUES ('" + class_name + "', 'Winter', 2015)";
+	              		System.out.println("insert into Class: " + query);
+	              		pstmt = conn.prepareStatement(query);
+	              		int rowCount = pstmt.executeUpdate();
+	              	}
+	              	
+	                  String select_query = "Select class_id FROM Class WHERE class_name = '" + class_name + "'" + 
+								" AND quarter = 'Winter' AND year = 2015";
+					  rs = statement.executeQuery(select_query);
+					  rs.next();
+					  int class_id = rs.getInt("class_id");
+	              	
+	            %>
+	            		<h3>Class found. Please select section.</h3>
+	             		<form action="Course_Enrollment.jsp" method="POST">
+	                       <input type="hidden" name="action" value="choose_section"/>
+	                       <input type="hidden" value="<%=class_id%>" name="id"/>
+	                       <input type="hidden" name="student_id" value="<%=student_id%>"/>
+	                       <th><input type="submit" value="Choose Section"/></th>
+	                </form>
+	             
+	          <%
+	              } else {
+	            	  out.println("<font color='#ff0000'>Prerequisite not cleared. Cannot continue");
+	              }
               }
           %>
           
