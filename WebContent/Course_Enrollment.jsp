@@ -363,7 +363,64 @@
                        <th><input type="submit" value="Add to Course"/></th>
                    </form>
                </tr>
+               <tr>
+                   <form action="Course_Enrollment.jsp" method="POST">
+                       <input type="hidden" name="action" value="update_class"/>
+                       <th><input value="" name="student_id" size="15"/></th>
+                       <th>
+                       <select name = "course_dropdown">
+                       <option value = "">Select Course</option>
+                       	<% for (int i = 0; i < course_names.size(); ++i) { %>
+                       		<option value=<%= course_names.get(i)%>><%= course_names.get(i)%></option>
+                       	<% } %>
+                       </select>
+                       </th>
+                       <th><input type="submit" value="Update Course"/></th>
+                   </form>
+               </tr>
        <% } // end of original form %>
+       
+       <%-- -------- Update class Form -------- --%>
+       <%
+          	if (action != null && action.equals("update_class")) {
+          		String class_name = request.getParameter("course_dropdown");
+              	int student_id = Integer.parseInt(request.getParameter("student_id"));
+              	
+              	// only update current class
+              	// get class_id
+              	String q1 = "SELECT class_id FROM Class WHERE class_name = '" + class_name + "' AND " + 
+              	"quarter = 'Winter' AND year = 2015";
+              	rs = statement.executeQuery(q1);
+              	rs.next();
+              	int class_id = rs.getInt("class_id");
+              	
+              	// get course_id
+              	String q2 = "SELECT course_id FROM Course WHERE course_name = '" + class_name + "'";
+				rs = statement.executeQuery(q2);
+				rs.next();
+				int course_id = rs.getInt("course_id");
+				
+				// get section_id this student enrolled
+				String q3 = "SELECT se.section_id FROM Section_Enrolllist se WHERE se.section_id IN (" +
+						"SELECT section_id FROM Section s WHERE s.class_id = " + class_id + ") " + 
+						"AND se.student_id = " + student_id;
+				rs = statement.executeQuery(q3);
+				rs.next();
+				int section_id = rs.getInt("section_id");
+				
+				System.out.println("student_id: " + student_id);
+				System.out.println("class_id: " + class_id);
+				System.out.println("course_id: " + course_id);
+				System.out.println("section_id: " + section_id);
+				
+          		// Begin transaction
+                conn.setAutoCommit(false);
+
+                // Commit transaction
+                conn.commit();
+                conn.setAutoCommit(true);
+          	}
+          %>
 
           <%-- -------- Close Connection Code -------- --%>
           <%
