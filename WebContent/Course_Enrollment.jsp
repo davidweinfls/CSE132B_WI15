@@ -49,48 +49,51 @@
                 // Check if an insertion is requested
                 if (action != null && action.equals("add_to_class")) {
                 	String class_name = request.getParameter("course_dropdown");
-                	rs = statement.executeQuery("SELECT * FROM Class WHERE class_name = '" + class_name + "'");
+                	rs = statement.executeQuery("SELECT * FROM Class WHERE class_name = '" + class_name + "'" + 
+                			" AND quarter = 'Winter' AND year = 2015");
                 	// open a new class if not exists
                 	if (!rs.next()) {
                 		String query = "INSERT INTO Class (class_name, quarter, year) " + 
 								"VALUES ('" + class_name + "', 'Winter', 2015)";
-                		System.out.println("query: " + query);
+                		System.out.println("insert into Class: " + query);
                 		pstmt = conn.prepareStatement(query);
                 		int rowCount = pstmt.executeUpdate();
                 	}
                 	
-                    // Begin transaction
-                    /* conn.setAutoCommit(false);
-
-                    pstmt = conn
-                    .prepareStatement("INSERT INTO Faculty (ssn, title, first, last, dept_name)" + 
-                    " VALUES (?, ?, ?, ?, ?)");
-
-                    pstmt.setString(1, request.getParameter("ssn"));
-                    String title = request.getParameter("title_dropdown");
-                    if (title != null) {
-                    	pstmt.setString(2, title);
-                    }
-                    else {
-						// output error message to page;
-						// return
-                    }
-                    pstmt.setString(3, request.getParameter("first"));
-                    pstmt.setString(4, request.getParameter("last"));
-                    String dept = request.getParameter("dept_dropdown");
-                    if (title != null) {
-                    	pstmt.setString(5, dept);
-                    }
-                    else {
-						// output error message to page;
-						// return
-                    }
-                    int rowCount = pstmt.executeUpdate();
-
-                    // Commit transaction
+                	// Begin transaction
+                    conn.setAutoCommit(false);
+                	
+                	// add relationship to Student_Class table
+                	String select_query = "Select class_id FROM Class WHERE class_name = '" + class_name + "'" + 
+                							" AND quarter = 'Winter' AND year = 2015";
+                	rs = statement.executeQuery(select_query);
+                	rs.next();
+                	int class_id = rs.getInt("class_id");
+                	int student_id = Integer.parseInt(request.getParameter("student_id"));
+                	String query = "INSERT INTO Student_Class VALUES (" + student_id + ", " + class_id + ", " + "'WIP'" + ")";
+                	System.out.println("insert into Student_Class: " + query);
+                	pstmt = conn.prepareStatement(query);
+                	int rowCount = pstmt.executeUpdate();
+                	if (rowCount > 0) {
+              %>
+	              		<form action="Course_Enrollment.jsp" method="POST">
+	                        <input type="hidden" name="action" value="choose_section"/>
+	                        <th><input type="submit" value="Choose Section"/></th>
+		                </form>
+		     		<% } %>   
+		             
+            <%
+                	// Commit transaction
                     conn.commit();
-                    conn.setAutoCommit(true); */
+                    conn.setAutoCommit(true);
                 }
+            %>
+            
+            <%-- -------- Choose Section -------- --%>
+            <%
+            	if (action != null && action.equals("choose_section")) {
+            		out.println("lalala");
+            	}
             %>
             
             <%-- -------- Original Form -------- --%>
@@ -144,6 +147,7 @@
 
             		// Wrap the SQL exception in a runtime exception to propagate
             		// it upwards
+            		out.println("<font color='#ff0000'>Add Course Error");
             		throw new RuntimeException(e);
             	} finally {
             		// Release resources in a finally block in reverse-order of
@@ -185,6 +189,7 @@
 </table>
 
 <a href="Welcome.html">Back</a>
+<a href="Course_Enrollment.jsp">Refresh</a>
 
 </body>
 </html>
