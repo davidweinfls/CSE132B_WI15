@@ -85,7 +85,7 @@ create TABLE Undergraduate (
 	major			TEXT NOT NULL,
 	minor			TEXT,
 	foreign key (u_id) references Student(student_id),
-	foreign key (major) fererences Department(dept_name)
+	foreign key (major) references Department(dept_name)
 );
 
 
