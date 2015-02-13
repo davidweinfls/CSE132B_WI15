@@ -103,7 +103,7 @@ create TABLE Phd (
 );
 
 create TABLE Prev_degree (
-	degree_id 		SERIAL,
+	degree_id 		SERIAL UNIQUE,
 	degree			TEXT,
 	institute		TEXT,
 	primary key (degree_id, degree, institute)
