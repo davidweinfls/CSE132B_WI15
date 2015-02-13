@@ -47,3 +47,72 @@ CREATE TABLE Meeting (
 	section_id		SERIAL,
 	foreign key (section_id) references Section (section_id)
 );
+
+create TABLE Requirement (
+	require_id		INTEGER PRIMARY KEY,
+	units			INTEGER NOT NULL,
+	degree			TEXT	NOT NULL,
+	gpa				FLOAT	NOT NULL,
+	decription		TEXT	NOT NULL
+);
+
+create TABLE Dept_requirement (
+	dept_name	TEXT,
+	require_id	INTEGER,
+	primary key(dept_name, require_id),
+	foreign key dept_name references Department(dept_name),
+	foreign key require_id references Requirement(require_id)
+)
+
+create TABLE Concentration (
+	name			TEXT PRIMARY KEY,
+	decription		TEXT NOT NULL,
+	dept_name		TEXT,
+	foreign key dept_name references Department(dept_name)
+);
+
+create TABLE Concentration_course (
+	con_name		TEXT,
+	course_id		SERIAL,
+	primary key (con_name, course_id),
+	foreign key (con_name) references Concentration(name),
+	foreign key (course_id) references Course(course_id)
+);
+
+create TABLE Undergraduate (
+	u_id			INTEGER PRIMARY KEY,
+	college			TEXT NOT NULL,
+	major			TEXT NOT NULL,
+	minor			TEXT,
+	foreign key (u_id) references Student(student_id),
+	foreign key (major) fererences Department(dept_name)
+);
+
+
+create TABLE Master (
+	master_id		INTEGER PRIMARY KEY,
+	con_name		TEXT,
+	foreign key (master_id) references Graduate(grad_id),
+	foreign key (con_name) references Concentration(name)
+);
+
+create TABLE Phd (
+	phd_id			INTEGER PRIMARY KEY,
+	candidacy		BOOLEAN NOT NULL,
+	foreign key (phd_id) references Graduate(grad_id)
+);
+
+create TABLE Prev_degree (
+	degree_id 		SERIAL,
+	degree			TEXT,
+	institute		TEXT,
+	primary key (degree_id, degree, institute)
+);
+
+create TABLE Other_degree (
+	degree_id,
+	student_id,
+	primary key (degree_id, student_id),
+	foreign key degree_id references Prev_degree (degree_id),
+	foreign key student_id refereces Student (student_id)
+)

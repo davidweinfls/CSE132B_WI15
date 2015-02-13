@@ -81,3 +81,10 @@ CREATE TABLE Section (
 
 INSERT INTO Section (enroll_limit, grade_option, instructor_ssn, class_id) VALUES (100, 'L/SU', '123-45-6789', 29);
 
+CREATE TABLE Section_Enrolllist (
+	student_id		INTEGER	REFERENCES	Student (student_id),
+	section_id		INTEGER	REFERENCES	Section (section_id),
+	grade_option	TEXT	NOT NULL,
+	waitlist		BOOLEAN	NOT NULL,
+	PRIMARY KEY (student_id, section_id)
+);
