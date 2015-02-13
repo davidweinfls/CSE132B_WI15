@@ -59,16 +59,16 @@ create TABLE Requirement (
 create TABLE Dept_requirement (
 	dept_name	TEXT,
 	require_id	INTEGER,
-	primary key(dept_name, require_id),
-	foreign key dept_name references Department(dept_name),
-	foreign key require_id references Requirement(require_id)
-)
+	primary key (dept_name, require_id),
+	foreign key (dept_name) references Department(dept_name),
+	foreign key (require_id) references Requirement(require_id)
+);
 
 create TABLE Concentration (
 	name			TEXT PRIMARY KEY,
-	decription		TEXT NOT NULL,
+	description		TEXT NOT NULL,
 	dept_name		TEXT,
-	foreign key dept_name references Department(dept_name)
+	foreign key (dept_name) references Department(dept_name)
 );
 
 create TABLE Concentration_course (
@@ -85,7 +85,7 @@ create TABLE Undergraduate (
 	major			TEXT NOT NULL,
 	minor			TEXT,
 	foreign key (u_id) references Student(student_id),
-	foreign key (major) fererences Department(dept_name)
+	foreign key (major) references Department(dept_name)
 );
 
 
@@ -110,9 +110,9 @@ create TABLE Prev_degree (
 );
 
 create TABLE Other_degree (
-	degree_id,
-	student_id,
+	degree_id		SERIAL,
+	student_id		INTEGER,
 	primary key (degree_id, student_id),
-	foreign key degree_id references Prev_degree (degree_id),
-	foreign key student_id refereces Student (student_id)
-)
+	foreign key (degree_id) references Prev_degree (degree_id),
+	foreign key (student_id) references Student (student_id)
+);
