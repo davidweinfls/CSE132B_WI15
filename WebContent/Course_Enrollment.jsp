@@ -365,7 +365,7 @@
                </tr>
                <tr>
                    <form action="Course_Enrollment.jsp" method="POST">
-                       <input type="hidden" name="action" value="update_class"/>
+                       <input type="hidden" name="action" value="show_enroll"/>
                        <th><input value="" name="student_id" size="15"/></th>
                        <th>
                        <select name = "course_dropdown">
@@ -380,9 +380,9 @@
                </tr>
        <% } // end of original form %>
        
-       <%-- -------- Update class Form -------- --%>
+       <%-- -------- Show Enroll Form -------- --%>
        <%
-          	if (action != null && action.equals("update_class")) {
+          	if (action != null && action.equals("show_enroll")) {
           		String class_name = request.getParameter("course_dropdown");
               	int student_id = Integer.parseInt(request.getParameter("student_id"));
               	
@@ -401,17 +401,103 @@
 				int course_id = rs.getInt("course_id");
 				
 				// get section_id this student enrolled
-				String q3 = "SELECT se.section_id FROM Section_Enrolllist se WHERE se.section_id IN (" +
+				String q3 = "SELECT se.section_id, se.grade_option FROM Section_Enrolllist se WHERE se.section_id IN (" +
 						"SELECT section_id FROM Section s WHERE s.class_id = " + class_id + ") " + 
 						"AND se.student_id = " + student_id;
 				rs = statement.executeQuery(q3);
 				rs.next();
 				int section_id = rs.getInt("section_id");
+				String grade_taken = rs.getString("grade_option");
+				
+				String q4 = "SELECT grade FROM Student_Class WHERE class_id = " + class_id + " AND student_id = " + 
+							student_id;
+				rs = statement.executeQuery(q4);
+				rs.next();
+				String grade = rs.getString("grade");
+				
+				// get grade option
+          		String q5 = "SELECT grade_option FROM Section WHERE section_id = " + section_id;
+          		rs = statement.executeQuery(q5);
+          		rs.next();
+          		String grade_option_list = rs.getString("grade_option");
 				
 				System.out.println("student_id: " + student_id);
 				System.out.println("class_id: " + class_id);
 				System.out.println("course_id: " + course_id);
 				System.out.println("section_id: " + section_id);
+				System.out.println("grade: " + grade);
+				System.out.println("grade_option: " + grade_taken);
+				
+				boolean su = true;
+          		boolean letter = false;
+          		int low = 0, high = 0;
+          		// get unit range if it can ba taken in letter
+          		if (grade_option_list.equals("L") || grade_option_list.equals("L/SU")) {
+          			String q6 = "SELECT unit_low, unit_high FROM Section, Course, Class WHERE " + 
+          			"section.class_id = class.class_id AND class.class_name = course.course_name AND " + 
+          			"section_id = " + section_id;
+          			rs = statement.executeQuery(q6);
+          			rs.next();
+          			low = rs.getInt("unit_low");
+          			high = rs.getInt("unit_high");
+          			
+          			if (grade_option_list == "L") su = false;
+          			letter = true;
+          		}
+          		ArrayList<String> grade_list = new ArrayList<String>();
+          		if (su) {
+	          		grade_list.add("SU");
+          		}
+          		if (letter) {
+          			for (int i = low; i <= high; ++i) {
+          				
+          				grade_list.add(Integer.toString(i));
+          			}
+          		}
+				
+				%>
+			
+			<table border="2">
+            <tr>
+                <th>Student ID</th>
+                <th>Course ID</th>
+                <th>Class ID</th>
+                <th>Section ID</th>
+                <th>Grade</th>
+                <th>Grade Taken</th>
+            </tr>
+			
+			<tr>
+				<form>
+					<input type="hidden" name="action" value="update_enroll"/>
+                  	<input type="hidden" value="<%=student_id%>" name="id"/>
+					<input type="hidden" value="<%=class_id%>" name="class_id"/>
+					<input type="hidden" value="<%=section_id%>" name="section_id"/>
+					<td><%=student_id%></td>
+					<td><%=course_id%></td>
+					<td><%=class_id%></td>
+					<td><%=section_id%></td>
+					<td><%=grade%></td>
+					<th>
+                	<select name = "grade_option_dropdown">
+                	<option value = "">Select Unit/SU</option>
+                		<% for (int i = 0; i < grade_list.size(); ++i) { %>
+                			<option value=<%= grade_list.get(i)%>><%= grade_list.get(i)%></option>
+                		<% } %>
+                	</select>
+                	</th>
+					<td><input type="submit" value="Update"></td>
+				</form>
+				<form action="Course.jsp" method="POST">
+					<input type="hidden" name="action" value="delete_enroll" /> 
+					<input type="hidden" value="<%=student_id%>" name="student_id"/>
+					<input type="hidden" value="<%=class_id%>" name="class_id"/>
+					<input type="hidden" value="<%=section_id%>" name="section_id"/>
+					<%-- Delete Button --%>
+					<td><input type="submit" value="Delete" /></td>
+				</form>
+			</tr>
+			<%
 				
           		// Begin transaction
                 conn.setAutoCommit(false);
