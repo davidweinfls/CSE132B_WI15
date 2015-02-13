@@ -189,3 +189,9 @@ CREATE TABLE Advisor (
 	faculty_ssn	TEXT	NOT NULL REFERENCES Faculty (ssn) ON DELETE CASCADE,
 	PRIMARY KEY (phd_id, faculty_ssn)
 );
+
+CREATE TABLE Faculty_Teach_Class ( 
+	faculty_ssn		TEXT	NOT NULL	REFERENCES	Faculty (ssn)		ON DELETE CASCADE,
+	class_id		INTEGER	NOT NULL	REFERENCES	Class (class_id)	ON DELETE CASCADE,
+	PRIMARY KEY (faculty_ssn, class_id)
+);
