@@ -35,7 +35,7 @@
                 // Open a connection to the database using DriverManager
                 conn = DriverManager.getConnection(
                     "jdbc:postgresql://localhost/cse132b?" +
-                    "user=postgres&password=postgres");
+                    "user=sendvt&password=postgres");
             %>
 
             <%-- -------- INSERT Code -------- --%>
