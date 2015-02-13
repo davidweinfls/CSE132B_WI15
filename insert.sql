@@ -2,6 +2,9 @@ INSERT INTO Department VALUES ('Computer_Science');
 INSERT INTO Department VALUES ('Physics');
 INSERT INTO Department VALUES ('Economics');
 
+INSERT INTO Student (first, last, ssn, enrollment, residency, five_year_program) VALUES ('Xiao', 'Ming', '100-00-0000', true, 'US', false);
+INSERT INTO Student (first, last, ssn, enrollment, residency, five_year_program) VALUES ('Xiao', 'Hong', '200-00-0000', true, 'INT', false);
+
 INSERT INTO Course (course_name, unit_low, unit_high, letter_su, lab, title, consent_of_instructor, dept_name)  VALUES ('CSE132B', 4, 4, 'L/SU', false, 'Database_Application', false, 'Computer_Science');
 INSERT INTO Course (course_name, unit_low, unit_high, letter_su, lab, title, consent_of_instructor, dept_name)  VALUES ('CSE132A', 4, 4, 'L/SU', false, 'Database_Principle', false, 'Computer_Science');
 INSERT INTO Course (course_name, unit_low, unit_high, letter_su, lab, title, consent_of_instructor, dept_name)  VALUES ('CSE110', 2, 6, 'L/SU', false, 'Software_Engineering', false, 'Computer_Science');
@@ -56,4 +59,6 @@ INSERT INTO Section (enroll_limit, grade_option, instructor_ssn, class_id) VALUE
 INSERT INTO Section (enroll_limit, grade_option, instructor_ssn, class_id) VALUES (100, 'L/SU', '222-22-2222', 12);
 INSERT INTO Section (enroll_limit, grade_option, instructor_ssn, class_id) VALUES (100, 'L/SU', '222-22-2222', 13);
 INSERT INTO Section (enroll_limit, grade_option, instructor_ssn, class_id) VALUES (100, 'L/SU', '222-22-2222', 14);
+
+/* last five */
 
