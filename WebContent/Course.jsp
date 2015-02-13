@@ -66,6 +66,8 @@
                     // Commit transaction
                     conn.commit();
                     conn.setAutoCommit(true);
+                    
+                    action = null;
                 }
             %>
             
@@ -97,6 +99,8 @@
                     // Commit transaction
                     conn.commit();
                     conn.setAutoCommit(true);
+                    
+                    action = null;
                 }
             %>
             
@@ -117,6 +121,8 @@
                     // Commit transaction
                     conn.commit();
                     conn.setAutoCommit(true);
+                    
+                    action = null;
                 }
             %>
             
