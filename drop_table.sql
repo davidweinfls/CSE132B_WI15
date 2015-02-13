@@ -6,7 +6,7 @@ DROP TABLE Concentration_Course;
 DROP TABLE Concentration CASCADE;
 DROP TABLE Undergraduate;
 DROP TABLE Master;
-DROP TABLE Phd;
+DROP TABLE Phd CASCADE;
 DROP TABLE Graduate CASCADE;
 DROP TABLE Prev_Degree;
 DROP TABLE Dept_Requirement CASCADE;

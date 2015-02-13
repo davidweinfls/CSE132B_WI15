@@ -74,19 +74,19 @@ INSERT INTO Student_class (student_id, class_id, grade) values (2, 9, 'F');
 INSERT INTO Student_class (student_id, class_id, grade) values (2, 12, 'A-');
 INSERT INTO Student_class (student_id, class_id, grade) values (2, 14, 'B+');
 
-INSERT INTO Section_Enrolllist (student_id, section_id, grade_option, waitlist) values(1, 1, 'L', false);
-INSERT INTO Section_Enrolllist (student_id, section_id, grade_option, waitlist) values(1, 6, 'L', false);
-INSERT INTO Section_Enrolllist (student_id, section_id, grade_option, waitlist) values(1, 9, 'L', false);
-INSERT INTO Section_Enrolllist (student_id, section_id, grade_option, waitlist) values(1, 12, 'L', false);
+INSERT INTO Section_Enrolllist (student_id, section_id, grade_option, waitlist) values(1, 1, '4', false);
+INSERT INTO Section_Enrolllist (student_id, section_id, grade_option, waitlist) values(1, 6, '4', false);
+INSERT INTO Section_Enrolllist (student_id, section_id, grade_option, waitlist) values(1, 9, '4', false);
+INSERT INTO Section_Enrolllist (student_id, section_id, grade_option, waitlist) values(1, 12, '4', false);
 
-INSERT INTO Section_Enrolllist (student_id, section_id, grade_option, waitlist) values(2, 4, 'L', false);
-INSERT INTO Section_Enrolllist (student_id, section_id, grade_option, waitlist) values(2, 7, 'L', false);
-INSERT INTO Section_Enrolllist (student_id, section_id, grade_option, waitlist) values(2, 10, 'L', false);
-INSERT INTO Section_Enrolllist (student_id, section_id, grade_option, waitlist) values(2, 12, 'L', false);
+INSERT INTO Section_Enrolllist (student_id, section_id, grade_option, waitlist) values(2, 4, '4', false);
+INSERT INTO Section_Enrolllist (student_id, section_id, grade_option, waitlist) values(2, 7, '4', false);
+INSERT INTO Section_Enrolllist (student_id, section_id, grade_option, waitlist) values(2, 10, '4', false);
+INSERT INTO Section_Enrolllist (student_id, section_id, grade_option, waitlist) values(2, 12, '4', false);
 
 INSERT INTO Requirement (require_id, units, degree, gpa, description) values(1, 8, 'bs', 2.0, 'bs1');
 INSERT INTO Requirement (require_id, units, degree, gpa, description) values(2, 12, 'ba', 2.0, 'ba2');
-INSERT INTO Requirement (require_id, units, degree, gpa, description) values(3, 16, 'ms', 2.0, 'ms3');
+INSERT INTO Requirement (require_id, units, degree, gpa, description) values(3, 16, 'master', 2.0, 'ms3');
 INSERT INTO Requirement (require_id, units, degree, gpa, description) values(4, 14, 'phd', 2.0, 'phd4');
 INSERT INTO Requirement (require_id, units, degree, gpa, description) values(5, 18, 'bs', 2.0, 'bs5');
 
@@ -116,6 +116,8 @@ INSERT INTO Phd (phd_id, candidacy) values(3, true);
 INSERT INTO Undergraduate (u_id, college, major) values(4, 'Sixth', 'Computer_Science');
 INSERT INTO Undergraduate (u_id, college, major) values(5, 'Marshall', 'Economics');
 
-
+INSERT INTO Prev_Degree (degree_id, degree, institute) VALUES (10001, 'master', 'UCSD');
+INSERT INTO Prev_Degree (degree_id, degree, institute) VALUES (10002, 'master', 'UCB');
+INSERT INTO Prev_Degree (degree_id, degree, institute) VALUES (10003, 'master', 'UCLA');
 /* last five */
 
