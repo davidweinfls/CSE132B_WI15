@@ -41,12 +41,59 @@
           <%
           	Statement statement = conn.createStatement();
           	Statement statement1 = conn.createStatement();
+          	String action = request.getParameter("action");
           %>
+          
+          <%-- -------- Original Form -------- --%>
+          <%            
+          	if (action == null) {
+               rs1 = statement1.executeQuery("SELECT distinct course_name FROM Course");
+               ArrayList<String> course_names = new ArrayList<String>();
+               while (rs1.next()) {
+               	course_names.add(rs1.getString("course_name"));
+               }
+      	%>
+               <table border="2">
+               <tr>
+                   <th>Student_ID</th>
+                   <th>Course_Name</th>
+               </tr>
+               
+               <!-- An empty row with blankets for user to type in -->
+               <tr>
+                   <form action="Course_Enrollment.jsp" method="POST">
+                       <input type="hidden" name="action" value="add_to_class"/>
+                       <th><input value="" name="student_id" size="15"/></th>
+                       <th>
+                       <select name = "course_dropdown">
+                       <option value = "">Select Course</option>
+                       	<% for (int i = 0; i < course_names.size(); ++i) { %>
+                       		<option value=<%= course_names.get(i)%>><%= course_names.get(i)%></option>
+                       	<% } %>
+                       </select>
+                       </th>
+                       <th><input type="submit" value="Add to Course"/></th>
+                   </form>
+               </tr>
+               <tr>
+                   <form action="Course_Enrollment.jsp" method="POST">
+                       <input type="hidden" name="action" value="show_enroll"/>
+                       <th><input value="" name="student_id" size="15"/></th>
+                       <th>
+                       <select name = "course_dropdown">
+                       <option value = "">Select Course</option>
+                       	<% for (int i = 0; i < course_names.size(); ++i) { %>
+                       		<option value=<%= course_names.get(i)%>><%= course_names.get(i)%></option>
+                       	<% } %>
+                       </select>
+                       </th>
+                       <th><input type="submit" value="Update Course"/></th>
+                   </form>
+               </tr>
+       <% } // end of original form %>
           
           <%-- -------- add_to_class -------- --%>
           <%
-              String action = request.getParameter("action");
-          	
               // Check if an insertion is requested
               if (action != null && action.equals("add_to_class")) {
               	String class_name = request.getParameter("course_dropdown");
@@ -331,55 +378,6 @@
           	}
           %>
           
-          
-          <%-- -------- Original Form -------- --%>
-          <%            
-          	if (action == null) {
-               rs1 = statement1.executeQuery("SELECT distinct course_name FROM Course");
-               ArrayList<String> course_names = new ArrayList<String>();
-               while (rs1.next()) {
-               	course_names.add(rs1.getString("course_name"));
-               }
-      	%>
-               <table border="2">
-               <tr>
-                   <th>Student_ID</th>
-                   <th>Course_Name</th>
-               </tr>
-               
-               <!-- An empty row with blankets for user to type in -->
-               <tr>
-                   <form action="Course_Enrollment.jsp" method="POST">
-                       <input type="hidden" name="action" value="add_to_class"/>
-                       <th><input value="" name="student_id" size="15"/></th>
-                       <th>
-                       <select name = "course_dropdown">
-                       <option value = "">Select Course</option>
-                       	<% for (int i = 0; i < course_names.size(); ++i) { %>
-                       		<option value=<%= course_names.get(i)%>><%= course_names.get(i)%></option>
-                       	<% } %>
-                       </select>
-                       </th>
-                       <th><input type="submit" value="Add to Course"/></th>
-                   </form>
-               </tr>
-               <tr>
-                   <form action="Course_Enrollment.jsp" method="POST">
-                       <input type="hidden" name="action" value="show_enroll"/>
-                       <th><input value="" name="student_id" size="15"/></th>
-                       <th>
-                       <select name = "course_dropdown">
-                       <option value = "">Select Course</option>
-                       	<% for (int i = 0; i < course_names.size(); ++i) { %>
-                       		<option value=<%= course_names.get(i)%>><%= course_names.get(i)%></option>
-                       	<% } %>
-                       </select>
-                       </th>
-                       <th><input type="submit" value="Update Course"/></th>
-                   </form>
-               </tr>
-       <% } // end of original form %>
-       
        <%-- -------- Show Enroll Form -------- --%>
        <%
           	if (action != null && action.equals("show_enroll")) {
@@ -426,7 +424,7 @@
 				System.out.println("course_id: " + course_id);
 				System.out.println("section_id: " + section_id);
 				System.out.println("grade: " + grade);
-				System.out.println("grade_option: " + grade_taken);
+				System.out.println("grade_taken: " + grade_taken);
 				
 				boolean su = true;
           		boolean letter = false;
@@ -454,7 +452,6 @@
           				grade_list.add(Integer.toString(i));
           			}
           		}
-				
 				%>
 			
 			<table border="2">
@@ -470,9 +467,10 @@
 			<tr>
 				<form>
 					<input type="hidden" name="action" value="update_enroll"/>
-                  	<input type="hidden" value="<%=student_id%>" name="id"/>
+                  	<input type="hidden" value="<%=student_id%>" name="student_id"/>
 					<input type="hidden" value="<%=class_id%>" name="class_id"/>
 					<input type="hidden" value="<%=section_id%>" name="section_id"/>
+					<input type="hidden" value="<%=grade_taken%>" name="grade_taken"/>
 					<td><%=student_id%></td>
 					<td><%=course_id%></td>
 					<td><%=class_id%></td>
@@ -480,7 +478,7 @@
 					<td><%=grade%></td>
 					<th>
                 	<select name = "grade_option_dropdown">
-                	<option value = "">Select Unit/SU</option>
+                	<option value = <%=grade_taken%>><%=grade_taken%></option>
                 		<% for (int i = 0; i < grade_list.size(); ++i) { %>
                 			<option value=<%= grade_list.get(i)%>><%= grade_list.get(i)%></option>
                 		<% } %>
@@ -497,14 +495,42 @@
 					<td><input type="submit" value="Delete" /></td>
 				</form>
 			</tr>
+			</table>
 			<%
-				
-          		// Begin transaction
+          	}
+          %>
+          
+          <%-- -------- Update Enroll Code -------- --%>
+          <%
+          	if (action != null && action.equals("update_enroll")) {
+          		int section_id = Integer.parseInt(request.getParameter("section_id"));
+          		int class_id = Integer.parseInt(request.getParameter("class_id"));
+          		int student_id = Integer.parseInt(request.getParameter("student_id"));
+          		String grade_option = request.getParameter("grade_option_dropdown");
+          		
                 conn.setAutoCommit(false);
 
-                // Commit transaction
+                pstmt = conn
+                    .prepareStatement("UPDATE Section_Enrolllist SET grade_option = ?" + 
+                    " WHERE student_id = " + student_id + " AND section_id = " + section_id);
+                pstmt.setString(1, grade_option);
+                int rowCount = pstmt.executeUpdate();
+                
+                if (rowCount > 0) {
+                	out.println("Grade option set!");
+                } else {
+                	out.println("<font color='#ff0000'>Something went wrong.");
+                }
+
                 conn.commit();
                 conn.setAutoCommit(true);
+          	}
+          %>
+          
+          <%-- -------- Delete Enroll Code -------- --%>
+          <%
+          	if (action != null && action.equals("delete_enroll")) {
+          		
           	}
           %>
 
