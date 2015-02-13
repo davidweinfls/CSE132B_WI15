@@ -237,7 +237,7 @@
           		pstmt = conn.prepareStatement(query);
           		rowCount = pstmt.executeUpdate();
               	} else {
-        	    	out.println("<font color='#ff0000'>Failed to enroll in section. Already enrolled");
+        	    	out.println("<font color='#ff0000'>Failed to enroll in section. Already enrolled. ");
            		}
               	
              	// add relationship to Student_Class table
