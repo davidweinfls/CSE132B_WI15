@@ -126,24 +126,86 @@
                 // Check if an update is requested
                 if (action != null && action.equals("update")) {
 
-                    // Begin transaction
-                    conn.setAutoCommit(false);
+                	int tempStuId = Integer.parseInt(request.getParameter("g_sid"));
+                	String oldFSSN = request.getParameter("f_ssn");
+                	String newFSSN = request.getParameter("faculty_ssn");
+                	boolean isPHD = false;
+                	
+                	
+                	ResultSet rs2 = null;
+                	Statement stmt2 = conn.createStatement();
+                	
+                	ResultSet rs3 = null;
+                	Statement stmt3 = conn.createStatement();
+                	
+                	rs2 = stmt2.executeQuery("SELECT faculty_ssn FROM Thesis_committee WHERE "
+                			+ "stu_id = " + tempStuId);
+                	
+                	rs3 = stmt3.executeQuery("SELECT distinct is_phd FROM Thesis_committee WHERE "
+                			+ "stu_id = " + tempStuId);
+                	
+                	
+                	if( rs3.next() ){
+                		isPHD = Boolean.parseBoolean(rs3.getString("is_phd"));
+                	}
 
-                    // Create the prepared statement and use it to
-                    // UPDATE student values in the Students table.
-                    pstmt = conn
-                        .prepareStatement("UPDATE Thesis_committee SET faculty_ssn = ? " 
-                    + " WHERE stu_id = ? AND faculty_ssn = ?");
+                	rs3 = stmt3.executeQuery("SELECT in_dept from Graduate where grad_id = " + tempStuId);
+                	rs3.next();
+                    String dept = rs3.getString("in_dept");
+                	
+                	final int MIN_PROF = 3;
+                	int numDepFaculty = 0;
+                	int numNonDepFaculty = 0;
+                	
+                	while( rs2.next() ){
+                		String facSSN = rs2.getString("faculty_ssn");
+                		if( !(facSSN.equals(oldFSSN)) ){
+                			rs3 = stmt3.executeQuery("SELECT dept_name FROM Faculty where ssn = '"
+                				+ facSSN + "'");
+                			rs3.next();
+                			if( rs3.getString("dept_name").equals(dept) ) {
+                				numDepFaculty++;
+                			}
+                			else{
+                				numNonDepFaculty++;
+                			}
+                		}
+            		}
+                	
+                	rs3 = stmt3.executeQuery("SELECT dept_name FROM Faculty where ssn = '"
+            				+ newFSSN + "'");
+            		rs3.next();
+            		
+            		if( rs3.getString("dept_name").equals(dept) ) {
+        				numDepFaculty++;
+        			}
+        			else{
+        				numNonDepFaculty++;
+        			}
+                	
+            		if( numDepFaculty >= MIN_PROF ){
+            			if( !isPHD || numNonDepFaculty > 0 ){
+            				
+            				// Begin transaction
+                            conn.setAutoCommit(false);
 
-                    pstmt.setString(1, request.getParameter("faculty_ssn"));
-                    pstmt.setInt(2, Integer.parseInt(request.getParameter("g_sid")));
-                    pstmt.setString(3, request.getParameter("f_ssn"));
-                    
-                    int rowCount = pstmt.executeUpdate();
+                            // Create the prepared statement and use it to
+                            // UPDATE student values in the Students table.
+                            pstmt = conn
+                                .prepareStatement("UPDATE Thesis_committee SET faculty_ssn = ? " 
+                            + " WHERE stu_id = ? AND faculty_ssn = ?");
 
-                    // Commit transaction
-                    conn.commit();
-                    conn.setAutoCommit(true);
+                            pstmt.setString(1, request.getParameter("faculty_ssn"));
+                            pstmt.setInt(2, Integer.parseInt(request.getParameter("g_sid")));
+                            pstmt.setString(3, request.getParameter("f_ssn"));
+                            
+                            int rowCount = pstmt.executeUpdate();
+
+                            // Commit transaction
+                            conn.commit();
+                            conn.setAutoCommit(true);
+            			}
+                	}
                 }
             %>
             
