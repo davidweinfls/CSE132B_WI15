@@ -121,7 +121,7 @@ create TABLE Requirement (
 	units			INTEGER NOT NULL,
 	degree			TEXT	NOT NULL,
 	gpa				FLOAT	NOT NULL,
-	decription		TEXT	NOT NULL
+	description		TEXT	NOT NULL
 );
 
 create TABLE Dept_Requirement (
