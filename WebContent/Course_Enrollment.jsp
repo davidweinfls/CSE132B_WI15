@@ -50,7 +50,7 @@
                rs1 = statement1.executeQuery("SELECT distinct course_name FROM Course");
                ArrayList<String> course_names = new ArrayList<String>();
                while (rs1.next()) {
-               	course_names.add(rs1.getString("course_name"));
+               		course_names.add(rs1.getString("course_name"));
                }
       	%>
                <table border="2">
@@ -127,8 +127,6 @@
               		}
               	}
               	if (clear == count) {
-              	
-              	
 	              	rs = statement.executeQuery("SELECT * FROM Class WHERE class_name = '" + class_name + "'" + 
 	              			" AND quarter = 'Winter' AND year = 2015");
 	              	// open a new class if not exists

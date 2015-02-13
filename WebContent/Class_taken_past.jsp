@@ -4,11 +4,11 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Course Enrollment Page</title>
+<title>Class Taken Past Page</title>
 </head>
 <body>
 
-<h2>Course Enrollment Form</h2>
+<h2>Class Taken in the Past Form</h2>
 <table>
     <tr>
       <td valign="top">
@@ -61,7 +61,7 @@
                
                <!-- An empty row with blankets for user to type in -->
                <tr>
-                   <form action="Course_Enrollment.jsp" method="POST">
+                   <form action="Class_taken_past.jsp" method="POST">
                        <input type="hidden" name="action" value="add_to_class"/>
                        <th><input value="" name="student_id" size="15"/></th>
                        <th>
@@ -76,7 +76,7 @@
                    </form>
                </tr>
                <tr>
-                   <form action="Course_Enrollment.jsp" method="POST">
+                   <form action="Class_taken_past.jsp" method="POST">
                        <input type="hidden" name="action" value="show_enroll"/>
                        <th><input value="" name="student_id" size="15"/></th>
                        <th>
@@ -91,6 +91,261 @@
                    </form>
                </tr>
        <% } // end of original form %>
+       
+       <%-- -------- add_to_class -------- --%>
+          <%
+              // Check if an insertion is requested
+              if (action != null && action.equals("add_to_class")) {
+              	String class_name = request.getParameter("course_dropdown");
+              	int student_id = Integer.parseInt(request.getParameter("student_id"));
+              	
+              	rs = statement.executeQuery("SELECT * FROM Class WHERE class_name = '" + class_name + "'");
+          %>
+          
+          <table border="2">
+            <tr>
+                <th>Class ID</th>
+                <th>Class Name</th>
+                <th>Quarter</th>
+                <th>Year</th>
+            </tr>
+            
+            <%
+                // Iterate over the ResultSet
+                while (rs.next()) {
+            %>
+            <tr>
+				<form action="Class_taken_past.jsp" method="POST">
+					<input type="hidden" name="action" value="show_section"/>
+                  	<input type="hidden" name="class_id" value="<%=rs.getInt("class_id")%>"/>
+                  	<input type="hidden" name="student_id" value="<%=student_id%>"/>
+					<td><%=rs.getInt("class_id")%></td>
+					<td><%=rs.getString("class_name")%></td>
+					<td><%=rs.getString("quarter")%></td>
+					<td><%=rs.getInt("year")%></td>
+					<!-- Update button -->
+					<td><input type="submit" value="Select"></td>
+				</form>
+			</tr>
+		
+			<%
+				}
+            %>
+            </table>
+            <%
+              }
+          %>
+          
+          <%-- -------- Show Section Form -------- --%>
+          <%
+              // Check if an insertion is requested
+              if (action != null && action.equals("show_section")) {
+              	int class_id = Integer.parseInt(request.getParameter("class_id"));
+              	int student_id = Integer.parseInt(request.getParameter("student_id"));
+              	
+              	rs = statement.executeQuery("SELECT * FROM Section WHERE class_id = '" + class_id + "'");
+          %>
+          
+          <table border="2">
+            <tr>
+                <th>Section ID</th>
+                <th>Enroll Limit</th>
+                <th>Grade Option</th>
+                <th>Instructor SSN</th>
+                <th>Class ID</th>
+            </tr>
+            
+            <%
+                // Iterate over the ResultSet
+                while (rs.next()) {
+            %>
+            <tr>
+				<form action="Class_taken_past.jsp" method="POST">
+					<input type="hidden" name="action" value="add_section"/>
+                  	<input type="hidden" name="section_id" value="<%=rs.getInt("section_id")%>"/>
+                  	<input type="hidden" name="student_id" value="<%=student_id%>"/>
+                  	<input type="hidden" name="class_id" value="<%=class_id%>"/>
+					<td><%=rs.getInt("section_id")%></td>
+					<td><%=rs.getInt("enroll_limit")%></td>
+					<td><%=rs.getString("grade_option")%></td>
+					<td><%=rs.getString("instructor_ssn")%></td>
+					<td><%=rs.getInt("class_id")%></td>
+					<!-- Update button -->
+					<td><input type="submit" value="Add"></td>
+				</form>
+			</tr>
+		
+			<%
+				}
+            %>
+            </table>
+            <%
+              }
+          %>
+          
+          <%-- -------- Add Section Form -------- --%>
+          <%
+          	if (action != null && action.equals("add_section")) {
+          		int section_id = Integer.parseInt(request.getParameter("section_id"));
+          		int student_id = Integer.parseInt(request.getParameter("student_id"));
+          		int class_id = Integer.parseInt(request.getParameter("class_id"));
+          		
+          		conn.setAutoCommit(false);
+          		
+          		// check if student already enrolled
+              	String q1 = "Select * FROM Section_Enrolllist Where student_id = " + student_id + " AND " + 
+              	"section_id = " + section_id;
+              	rs = statement.executeQuery(q1);
+              	int rowCount = 0;
+              	if (!rs.next()) {
+          		String query = "INSERT INTO Section_Enrolllist VALUES (" + 
+          				student_id + ", " + section_id + ", " + "'L', false)";
+          		pstmt = conn.prepareStatement(query);
+          		rowCount = pstmt.executeUpdate();
+              	} else {
+        	    	out.println("<font color='#ff0000'>Failed to enroll in section. Already enrolled. ");
+           		}
+              	
+             	// add relationship to Student_Class table
+              	// check if student already enrolled
+              	String q2 = "Select * FROM Student_Class Where student_id = " + student_id + " AND " + 
+              	"class_id = " + class_id;
+              	rs = statement.executeQuery(q2);
+              	int rowCount1 = 0;
+              	if (!rs.next()) {
+              		String query1 = "INSERT INTO Student_Class VALUES (" + student_id + ", " + class_id + ", " + "'WIP'" + ")";
+              		pstmt1 = conn.prepareStatement(query1);
+              		rowCount1 = pstmt1.executeUpdate();
+              	} else {
+              		out.println("<font color='#ff0000'>Student already enrolled in this class");
+              	}
+          		
+          		if (rowCount > 0 && rowCount1 > 0) {
+                    %>
+           			<h3>Last step before add class. Select your grade option and input grade</h3>
+            		<form action="Class_taken_past.jsp" method="POST">
+                      <input type="hidden" name="action" value="input_grade"/>
+                      <input type="hidden" value="<%=section_id%>" name="section_id"/>
+                      <input type="hidden" name="student_id" value="<%=student_id%>"/>
+                      <input type="hidden" name="class_id" value="<%=class_id%>"/>
+                      <th><input type="submit" value="Input Grade"/></th>
+               		</form>
+           <% } 
+           %>   
+                     
+          <%
+          		conn.commit();
+          		conn.setAutoCommit(true);
+          	}
+          %>
+          
+          <%-- -------- Input Grade Form -------- --%>
+          <%
+          	if (action != null && action.equals("input_grade")) {
+          		int section_id = Integer.parseInt(request.getParameter("section_id"));
+          		int student_id = Integer.parseInt(request.getParameter("student_id"));
+          		int class_id = Integer.parseInt(request.getParameter("class_id"));
+          		
+          		// get grade option
+          		String query = "SELECT grade_option FROM Section WHERE section_id = " + section_id;
+          		rs = statement.executeQuery(query);
+          		rs.next();
+          		String grade_option = rs.getString("grade_option");
+          		boolean su = true;
+          		boolean letter = false;
+          		int low = 0, high = 0;
+          		// get unit range if it can ba taken in letter
+          		if (grade_option.equals("L") || grade_option.equals("L/SU")) {
+          			String q1 = "SELECT unit_low, unit_high FROM Section, Course, Class WHERE " + 
+          			"section.class_id = class.class_id AND class.class_name = course.course_name AND " + 
+          			"section_id = " + section_id;
+          			rs = statement.executeQuery(q1);
+          			rs.next();
+          			low = rs.getInt("unit_low");
+          			high = rs.getInt("unit_high");
+          			
+          			if (grade_option == "L") su = false;
+          			letter = true;
+          		}
+          		ArrayList<String> grade_list = new ArrayList<String>();
+          		if (su) {
+	          		grade_list.add("SU");
+          		}
+          		if (letter) {
+          			for (int i = low; i <= high; ++i) {
+          				grade_list.add(Integer.toString(i));
+          			}
+          		}
+          %>
+          
+          <table border = "2">
+          <tr>
+          	<th>Student ID</th>
+          	<th>Section ID</th>
+          	<th>Grade Option</th>
+          	<th>Grade</th>
+          </tr>
+          
+          <tr>
+            <form action="Class_taken_past.jsp" method="POST">
+                <input type="hidden" name="action" value="add_grade"/>
+                <input type="hidden" value="<%=section_id%>" name="section_id"/>
+                <input type="hidden" name="student_id" value="<%=student_id%>"/>
+                <input type="hidden" name="class_id" value="<%=class_id%>"/>
+                <th><%=student_id%></th>
+          		<th><%=section_id%></th>
+                <th>
+                <select name = "grade_dropdown">
+                <option value = "">Select Unit/SU</option>
+                	<% for (int i = 0; i < grade_list.size(); ++i) { %>
+                		<option value=<%= grade_list.get(i)%>><%= grade_list.get(i)%></option>
+                	<% } %>
+                </select>
+                </th>
+                <th><input value="" name="grade" size="5"></th>
+                <th><input type="submit" value="Confirm"/></th>
+            </form>
+               </tr>
+          </table>	
+          	
+          <%		
+          	}
+          %>
+          
+          <%-- -------- Update Grade Form -------- --%>
+          <%
+          	if (action != null && action.equals("add_grade")) {
+          		int section_id = Integer.parseInt(request.getParameter("section_id"));
+          		int student_id = Integer.parseInt(request.getParameter("student_id"));
+          		int class_id = Integer.parseInt(request.getParameter("class_id"));
+          		String grade_option = request.getParameter("grade_dropdown");
+          		String grade = request.getParameter("grade");
+
+                conn.setAutoCommit(false);
+
+                pstmt = conn
+                    .prepareStatement("UPDATE Section_Enrolllist SET grade_option = ?" + 
+                    " WHERE student_id = " + student_id + " AND section_id = " + section_id);
+                pstmt.setString(1, grade_option);
+                int rowCount = pstmt.executeUpdate();
+                
+                String q = "UPDATE Student_Class SET grade = ? WHERE student_id = " + student_id + 
+                		" AND class_id = " + class_id;
+                pstmt1 = conn.prepareStatement(q);
+                pstmt1.setString(1, grade);
+                int rowCount1 = pstmt1.executeUpdate();
+                
+                if (rowCount > 0 && rowCount1 > 0) {
+                	out.println("Grade option and grade set!");
+                } else {
+                	out.println("<font color='#ff0000'>Something went wrong.");
+                }
+
+                // Commit transaction
+                conn.commit();
+                conn.setAutoCommit(true);
+          	}
+          %>
        
        <%-- -------- Close Connection Code -------- --%>
           <%
@@ -152,7 +407,7 @@
 </table>
 
 <a href="Welcome.html">Back</a>
-<a href="Course_Enrollment.jsp">Refresh</a>
+<a href="Class_taken_past.jsp">Refresh</a>
 
 </body>
 </html>
