@@ -4,11 +4,11 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Student Page</title>
+<title>Review Session Page</title>
 </head>
 <body>
 
-<h2>Student Entry Form</h2>
+<h2>Review Session Form</h2>
 <table>
     <tr>
         <td valign="top">
@@ -47,17 +47,15 @@
                     // Create the prepared statement and use it to
                     // INSERT student values INTO the students table.
                     pstmt = conn
-                    .prepareStatement("INSERT INTO Student (student_id, first, middle, last, ssn, enrollment, residency, five_year_program)" + 
-                    " VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
-
-                    pstmt.setInt(1, Integer.parseInt(request.getParameter("student_id")));
-                    pstmt.setString(2, request.getParameter("first"));
-                    pstmt.setString(3, request.getParameter("middle"));
-                    pstmt.setString(4, request.getParameter("last"));
-                    pstmt.setString(5, request.getParameter("ssn"));
-                    pstmt.setBoolean(6, Boolean.parseBoolean(request.getParameter("enrollment")));
-                    pstmt.setString(7, request.getParameter("residency"));
-                    pstmt.setBoolean(8, Boolean.parseBoolean(request.getParameter("five_year_program")));
+                    .prepareStatement("INSERT INTO Meeting (type, mandatory, weekly, time, date, building_room, day, section_id)" + 
+                    " VALUES ('review', ?, false, ?, ?, ?, ?, ?)");
+                    
+                    pstmt.setBoolean(1, Boolean.parseBoolean(request.getParameter("mandatory")));
+                    pstmt.setString(2, request.getParameter("time"));
+                    pstmt.setString(3, request.getParameter("date"));
+                    pstmt.setString(4, request.getParameter("building_room"));
+                    pstmt.setString(5, request.getParameter("day"));
+                    pstmt.setInt(6, Integer.parseInt(request.getParameter("section_id")));
                     int rowCount = pstmt.executeUpdate();
 
                     // Commit transaction
@@ -77,19 +75,15 @@
                     // Create the prepared statement and use it to
                     // UPDATE student values in the Students table.
                     pstmt = conn
-                        .prepareStatement("UPDATE Student SET student_id = ?, first = ?, "
-                            + "middle = ?, last = ?, ssn = ?, enrollment = ?, residency = ?, " + 
-                        "five_year_program = ? WHERE student_id = ?");
+                        .prepareStatement("UPDATE Meeting SET mandatory = ?, time = ?, date = ?,"
+                        	+ " building_room = ?, day = ? WHERE meeting_id = ?");
 
-                    pstmt.setInt(1, Integer.parseInt(request.getParameter("student_id")));
-                    pstmt.setString(2, request.getParameter("first"));
-                    pstmt.setString(3, request.getParameter("middle"));
-                    pstmt.setString(4, request.getParameter("last"));
-                    pstmt.setString(5, request.getParameter("ssn"));
-                    pstmt.setBoolean(6, Boolean.parseBoolean(request.getParameter("enrollment")));
-                    pstmt.setString(7, request.getParameter("residency"));
-                    pstmt.setBoolean(8, Boolean.parseBoolean(request.getParameter("five_year_program")));
-                    pstmt.setInt(9, Integer.parseInt(request.getParameter("id")));
+                    pstmt.setBoolean(1, Boolean.parseBoolean(request.getParameter("mandatory")));
+                    pstmt.setString(2, request.getParameter("time"));
+                    pstmt.setString(3, request.getParameter("date"));
+                    pstmt.setString(4, request.getParameter("building_room"));
+                    pstmt.setString(5, request.getParameter("day"));
+                    pstmt.setInt(6, Integer.parseInt(request.getParameter("m_id")));
                     int rowCount = pstmt.executeUpdate();
 
                     // Commit transaction
@@ -109,9 +103,9 @@
                     // Create the prepared statement and use it to
                     // DELETE students FROM the Students table.
                     pstmt = conn
-                        .prepareStatement("DELETE FROM Student WHERE student_id = ?");
+                        .prepareStatement("DELETE FROM Meeting WHERE m_id = ?");
 
-                    pstmt.setInt(1, Integer.parseInt(request.getParameter("id")));
+                    pstmt.setInt(1, Integer.parseInt(request.getParameter("m_id")));
                     int rowCount = pstmt.executeUpdate();
 
                     // Commit transaction
@@ -127,34 +121,30 @@
 
                 // Use the created statement to SELECT
                 // the student attributes FROM the Student table.
-                rs = statement.executeQuery("SELECT * FROM Student");
+                rs = statement.executeQuery("SELECT * FROM Meeting where type = 'review'");
             %>
             
             <!-- Add an HTML table header row to format the results -->
             <table border="2">
             <tr>
-                <th>Student_ID</th>
-                <th>First Name</th>
-                <th>Middle Name</th>
-                <th>Last Name</th>
-                <th>SSN</th>
-                <th>Enrollment</th>
-                <th>Residency</th>
-                <th>Five-year program</th>
+                <th>mandatory</th>
+                <th>time</th>
+                <th>date</th>
+                <th>building_room</th>
+                <th>day</th>
+                <th>section_id</th>
             </tr>
             
             <!-- An empty row with blankets for user to type in -->
             <tr>
-                <form action="Student.jsp" method="POST">
+                <form action="Review_session.jsp" method="POST">
                     <input type="hidden" name="action" value="insert"/>
-                    <th><input value="" name="student_id" size="10"/></th>
-                    <th><input value="" name="first" size="10"/></th>
-                    <th><input value="" name="middle" size="10"/></th>
-                    <th><input value="" name="last" size="10"/></th>
-                    <th><input value="" name="ssn" size="10"/></th>
-                    <th><input value="" name="enrollment" size="5"/></th>
-                    <th><input value="" name="residency" size="5"/></th>
-                    <th><input value="" name="five_year_program" size="5"/></th>
+                    <th><input value="" name="mandatory" size="5"/></th>
+                    <th><input value="" name="time" size="10"/></th>
+                    <th><input value="" name="date" size="10"/></th>
+                    <th><input value="" name="building_room" size="10"/></th>
+                    <th><input value="" name="day" size="10"/></th>
+                    <th><input value="" name="section_id" size="10"/></th>
                     <th><input type="submit" value="Insert"/></th>
                 </form>
             </tr>
@@ -167,29 +157,22 @@
 			<tr>
 				<form>
 					<input type="hidden" name="action" value="update"/>
-                  		<input type="hidden" name="id" value="<%=rs.getInt("student_id")%>"/>
+                  		<input type="hidden" name="m_id" value="<%=rs.getInt("meeting_id")%>"/>
 					<%-- Get the student_id --%>
-					<td><input value=<%=rs.getInt("student_id")%> name="student_id" size="10"/></td>
-					<%-- Get the first name --%>
-					<td><input value=<%=rs.getString("first")%> name="first" size="10"/></td>
-					<%-- Get the middle name --%>
-					<td><input value=<%=rs.getString("middle")%> name="middle" size="10"/></td>
-					<%-- Get the last name --%>
-					<td><input value=<%=rs.getString("last")%> name="last" size="10"/></td>
-					<%-- Get the ssn --%>
-					<td><input value=<%=rs.getString("ssn")%> name="ssn" size="10"/></td>
-					<%-- Get the enrollment --%>
-					<td><input value=<%=rs.getBoolean("enrollment")%> name="enrollment" size="5"/></td>
-					<%-- Get the residency --%>
-					<td><input value=<%=rs.getString("residency")%> name="residency" size="5"/></td>
-					<%-- Get the 5-year program --%>
-					<td><input value=<%=rs.getBoolean("five_year_program")%> name="five_year_program" size="5"/></td>
+					<td><input value=<%=rs.getBoolean("mandatory")%> name="mandatory" size="5"/></td>
+					<td><input value=<%=rs.getString("time")%> name="time" size="10"/></td>
+					<%-- Get the class_id --%>
+					<td><input value=<%=rs.getString("date")%> name="date" size="10"/></td>
+					<%-- Get the grade --%>
+					<td><input value=<%=rs.getString("building_room")%> name="building_room" size="10"/></td>
+					<td><input value=<%=rs.getString("day")%> name="day" size="10"/></td>
+					<td><input value=<%=rs.getInt("section_id")%> name="section_id" size="10"/></td>
 					<!-- Update button -->
 					<td><input type="submit" value="Update"></td>
 				</form>
-				<form action="Student.jsp" method="POST">
+				<form action="Review_session.jsp" method="POST">
 					<input type="hidden" name="action" value="delete" /> 
-					<input type="hidden" value="<%=rs.getInt("student_id")%>" name="id"/>
+					<input type="hidden" name="m_id" value="<%=rs.getInt("meeting_id")%>"/>
 					<%-- Delete Button --%>
 					<td><input type="submit" value="Delete" /></td>
 				</form>

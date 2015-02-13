@@ -1,0 +1,25 @@
+DROP TABLE Other_Degree;
+DROP TABLE Prerequisite;
+DROP TABLE Student_Class;
+DROP TABLE Section_Enrolllist;
+DROP TABLE Concentration_Course;
+DROP TABLE Concentration CASCADE;
+DROP TABLE Undergraduate;
+DROP TABLE Master;
+DROP TABLE Phd CASCADE;
+DROP TABLE Graduate CASCADE;
+DROP TABLE Prev_Degree;
+DROP TABLE Dept_Requirement CASCADE;
+DROP TABLE Requirement CASCADE;
+DROP TABLE Meeting;
+DROP TABLE Probation;
+DROP TABLE Thesis_Committee;
+DROP TABLE Section;
+DROP TABLE Class CASCADE;
+DROP TABLE Course CASCADE;
+DROP TABLE Student CASCADE;
+DROP TABLE Faculty CASCADE;
+DROP TABLE Department CASCADE;
+DROP TABLE Advisor CASCADE;
+DROP TABLE Faculty_Teach_Class CASCADE;
+
