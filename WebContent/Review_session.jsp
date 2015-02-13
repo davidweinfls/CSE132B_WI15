@@ -166,7 +166,7 @@
 					<%-- Get the grade --%>
 					<td><input value=<%=rs.getString("building_room")%> name="building_room" size="10"/></td>
 					<td><input value=<%=rs.getString("day")%> name="day" size="10"/></td>
-					<td><input value=<%=rs.getInt("section_id")%> name="section_id" size="10"/></td>
+					<td><%=rs.getInt("section_id")%></td>
 					<!-- Update button -->
 					<td><input type="submit" value="Update"></td>
 				</form>

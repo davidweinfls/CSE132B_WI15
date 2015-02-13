@@ -112,7 +112,7 @@ CREATE TABLE Meeting (
 	date			TEXT,
 	building_room	TEXT	NOT NULL,
 	day				TEXT	NOT NULL,
-	section_id		SERIAL,
+	section_id		INTEGER,
 	foreign key (section_id) references Section (section_id) ON DELETE CASCADE
 );
 
