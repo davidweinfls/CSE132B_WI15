@@ -62,13 +62,13 @@ CREATE TABLE Section (
 	section_id		SERIAL	PRIMARY KEY,
 	enroll_limit			INTEGER,
 	grade_option	TEXT	NOT NULL,
-	instructor_ssn	TEXT	NOT NULL REFERENCES Faculty (ssn),
-	class_id		INTEGER	NOT NULL REFERENCES Class (class_id)
+	instructor_ssn	TEXT	NOT NULL REFERENCES Faculty (ssn) ON DELETE CASCADE,
+	class_id		INTEGER	NOT NULL REFERENCES Class (class_id) ON DELETE CASCADE
 );
 
 CREATE TABLE Section_Enrolllist (
-	student_id		INTEGER	REFERENCES	Student (student_id),
-	section_id		INTEGER	REFERENCES	Section (section_id),
+	student_id		INTEGER	REFERENCES	Student (student_id) ON DELETE CASCADE,
+	section_id		INTEGER	REFERENCES	Section (section_id) ON DELETE CASCADE,
 	grade_option	TEXT	NOT NULL,
 	waitlist		BOOLEAN	NOT NULL,
 	PRIMARY KEY (student_id, section_id)
@@ -79,8 +79,8 @@ CREATE TABLE Section_Enrolllist (
 CREATE TABLE Graduate (
 	grad_id			INTEGER PRIMARY KEY,
 	in_dept			TEXT,
-	foreign key (grad_id) references Student(student_id),
-    foreign key (in_dept) references Department(dept_name)
+	foreign key (grad_id) references Student(student_id) ON DELETE CASCADE,
+    foreign key (in_dept) references Department(dept_name) ON DELETE CASCADE
 );
 
 CREATE TABLE Thesis_Committee (
@@ -88,8 +88,8 @@ CREATE TABLE Thesis_Committee (
 	is_phd			BOOLEAN NOT NULL,
 	faculty_ssn		TEXT,
 	primary key (stu_id, faculty_ssn),
-	foreign key (stu_id) references Graduate(grad_id),
-    foreign key (faculty_ssn) references Faculty(ssn)
+	foreign key (stu_id) references Graduate(grad_id) ON DELETE CASCADE,
+    foreign key (faculty_ssn) references Faculty(ssn) ON DELETE CASCADE
 );
 
 CREATE TABLE Probation (
@@ -100,7 +100,7 @@ CREATE TABLE Probation (
 	end_quarter		TEXT,
 	reason 			TEXT,
 	primary key (pro_id, start_year, end_year, start_quarter, end_quarter),
-	foreign key (pro_id) references Student (student_id)
+	foreign key (pro_id) references Student (student_id) ON DELETE CASCADE
 );
 
 CREATE TABLE Meeting (
@@ -113,7 +113,7 @@ CREATE TABLE Meeting (
 	building_room	TEXT	NOT NULL,
 	day				TEXT	NOT NULL,
 	section_id		SERIAL,
-	foreign key (section_id) references Section (section_id)
+	foreign key (section_id) references Section (section_id) ON DELETE CASCADE
 );
 
 create TABLE Requirement (
@@ -128,23 +128,23 @@ create TABLE Dept_Requirement (
 	dept_name	TEXT,
 	require_id	INTEGER,
 	primary key (dept_name, require_id),
-	foreign key (dept_name) references Department(dept_name),
-	foreign key (require_id) references Requirement(require_id)
+	foreign key (dept_name) references Department(dept_name) ON DELETE CASCADE,
+	foreign key (require_id) references Requirement(require_id) ON DELETE CASCADE
 );
 
 create TABLE Concentration (
 	name			TEXT PRIMARY KEY,
 	description		TEXT NOT NULL,
 	dept_name		TEXT,
-	foreign key (dept_name) references Department(dept_name)
+	foreign key (dept_name) references Department(dept_name) ON DELETE CASCADE
 );
 
 create TABLE Concentration_Course (
 	con_name		TEXT,
 	course_id		SERIAL,
 	primary key (con_name, course_id),
-	foreign key (con_name) references Concentration(name),
-	foreign key (course_id) references Course(course_id)
+	foreign key (con_name) references Concentration(name) ON DELETE CASCADE,
+	foreign key (course_id) references Course(course_id) ON DELETE CASCADE
 );
 
 create TABLE Undergraduate (
@@ -152,21 +152,21 @@ create TABLE Undergraduate (
 	college			TEXT NOT NULL,
 	major			TEXT NOT NULL,
 	minor			TEXT,
-	foreign key (u_id) references Student(student_id),
-	foreign key (major) references Department(dept_name)
+	foreign key (u_id) references Student(student_id) ON DELETE CASCADE,
+	foreign key (major) references Department(dept_name) ON DELETE CASCADE
 );
 
 create TABLE Master (
 	master_id		INTEGER PRIMARY KEY,
 	con_name		TEXT,
-	foreign key (master_id) references Graduate(grad_id),
-	foreign key (con_name) references Concentration(name)
+	foreign key (master_id) references Graduate(grad_id) ON DELETE CASCADE,
+	foreign key (con_name) references Concentration(name) ON DELETE CASCADE
 );
 
 create TABLE Phd (
 	phd_id			INTEGER PRIMARY KEY,
 	candidacy		BOOLEAN NOT NULL,
-	foreign key (phd_id) references Graduate(grad_id)
+	foreign key (phd_id) references Graduate(grad_id) ON DELETE CASCADE
 );
 
 create TABLE Prev_Degree (
@@ -180,6 +180,12 @@ create TABLE Other_Degree (
 	degree_id		SERIAL UNIQUE,
 	student_id		INTEGER	NOT NULL,
 	primary key (degree_id, student_id),
-	foreign key (degree_id) references Prev_Degree (degree_id),
-	foreign key (student_id) references Student (student_id)
+	foreign key (degree_id) references Prev_Degree (degree_id) ON DELETE CASCADE,
+	foreign key (student_id) references Student (student_id) ON DELETE CASCADE
+);
+
+CREATE TABLE Advisor (
+	phd_id		INTEGER NOT NULL REFERENCES Phd (phd_id) ON DELETE CASCADE,
+	faculty_ssn	TEXT	NOT NULL REFERENCES Faculty (ssn) ON DELETE CASCADE,
+	PRIMARY KEY (phd_id, faculty_ssn)
 );

@@ -103,7 +103,8 @@
             <%
                 // Check if a delete is requested
                 if (action != null && action.equals("delete")) {
-
+					int class_id = Integer.parseInt(request.getParameter("id"));
+                	
                     // Begin transaction
                     conn.setAutoCommit(false);
 
@@ -112,6 +113,15 @@
 
                     pstmt.setInt(1, Integer.parseInt(request.getParameter("id")));
                     int rowCount = pstmt.executeUpdate();
+                    
+                    pstmt = conn.prepareStatement("DELETE FROM Student_Class WHERE class_id = " + class_id);
+                    rowCount = pstmt.executeUpdate();
+                    
+                    pstmt = conn.prepareStatement("DELETE FROM Section_Enrolllist WHERE class_id = " + class_id);
+                    rowCount = pstmt.executeUpdate();
+                    
+                    pstmt = conn.prepareStatement("DELETE FROM Student_Class WHERE class_id = " + class_id);
+                    rowCount = pstmt.executeUpdate();
 
                     // Commit transaction
                     conn.commit();

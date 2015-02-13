@@ -121,7 +121,8 @@
             <%
                 // Check if a delete is requested
                 if (action != null && action.equals("delete")) {
-
+					String id = request.getParameter("id");
+                	
                     // Begin transaction
                     conn.setAutoCommit(false);
 
@@ -130,7 +131,13 @@
 
                     pstmt.setString(1, request.getParameter("id"));
                     int rowCount = pstmt.executeUpdate();
-
+                    
+                    pstmt = conn.prepareStatement("DELETE FROM Advisor WHERE faculty_ssn = '" + id + "'");
+                    rowCount = pstmt.executeUpdate();
+                    
+                    pstmt = conn.prepareStatement("DELETE FROM Thesis_Committee WHERE faculty_ssn = '" + id + "'");
+                    rowCount = pstmt.executeUpdate();
+                    
                     // Commit transaction
                     conn.commit();
                     conn.setAutoCommit(true);
