@@ -146,7 +146,9 @@
                 	
                 	
                 	if( rs3.next() ){
-                		isPHD = Boolean.parseBoolean(rs3.getString("is_phd"));
+                		System.out.println(rs3.getString("is_phd"));
+                		isPHD = rs3.getBoolean("is_phd");
+                		
                 	}
 
                 	rs3 = stmt3.executeQuery("SELECT in_dept from Graduate where grad_id = " + tempStuId);
