@@ -242,6 +242,7 @@
             <%
             	// Close the ResultSet
             		rs.close();
+            		
 
             		// Close the Statement
             		statement.close();
