@@ -78,7 +78,7 @@ CREATE TABLE Section_Enrolllist (
 
 CREATE TABLE Graduate (
 	grad_id			INTEGER PRIMARY KEY,
-	in_dept			TEXT,
+	in_dept			TEXT NOT NULL,
 	foreign key (grad_id) references Student(student_id) ON DELETE CASCADE,
     foreign key (in_dept) references Department(dept_name) ON DELETE CASCADE
 );
