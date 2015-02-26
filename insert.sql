@@ -63,6 +63,7 @@ INSERT INTO Section (enroll_limit, grade_option, instructor_ssn, class_id) VALUE
 INSERT INTO Section (enroll_limit, grade_option, instructor_ssn, class_id) VALUES (100, 'L/SU', '222-22-2222', 12);
 INSERT INTO Section (enroll_limit, grade_option, instructor_ssn, class_id) VALUES (100, 'L/SU', '222-22-2222', 13);
 INSERT INTO Section (enroll_limit, grade_option, instructor_ssn, class_id) VALUES (100, 'L/SU', '222-22-2222', 14);
+INSERT INTO Section (enroll_limit, grade_option, instructor_ssn, class_id) VALUES (150, 'L/SU', '222-22-2222', 16);
 
 INSERT INTO Student_class (student_id, class_id, grade) values (1, 5, 'B');
 INSERT INTO Student_class (student_id, class_id, grade) values (1, 8, 'C');
