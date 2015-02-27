@@ -32,6 +32,8 @@ INSERT INTO Class (class_name, quarter, year) VALUES ('CSE110', 'Fall', 2010);
 INSERT INTO Class (class_name, quarter, year) VALUES ('CSE110', 'Winter', 2011);
 INSERT INTO Class (class_name, quarter, year) VALUES ('CSE110', 'Spring', 2012);
 INSERT INTO Class (class_name, quarter, year) VALUES ('CSE100', 'Spring', 2013);
+INSERT INTO Class (class_name, quarter, year) VALUES ('CSE11', 'Winter', 2015);
+INSERT INTO Class (class_name, quarter, year) VALUES ('CSE12', 'Winter', 2015);
 
 INSERT INTO Prerequisite (course_id, prerequisite_id) VALUES ((SELECT course_id FROM course WHERE course_name = 'CSE12'), (SELECT course_id FROM course WHERE course_name = 'CSE11'));
 INSERT INTO Prerequisite (course_id, prerequisite_id) VALUES ((SELECT course_id FROM course WHERE course_name = 'CSE30'), (SELECT course_id FROM course WHERE course_name = 'CSE12'));
@@ -63,7 +65,11 @@ INSERT INTO Section (enroll_limit, grade_option, instructor_ssn, class_id) VALUE
 INSERT INTO Section (enroll_limit, grade_option, instructor_ssn, class_id) VALUES (100, 'L/SU', '222-22-2222', 12);
 INSERT INTO Section (enroll_limit, grade_option, instructor_ssn, class_id) VALUES (100, 'L/SU', '222-22-2222', 13);
 INSERT INTO Section (enroll_limit, grade_option, instructor_ssn, class_id) VALUES (100, 'L/SU', '222-22-2222', 14);
-INSERT INTO Section (enroll_limit, grade_option, instructor_ssn, class_id) VALUES (150, 'L/SU', '222-22-2222', 16);
+INSERT INTO Section (enroll_limit, grade_option, instructor_ssn, class_id) VALUES (300, 'L/SU', '222-22-2222', 15);
+INSERT INTO Section (enroll_limit, grade_option, instructor_ssn, class_id) VALUES (300, 'L/SU', '222-22-2222', 15);
+INSERT INTO Section (enroll_limit, grade_option, instructor_ssn, class_id) VALUES (400, 'L/SU', '222-22-2222', 16);
+INSERT INTO Section (enroll_limit, grade_option, instructor_ssn, class_id) VALUES (110, 'L/SU', '222-22-2222', 16);
+INSERT INTO Section (enroll_limit, grade_option, instructor_ssn, class_id) VALUES (100, 'L/SU', '222-22-2222', 16);
 
 INSERT INTO Student_class (student_id, class_id, grade) values (1, 5, 'B');
 INSERT INTO Student_class (student_id, class_id, grade) values (1, 8, 'C');

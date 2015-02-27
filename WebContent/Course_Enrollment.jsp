@@ -230,8 +230,8 @@
               	int rowCount = 0;
               	if (!rs.next()) {
           		String query = "INSERT INTO Section_Enrolllist VALUES (" + 
-          				student_id + ", " + section_id + ", " + "'L', " + waitlist + ")";
-          		System.out.println("insert into Student_Class: " + query);
+          				student_id + ", " + section_id + ", " + "'4', " + waitlist + ")";
+          		System.out.println("insert into Student_Enrolllist: " + query);
           		pstmt = conn.prepareStatement(query);
           		rowCount = pstmt.executeUpdate();
               	} else {

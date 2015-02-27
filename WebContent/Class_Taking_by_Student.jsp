@@ -111,7 +111,7 @@
 					<td><%=rs.getString("quarter")%></td>
 					<td><%=rs.getInt("year")%></td>
 					<td><%=rs.getInt("section_id")%></td>
-					<td><%=rs.getInt("grade_option")%></td>
+					<td><%=rs.getString("grade_option")%></td>
 					<td><%=rs.getBoolean("waitlist")%></td>
 				</tr>	
 	      <%
@@ -137,7 +137,6 @@
 
           		// Wrap the SQL exception in a runtime exception to propagate
           		// it upwards
-          		out.println("<font color='#ff0000'>Add Course Error");
           		throw new RuntimeException(e);
           	} finally {
           		// Release resources in a finally block in reverse-order of

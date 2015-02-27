@@ -19,6 +19,7 @@
           <%-- Import the java.sql package --%>
           <%@ page import="java.sql.*"%>
           <%@ page import="java.util.*"%>
+          <%@ page import="java.lang.StringBuilder"%>
           <%-- -------- Open Connection Code -------- --%>
           <%
           
@@ -27,6 +28,21 @@
           PreparedStatement pstmt1 = null;
           ResultSet rs = null;
           ResultSet rs1 = null;
+          
+          Hashtable<String, Double> gpaTable = new Hashtable<String, Double>();
+         	
+		gpaTable.put("A+", 4.0);
+		gpaTable.put("A", 4.0);
+		gpaTable.put("A-", 3.7);
+		gpaTable.put("B+", 3.3);
+		gpaTable.put("B", 3.0);
+		gpaTable.put("B-", 2.7);
+		gpaTable.put("C+", 2.3);
+		gpaTable.put("C", 2.0);
+		gpaTable.put("C-", 1.7);
+		gpaTable.put("D+", 1.3);
+		gpaTable.put("D", 1.0);
+		gpaTable.put("F", 0.0);
           
           try {
               // Registering Postgresql JDBC driver with the DriverManager
@@ -47,26 +63,28 @@
           <%-- -------- Original Form -------- --%>
           <%            
           	if (action == null) {
-          		rs = statement.executeQuery("SELECT * FROM Class");
+          		rs = statement.executeQuery("SELECT * FROM Student");
       	  %>
                <table border="2">
                <tr>
-                   <th>Class ID</th>
-                   <th>Class Name</th>
-                   <th>Quarter</th>
-                   <th>Year</th>
+                   <th>Student ID</th>
+                   <th>SSN</th>
+                   <th>First</th>
+                   <th>Middle</th>
+                   <th>Last</th>
                </tr>
         <%      
                while (rs.next()) {
         %>
        			<tr>
        				<form>
-       					<input type="hidden" name="action" value="display_roster"/>
-                        <input type="hidden" name="class_id" value="<%=rs.getInt("class_id")%>"/>
-       					<td><%=rs.getInt("class_id")%></td>
-       					<td><%=rs.getString("class_name")%></td>
-       					<td><%=rs.getString("quarter")%></td>
-       					<td><%=rs.getInt("year")%></td>
+       					<input type="hidden" name="action" value="grade_report"/>
+                        <input type="hidden" name="student_id" value="<%=rs.getInt("student_id")%>"/>
+       					<td><%=rs.getInt("student_id")%></td>
+       					<td><%=rs.getString("ssn")%></td>
+       					<td><%=rs.getString("first")%></td>
+       					<td><%=rs.getString("middle")%></td>
+       					<td><%=rs.getString("last")%></td>
        					<td><input type="submit" value="Select"></td>
        				</form>
        			</tr>
@@ -74,50 +92,43 @@
                }
         } // end of original form %>
           
-          <%-- -------- display_roster -------- --%>
+          <%-- -------- Grade Report -------- --%>
           <%
               // Check if an insertion is requested
-              if (action != null && action.equals("display_roster")) {
-              	int class_id = Integer.parseInt(request.getParameter("class_id"));
-              	
-              	String w = "SELECT s.*, sec.section_id, se.grade_option, se.waitlist " + 
-              				"FROM Student s, Student_Class sc, Section sec, Section_Enrolllist se " + 
-              				"WHERE sc.student_id = s.student_id " + 
-              				"AND sc.class_id = " + class_id +
-              				" AND sec.class_id = " + class_id + 
-              				"AND se.section_id = sec.section_id " +
-              				"AND se.student_id = s.student_id";
-              	rs = statement.executeQuery(w);
+              if (action != null && action.equals("grade_report")) {
+            	  int student_id = Integer.parseInt(request.getParameter("student_id"));
+                	
+                	String w = "SELECT c.*, sc.grade, se.grade_option " +  
+                			"FROM Class c, Student_Class sc, Section s, Section_Enrolllist se " +  
+                			"WHERE sc.class_id = c.class_id " +  
+                			"AND sc.student_id = " + student_id + 
+                			" AND s.class_id = c.class_id " + 
+                			"AND s.section_id = se.section_id " +  
+                			"AND se.student_id = " + student_id + 
+                			" AND NOT(c.year <> 2015 AND c.quarter <> 'Winter') " +
+                			"GROUP BY c.class_id, c.year, c.quarter, sc.grade, se.grade_option " + 
+                			"ORDER BY c.year";
+                	rs = statement.executeQuery(w);
            %>
                  <table border="2">
                  <tr>
-                     <th>Student ID</th>
-                     <th>First</th>
-                     <th>Middle</th>
-                     <th>Last</th>
-                     <th>SSN</th>
-                     <th>Enrollment</th>
-                     <th>Residency</th>
-                     <th>Five-year Program</th>
-                     <th>Section ID</th>
+                     <th>Class ID</th>
+                     <th>Class Name</th>
+                     <th>Quarter</th>
+                     <th>Year</th>
+                     <th>Grade</th>
                      <th>Grade Option</th>
-                     <th>Waitlist</th>
                  </tr>
            <%
               	while (rs.next()) {
            %>
 	           <tr>
-					<td><%=rs.getInt("student_id")%></td>
-					<td><%=rs.getString("first")%></td>
-					<td><%=rs.getString("middle")%></td>
-					<td><%=rs.getString("last")%></td>
-					<td><%=rs.getString("ssn")%></td>
-					<td><%=rs.getBoolean("enrollment")%></td>
-					<td><%=rs.getString("residency")%></td>
-					<td><%=rs.getBoolean("five_year_program")%></td>
-					<td><%=rs.getInt("section_id")%></td>
-					<td><%=rs.getInt("grade_option")%></td>
-					<td><%=rs.getBoolean("waitlist")%></td>
+					<td><%=rs.getInt("class_id")%></td>
+					<td><%=rs.getString("class_name")%></td>
+					<td><%=rs.getString("quarter")%></td>
+					<td><%=rs.getInt("year")%></td>
+					<td><%=rs.getString("grade")%></td>
+					<td><%=rs.getString("grade_option")%></td>
 				</tr>	
 	      <%
               }
@@ -142,7 +153,6 @@
 
           		// Wrap the SQL exception in a runtime exception to propagate
           		// it upwards
-          		out.println("<font color='#ff0000'>Add Course Error");
           		throw new RuntimeException(e);
           	} finally {
           		// Release resources in a finally block in reverse-order of
