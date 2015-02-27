@@ -114,14 +114,14 @@
                     pstmt.setInt(1, Integer.parseInt(request.getParameter("id")));
                     int rowCount = pstmt.executeUpdate();
                     
-                    pstmt = conn.prepareStatement("DELETE FROM Student_Class WHERE class_id = " + class_id);
+                    /* pstmt = conn.prepareStatement("DELETE FROM Student_Class WHERE class_id = " + class_id);
                     rowCount = pstmt.executeUpdate();
                     
                     pstmt = conn.prepareStatement("DELETE FROM Section_Enrolllist WHERE class_id = " + class_id);
                     rowCount = pstmt.executeUpdate();
                     
                     pstmt = conn.prepareStatement("DELETE FROM Student_Class WHERE class_id = " + class_id);
-                    rowCount = pstmt.executeUpdate();
+                    rowCount = pstmt.executeUpdate(); */
 
                     // Commit transaction
                     conn.commit();
@@ -181,7 +181,7 @@
 			<tr>
 				<form>
 					<input type="hidden" name="action" value="update"/>
-                  		<input type="hidden" name="id" value="<%=rs.getInt("class_id")%>"/>
+                    <input type="hidden" name="id" value="<%=rs.getInt("class_id")%>"/>
 					<td><input value=<%=rs.getInt("class_id")%> name="class_id" size="5"/></td>
 					<td>
 					<select name = "dropdown">
