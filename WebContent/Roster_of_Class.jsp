@@ -116,7 +116,7 @@
 					<td><%=rs.getString("residency")%></td>
 					<td><%=rs.getBoolean("five_year_program")%></td>
 					<td><%=rs.getInt("section_id")%></td>
-					<td><%=rs.getInt("grade_option")%></td>
+					<td><%=rs.getString("grade_option")%></td>
 					<td><%=rs.getBoolean("waitlist")%></td>
 				</tr>	
 	      <%

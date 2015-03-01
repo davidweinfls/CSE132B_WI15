@@ -85,7 +85,7 @@
               	String w = "SELECT c.*, s.section_id, se.grade_option, se.waitlist " + 
               				"FROM Class c, Student_Class sc, Section s, Section_Enrolllist se " + 
               				"WHERE sc.student_id = " + student_id + 
-              				" AND c.quarter = 'Winter' AND c.year = 2015 " + 
+              				" AND c.quarter = 'Spring' AND c.year = 2009 " + 
               				"AND sc.class_id = c.class_id " + 
               				"AND s.class_id = c.class_id " + 
               				"AND se.section_id = s.section_id " +
