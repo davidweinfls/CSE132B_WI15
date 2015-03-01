@@ -49,8 +49,8 @@
                     conn.setAutoCommit(false);
 
                     pstmt = conn
-                    .prepareStatement("INSERT INTO Course (course_name, unit_low, unit_high, letter_su, lab, title, consent_of_instructor, dept_name)" + 
-                    " VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+                    .prepareStatement("INSERT INTO Course (course_name, unit_low, unit_high, letter_su, lab, title, consent_of_instructor, course_type, dept_name)" + 
+                    " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
 
                     //pstmt.setInt(1, Integer.parseInt(request.getParameter("course_id")));
                     pstmt.setString(1, request.getParameter("course_name"));
@@ -60,7 +60,8 @@
                     pstmt.setBoolean(5, Boolean.parseBoolean(request.getParameter("lab")));
                     pstmt.setString(6, request.getParameter("title"));
                     pstmt.setBoolean(7, Boolean.parseBoolean(request.getParameter("consent_of_instructor")));
-                    pstmt.setString(8, request.getParameter("dept_name"));
+                    pstmt.setString(8, request.getParameter("course_type"));
+                    pstmt.setString(9, request.getParameter("dept_name"));
                     int rowCount = pstmt.executeUpdate();
 
                     // Commit transaction
@@ -82,7 +83,7 @@
                     pstmt = conn
                         .prepareStatement("UPDATE Course SET course_id = ?, course_name = ?, "
                             + "unit_low = ?, unit_high = ?, letter_su = ?, lab = ?, title = ?, " + 
-                        "consent_of_instructor = ? WHERE course_id = ?");
+                        "consent_of_instructor = ?, course_type = ?, WHERE course_id = ?");
 
                     pstmt.setInt(1, Integer.parseInt(request.getParameter("course_id")));
                     pstmt.setString(2, request.getParameter("course_name"));
@@ -92,8 +93,8 @@
                     pstmt.setBoolean(6, Boolean.parseBoolean(request.getParameter("lab")));
                     pstmt.setString(7, request.getParameter("title"));
                     pstmt.setBoolean(8, Boolean.parseBoolean(request.getParameter("consent_of_instructor")));
-                    pstmt.setString(9, request.getParameter("dept_name"));
-                    pstmt.setInt(9, Integer.parseInt(request.getParameter("id")));
+                    pstmt.setInt(9, Integer.parseInt(request.getParameter("course_type")));
+                    pstmt.setInt(10, Integer.parseInt(request.getParameter("id")));
                     int rowCount = pstmt.executeUpdate();
 
                     // Commit transaction
@@ -291,6 +292,7 @@
                 <th>Lab</th>
                 <th>Title</th>
                 <th>Consent of Instructor</th>
+                <th>Course Type</th>
                 <th>Department</th>
             </tr>
             
@@ -306,6 +308,7 @@
                     <th><input value="" name="lab" size="5"/></th>
                     <th><input value="" name="title" size="10"/></th>
                     <th><input value="" name="consent_of_instructor" size="5"/></th>
+                    <th><input value="" name="course_type" size="5"/></th>
                     <th><input value="" name="dept_name" size="10"/></th>
                     <th><input type="submit" value="Insert"/></th>
                 </form>
@@ -328,6 +331,7 @@
 					<td><input value=<%=rs.getBoolean("lab")%> name="lab" size="5"/></td>
 					<td><input value=<%=rs.getString("title")%> name="title" size="20"/></td>
 					<td><input value=<%=rs.getBoolean("consent_of_instructor")%> name="consent_of_instructor" size="5"/></td>
+					<td><input value=<%=rs.getString("course_type")%> name="course_type" size="15"/></td>
 					<td><input value=<%=rs.getString("dept_name")%> name="dept_name" size="15"/></td>
 					<!-- Update button -->
 					<td><input type="submit" value="Update"></td>
