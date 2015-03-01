@@ -27,6 +27,7 @@ CREATE TABLE Course (
     lab             BOOLEAN NOT NULL,
     title           TEXT    NOT NULL,
     consent_of_instructor   BOOLEAN NOT NULL,
+    course_type		TEXT,
     dept_name       TEXT    REFERENCES  Department (dept_name) ON DELETE CASCADE
 );
 
