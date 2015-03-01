@@ -86,7 +86,7 @@ INSERT INTO Student_class (student_id, class_id, grade) values (5, 9, 'B+');
 INSERT INTO Student_class (student_id, class_id, grade) values (8, 9, 'A');
 INSERT INTO Student_class (student_id, class_id, grade) values (2, 10, 'B-');
 INSERT INTO Student_class (student_id, class_id, grade) values (8, 10, 'P');
-INSERT INTO Student_class (student_id, class_id, grade) values (8, 10, 'A');
+INSERT INTO Student_class (student_id, class_id, grade) values (4, 10, 'A');
 
 INSERT INTO Section_Enrolllist (student_id, section_id, grade_option, waitlist) values(2, 1, 'P/NP', false);
 INSERT INTO Section_Enrolllist (student_id, section_id, grade_option, waitlist) values(1, 1, 'P/NP', false);
@@ -120,16 +120,16 @@ INSERT INTO Section_Enrolllist (student_id, section_id, grade_option, waitlist) 
 INSERT INTO Section_Enrolllist (student_id, section_id, grade_option, waitlist) values(4, 10, '2', false);
 
 
-INSERT INTO Meeting VALUES (1, 'Lecture', true, true, '03:50 PM', '05:50 PM', '', 'CTR', 'Mon-Wed', 11);
-INSERT INTO Meeting VALUES (2, 'Lecture', true, true, '02:00 PM', '03:30 PM', '', 'CTR', 'Mon', 2);
-INSERT INTO Meeting VALUES (3, 'Lecture', true, true, '01:00 PM', '02:30 PM', '', 'CTR', 'Thu', 2);
-INSERT INTO Meeting VALUES (4, 'Lecture', true, true, '02:00 PM', '03:30 PM', '', 'CTR', 'Mon', 22);
-INSERT INTO Meeting VALUES (5, 'Lecture', true, true, '03:00 PM', '03:50 PM', '', 'CTR', 'Wed', 22);
-INSERT INTO Meeting VALUES (6, 'Lecture', true, true, '01:00 PM', '01:50 PM', '', 'CTR', 'Fri', 22);
-INSERT INTO Meeting VALUES (7, 'Lecture', true, true, '02:00 PM', '04:00 PM', '', 'CTR', 'Mon', 3);
-INSERT INTO Meeting VALUES (8, 'Lecture', true, true, '01:00 PM', '02:00 PM', '', 'CTR', 'Wed', 3);
-INSERT INTO Meeting VALUES (9, 'Lecture', true, true, '01:00 PM', '02:00 PM', '', 'CTR', 'Mon-Wed', 33);
-INSERT INTO Meeting VALUES (10, 'Lecture', true, true, '01:00 PM', '02:00 PM', '', 'CTR', 'Tue-Thu', 1);
+INSERT INTO Meeting VALUES (1, 'Lecture', true, true, '03:50 PM', '05:50 PM', NULL, 'CTR', 'Mon-Wed', 11);
+INSERT INTO Meeting VALUES (2, 'Lecture', true, true, '02:00 PM', '03:30 PM', NULL, 'CTR', 'Mon', 2);
+INSERT INTO Meeting VALUES (3, 'Lecture', true, true, '01:00 PM', '02:30 PM', NULL, 'CTR', 'Thu', 2);
+INSERT INTO Meeting VALUES (4, 'Lecture', true, true, '02:00 PM', '03:30 PM', NULL, 'CTR', 'Mon', 22);
+INSERT INTO Meeting VALUES (5, 'Lecture', true, true, '03:00 PM', '03:50 PM', NULL, 'CTR', 'Wed', 22);
+INSERT INTO Meeting VALUES (6, 'Lecture', true, true, '01:00 PM', '01:50 PM', NULL, 'CTR', 'Fri', 22);
+INSERT INTO Meeting VALUES (7, 'Lecture', true, true, '02:00 PM', '04:00 PM', NULL, 'CTR', 'Mon', 3);
+INSERT INTO Meeting VALUES (8, 'Lecture', true, true, '01:00 PM', '02:00 PM', NULL, 'CTR', 'Wed', 3);
+INSERT INTO Meeting VALUES (9, 'Lecture', true, true, '01:00 PM', '02:00 PM', NULL, 'CTR', 'Mon-Wed', 33);
+INSERT INTO Meeting VALUES (10, 'Lecture', true, true, '01:00 PM', '02:00 PM', NULL, 'CTR', 'Tue-Thu', 1);
 
 INSERT INTO Requirement (require_id, units, degree, gpa, description) values(1, 8, 'bs', 2.0, 'bs1');
 INSERT INTO Requirement (require_id, units, degree, gpa, description) values(2, 12, 'ba', 2.0, 'ba2');
@@ -141,7 +141,6 @@ INSERT INTO Dept_requirement (dept_name, require_id) values('Computer_Science', 
 INSERT INTO Dept_requirement (dept_name, require_id) values('Computer_Science', 2);
 INSERT INTO Dept_requirement (dept_name, require_id) values('Computer_Science', 3);
 INSERT INTO Dept_requirement (dept_name, require_id) values('Computer_Science', 4);
-INSERT INTO Dept_requirement (dept_name, require_id) values('Economics', 5);
 
 INSERT INTO Concentration (name, description, dept_name) values('Database', 'database within cse', 'Computer_Science');
 INSERT INTO Concentration (name, description, dept_name) values('Software', 'software within cse', 'Computer_Science');
@@ -163,10 +162,10 @@ INSERT INTO Master (master_id, con_name) values(8, 'Software'); /*ok*/
 INSERT INTO Phd (phd_id, candidacy) values(9, true);
 
 INSERT INTO Undergraduate (u_id, college, major) values(1, 'Sixth', 'Computer_Science');
-INSERT INTO Undergraduate (u_id, college, major) values(2, 'Marshall', 'Economics');
+INSERT INTO Undergraduate (u_id, college, major) values(2, 'Marshall', 'Computer_Science');
 INSERT INTO Undergraduate (u_id, college, major) values(3, 'Marshall', 'Computer_Science');
 INSERT INTO Undergraduate (u_id, college, major) values(4, 'Marshall', 'Computer_Science');
-INSERT INTO Undergraduate (u_id, college, major) values(5, 'Marshall', 'Economics');
+INSERT INTO Undergraduate (u_id, college, major) values(5, 'Marshall', 'Computer_Science');
 
 INSERT INTO Prev_Degree (degree_id, degree, institute) VALUES (10001, 'master', 'UCSD');
 INSERT INTO Prev_Degree (degree_id, degree, institute) VALUES (10002, 'master', 'UCB');
