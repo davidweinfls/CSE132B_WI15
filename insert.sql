@@ -120,16 +120,19 @@ INSERT INTO Section_Enrolllist (student_id, section_id, grade_option, waitlist) 
 INSERT INTO Section_Enrolllist (student_id, section_id, grade_option, waitlist) values(4, 10, '2', false);
 
 
-INSERT INTO Meeting VALUES (1, 'Lecture', true, true, '03:50 PM', '05:50 PM', NULL, 'CTR', 'Mon-Wed', 11);
-INSERT INTO Meeting VALUES (2, 'Lecture', true, true, '02:00 PM', '03:30 PM', NULL, 'CTR', 'Mon', 2);
-INSERT INTO Meeting VALUES (3, 'Lecture', true, true, '01:00 PM', '02:30 PM', NULL, 'CTR', 'Thu', 2);
-INSERT INTO Meeting VALUES (4, 'Lecture', true, true, '02:00 PM', '03:30 PM', NULL, 'CTR', 'Mon', 22);
-INSERT INTO Meeting VALUES (5, 'Lecture', true, true, '03:00 PM', '03:50 PM', NULL, 'CTR', 'Wed', 22);
-INSERT INTO Meeting VALUES (6, 'Lecture', true, true, '01:00 PM', '01:50 PM', NULL, 'CTR', 'Fri', 22);
-INSERT INTO Meeting VALUES (7, 'Lecture', true, true, '02:00 PM', '04:00 PM', NULL, 'CTR', 'Mon', 3);
-INSERT INTO Meeting VALUES (8, 'Lecture', true, true, '01:00 PM', '02:00 PM', NULL, 'CTR', 'Wed', 3);
-INSERT INTO Meeting VALUES (9, 'Lecture', true, true, '01:00 PM', '02:00 PM', NULL, 'CTR', 'Mon-Wed', 33);
-INSERT INTO Meeting VALUES (10, 'Lecture', true, true, '01:00 PM', '02:00 PM', NULL, 'CTR', 'Tue-Thu', 1);
+INSERT INTO Meeting VALUES (1, 'Lecture', true, true, '03:50 PM', '05:50 PM', NULL, 'CTR', 'Mon', 11);
+INSERT INTO Meeting VALUES (2, 'Lecture', true, true, '03:50 PM', '05:50 PM', NULL, 'CTR', 'Wed', 11);
+INSERT INTO Meeting VALUES (3, 'Lecture', true, true, '02:00 PM', '03:30 PM', NULL, 'CTR', 'Mon', 2);
+INSERT INTO Meeting VALUES (4, 'Lecture', true, true, '01:00 PM', '02:30 PM', NULL, 'CTR', 'Thu', 2);
+INSERT INTO Meeting VALUES (5, 'Lecture', true, true, '02:00 PM', '03:30 PM', NULL, 'CTR', 'Mon', 22);
+INSERT INTO Meeting VALUES (6, 'Lecture', true, true, '03:00 PM', '03:50 PM', NULL, 'CTR', 'Wed', 22);
+INSERT INTO Meeting VALUES (7, 'Lecture', true, true, '01:00 PM', '01:50 PM', NULL, 'CTR', 'Fri', 22);
+INSERT INTO Meeting VALUES (8, 'Lecture', true, true, '02:00 PM', '04:00 PM', NULL, 'CTR', 'Mon', 3);
+INSERT INTO Meeting VALUES (9, 'Lecture', true, true, '01:00 PM', '02:00 PM', NULL, 'CTR', 'Wed', 3);
+INSERT INTO Meeting VALUES (10, 'Lecture', true, true, '01:00 PM', '02:00 PM', NULL, 'CTR', 'Mon', 33);
+INSERT INTO Meeting VALUES (11, 'Lecture', true, true, '01:00 PM', '02:00 PM', NULL, 'CTR', 'Wed', 33);
+INSERT INTO Meeting VALUES (12, 'Lecture', true, true, '01:00 PM', '02:00 PM', NULL, 'CTR', 'Tue', 1);
+INSERT INTO Meeting VALUES (13, 'Lecture', true, true, '01:00 PM', '02:00 PM', NULL, 'CTR', 'Thu', 1);
 
 INSERT INTO Requirement (require_id, units, degree, gpa, description) values(1, 8, 'bs', 2.0, 'bs1');
 INSERT INTO Requirement (require_id, units, degree, gpa, description) values(2, 12, 'ba', 2.0, 'ba2');

@@ -109,7 +109,7 @@
                			" AND s.class_id = c.class_id " + 
                			"AND s.section_id = se.section_id " +  
                			"AND se.student_id = " + student_id + 
-               			" AND NOT(c.year = 2015 AND c.quarter = 'Winter') " +
+               			" AND NOT(c.year = 2009 AND c.quarter = 'Spring') " +
                			"GROUP BY c.class_id, c.year, c.quarter, sc.grade, se.grade_option " + 
                			"ORDER BY c.year)";
                	pstmt = conn.prepareStatement(w);
