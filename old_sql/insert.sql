@@ -126,5 +126,8 @@ INSERT INTO Undergraduate (u_id, college, major) values(5, 'Marshall', 'Economic
 INSERT INTO Prev_Degree (degree_id, degree, institute) VALUES (10001, 'master', 'UCSD');
 INSERT INTO Prev_Degree (degree_id, degree, institute) VALUES (10002, 'master', 'UCB');
 INSERT INTO Prev_Degree (degree_id, degree, institute) VALUES (10003, 'master', 'UCLA');
+
+
+
 /* last five */
 
