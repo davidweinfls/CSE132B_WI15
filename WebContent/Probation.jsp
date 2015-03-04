@@ -69,9 +69,9 @@
                 		// ANY * fall
                 		// A * A
                 		// spring * summer
-                		if( startQuarter.equals("winter") || endQuarter.equals("fall") || 
+                		if( startQuarter.equals("Winter") || endQuarter.equals("Fall") || 
                 				startQuarter.equals(endQuarter) ||
-                				( startQuarter.equals("spring") && endQuarter.equals("summer") ) ){
+                				( startQuarter.equals("Spring") && endQuarter.equals("Summer") ) ){
                 			insert = true;
                 		}
                 	}
@@ -142,9 +142,9 @@
                 		// ANY * fall
                 		// A * A
                 		// spring * summer
-                		if( startQuarter.equals("winter") || endQuarter.equals("fall") || 
+                		if( startQuarter.equals("Winter") || endQuarter.equals("Fall") || 
                 				startQuarter.equals(endQuarter) ||
-                				( startQuarter.equals("spring") && endQuarter.equals("summer") ) ){
+                				( startQuarter.equals("Spring") && endQuarter.equals("Summer") ) ){
                 			update = true;
                 		}
                 	}

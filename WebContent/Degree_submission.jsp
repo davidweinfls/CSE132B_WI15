@@ -153,8 +153,8 @@
                 							+ "From Section_Enrolllist, Student_Class, Section "
                 							+ "WHERE Section_Enrolllist.section_id = Section.section_id "
                 							+ "AND Section.class_id = Student_Class.class_id "
-                							+ "AND Section_Enrolllist.student_id = Student_class.student_id"
-                							+ "Section_Enrolllist_student_id = " + tempSid);
+                							+ "AND Section_Enrolllist.student_id = Student_class.student_id "
+                							+ "AND Section_Enrolllist.student_id = " + tempSid);
                 					
                 					while( rs3.next() ){
                 						classTaken.add(rs3.getInt("class"));

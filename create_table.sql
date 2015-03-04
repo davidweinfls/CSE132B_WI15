@@ -138,7 +138,9 @@ create TABLE Dept_Requirement (
 create TABLE Concentration (
 	name			TEXT PRIMARY KEY,
 	description		TEXT NOT NULL,
-	dept_name		TEXT,
+	dept_name		TEXT NOT NULL,
+	gpa				FLOAT NOT NULL,
+	unit			INT NOT NULL,
 	foreign key (dept_name) references Department(dept_name) ON DELETE CASCADE
 );
 
