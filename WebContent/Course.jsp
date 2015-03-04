@@ -186,28 +186,34 @@
                 	String course_name = request.getParameter("course_name");
                 	String prereq_name = request.getParameter("prereq_name");
                 	
+                    conn.setAutoCommit(false);
+
+                	int course_id = 0, prereq_id = 0;
+                	
                 	String q1 = "SELECT course_id FROM Course WHERE course_name = '" + course_name + "'";
                 	rs = statement.executeQuery(q1);
-                	rs.next();
-                	int course_id = rs.getInt("course_id");
+                	if (rs.next())
+                		course_id = rs.getInt("course_id");
                 	
                 	String q2 = "SELECT course_id FROM Course WHERE course_name = '" + prereq_name + "'";
                 	rs = statement.executeQuery(q2);
-                	rs.next();
-                	int prereq_id = rs.getInt("course_id");
+                	if (rs.next())
+                		prereq_id = rs.getInt("course_id");
                 	
-                    // Begin transaction
-                    conn.setAutoCommit(false);
-
-                    pstmt = conn
-                    .prepareStatement("INSERT INTO Prerequisite " + "VALUES (" + course_id + ", " + prereq_id + ")");
-                    int rowCount = pstmt.executeUpdate();
-
-                    if (rowCount > 0) {
-                    	out.println("Prerequisite added!!!");
-                    } else {
-                    	out.println("<font color='#ff0000'>Add Prerequisite Failed!");
-                    }
+                	if (course_id > 0 && prereq_id > 0) {
+	                    pstmt = conn
+	                    .prepareStatement("INSERT INTO Prerequisite " + "VALUES (" + course_id + ", " + prereq_id + ")");
+	                    int rowCount = pstmt.executeUpdate();
+	
+	                    if (rowCount > 0) {
+	                    	out.println("Prerequisite added!!!");
+	                    } else {
+	                    	out.println("<font color='#ff0000'>Add Prerequisite Failed!");
+	                    }
+                    
+                	} else {
+                		out.println("<font color='#ff0000'>Add Prerequisite Failed!");
+                	}
                     
                     // Commit transaction
                     conn.commit();
