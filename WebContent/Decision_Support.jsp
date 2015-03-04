@@ -477,7 +477,7 @@
               	while (rs.next()) {
               		String grade = rs.getString("grade");
               		String grade_option_s = rs.getString("grade_option");
-              		if (!(grade.equals("P") || grade.equals("NP")) || grade.equals("WIP") ){
+              		if (!(grade.equals("P") || grade.equals("NP") || grade.equals("WIP")) ){
               			int grade_option = Integer.parseInt(grade_option_s);
               			count+= grade_option;
               			total_gpa += gpaTable.get(grade) * grade_option;
