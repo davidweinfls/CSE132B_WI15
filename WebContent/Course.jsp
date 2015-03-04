@@ -83,7 +83,7 @@
                     pstmt = conn
                         .prepareStatement("UPDATE Course SET course_id = ?, course_name = ?, "
                             + "unit_low = ?, unit_high = ?, letter_su = ?, lab = ?, title = ?, " + 
-                        "consent_of_instructor = ?, course_type = ?, WHERE course_id = ?");
+                        "consent_of_instructor = ?, course_type = ? WHERE course_id = ?");
 
                     pstmt.setInt(1, Integer.parseInt(request.getParameter("course_id")));
                     pstmt.setString(2, request.getParameter("course_name"));
@@ -93,7 +93,7 @@
                     pstmt.setBoolean(6, Boolean.parseBoolean(request.getParameter("lab")));
                     pstmt.setString(7, request.getParameter("title"));
                     pstmt.setBoolean(8, Boolean.parseBoolean(request.getParameter("consent_of_instructor")));
-                    pstmt.setInt(9, Integer.parseInt(request.getParameter("course_type")));
+                    pstmt.setString(9, request.getParameter("course_type"));
                     pstmt.setInt(10, Integer.parseInt(request.getParameter("id")));
                     int rowCount = pstmt.executeUpdate();
 

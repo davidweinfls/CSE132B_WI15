@@ -69,6 +69,11 @@
        					<td><%=rs.getInt("year")%></td>
        					<td><input type="submit" value="Select"></td>
        				</form>
+       				<form>
+       					<input type="hidden" name="action" value="display_roster_by_title"/>
+                        <input type="hidden" name="class_id" value="<%=rs.getInt("class_id")%>"/>
+       					<td><input type="submit" value="Select By Title"></td>
+       				</form>
        			</tr>
        	<%
                }
@@ -81,12 +86,12 @@
               	int class_id = Integer.parseInt(request.getParameter("class_id"));
               	
               	String w = "SELECT s.*, sec.section_id, se.grade_option, se.waitlist " + 
-              				"FROM Student s, Student_Class sc, Section sec, Section_Enrolllist se " + 
-              				"WHERE sc.student_id = s.student_id " + 
-              				"AND sc.class_id = " + class_id +
-              				" AND sec.class_id = " + class_id + 
-              				"AND se.section_id = sec.section_id " +
-              				"AND se.student_id = s.student_id";
+          					"FROM Student s, Student_Class sc, Section sec, Section_Enrolllist se " + 
+          					"WHERE sc.student_id = s.student_id " + 
+          					"AND sc.class_id = " + class_id +
+          					" AND sec.class_id = " + class_id + 
+          					"AND se.section_id = sec.section_id " +
+          					"AND se.student_id = s.student_id";
               	rs = statement.executeQuery(w);
            %>
                  <table border="2">
@@ -101,7 +106,7 @@
                      <th>Five-year Program</th>
                      <th>Section ID</th>
                      <th>Grade Option</th>
-                     <th>Waitlist</th>
+                     <th>Wait List</th>
                  </tr>
            <%
               	while (rs.next()) {
@@ -118,6 +123,56 @@
 					<td><%=rs.getInt("section_id")%></td>
 					<td><%=rs.getString("grade_option")%></td>
 					<td><%=rs.getBoolean("waitlist")%></td>
+				</tr>	
+	      <%
+              }
+          }
+          %>
+          
+          <%-- -------- display_roster BY Title -------- --%>
+          <%
+              // Check if an insertion is requested
+              if (action != null && action.equals("display_roster_by_title")) {
+              	int class_id = Integer.parseInt(request.getParameter("class_id"));
+              	
+              	String w = "SELECT s.*, se.grade_option " +
+  							"FROM Class c, Course cou, Student_class sc, " + 
+  							"Section sec, Section_Enrolllist se, Student s " +
+  							" WHERE c.class_name = cou.course_name " + 
+  							" AND cou.title IN (SELECT cou.title FROM Course cou, Class c " + 
+  												"WHERE cou.course_name = c.class_name " + 
+  												"AND c.class_id = " + class_id + " ) " +
+  							"AND sc.class_id = c.class_id AND sc.student_id = s.student_id " + 
+  							"AND sec.class_id = c.class_id " +
+  							"AND se.section_id = sec.section_id AND se.student_id = s.student_id " + 
+  							"ORDER BY s.ssn ";
+              	rs = statement.executeQuery(w);
+           %>
+                 <table border="2">
+                 <tr>
+                     <th>Student ID</th>
+                     <th>First</th>
+                     <th>Middle</th>
+                     <th>Last</th>
+                     <th>SSN</th>
+                     <th>Enrollment</th>
+                     <th>Residency</th>
+                     <th>Five-year Program</th>
+                     <th>Grade Option</th>
+                 </tr>
+           <%
+              	while (rs.next()) {
+           %>
+	           <tr>
+					<td><%=rs.getInt("student_id")%></td>
+					<td><%=rs.getString("first")%></td>
+					<td><%=rs.getString("middle")%></td>
+					<td><%=rs.getString("last")%></td>
+					<td><%=rs.getString("ssn")%></td>
+					<td><%=rs.getBoolean("enrollment")%></td>
+					<td><%=rs.getString("residency")%></td>
+					<td><%=rs.getBoolean("five_year_program")%></td>
+					<td><%=rs.getString("grade_option")%></td>
 				</tr>	
 	      <%
               }
