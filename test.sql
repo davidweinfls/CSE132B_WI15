@@ -26,3 +26,10 @@ WHERE sec.section_id = se.section_id
 AND se.student_id = sc.student_id
 AND sc.class_id = sec.class_id
 AND sc.class_id = 8;
+
+SELECT sc.*
+FROM Student_Class sc, Section sec, Section_enrolllist se, Class c
+WHERE c.class_name = 'CSE1' AND c.class_id = sec.class_id 
+AND sec.section_id = se.section_id AND se.student_id = sc.student_id
+AND sc.class_id = sec.class_id
+AND sec.instructor_ssn = '100-00-0000';

@@ -64,7 +64,7 @@
           	if (action == null) {
           		rs = statement.executeQuery("SELECT * FROM Faculty");
       	  %>
-      	  		<h4>Only display classes from previous quarter</h4>
+      	  		<h4>part ii, iii (Only display classes from previous quarter)</h4>
                <table border="2">
                <tr>
                    <th>SSN</th>
@@ -88,6 +88,40 @@
        			</tr>
        	<%
                }
+        %>
+        	</table>
+        	<%
+            String s = "SELECT * FROM Course";
+      		rs = statement.executeQuery(s);
+            %>
+            
+            <h4>part iv - Grade of a course given over year </h4>
+          <table border="2">
+            <tr>
+                <th>Course Name</th>
+            </tr>
+            
+            <%
+                // Iterate over the ResultSet
+                while (rs.next()) {
+            %>
+            <tr>
+				<form action="Decision_Support.jsp" method="POST">
+					<input type="hidden" name="action" value="iv"/>
+                  	<input type="hidden" name="class_name" value="<%=rs.getString("course_name")%>"/>
+					<td><%=rs.getString("course_name")%></td>
+					<!-- Update button -->
+					<td><input type="submit" value="Select"></td>
+				</form>
+			</tr>
+		
+			<%
+				}
+            %>
+            </table>
+        
+        <%
+        
         } // end of original form %>
           
           <%-- -------- Display_class -------- --%>
@@ -102,6 +136,7 @@
               	rs = statement.executeQuery(w);
           %>
           
+          <h4>part ii - Grade given by quarter-year (specific class) </h4>
           <table border="2">
             <tr>
                 <th>Class ID</th>
@@ -116,7 +151,7 @@
             %>
             <tr>
 				<form action="Decision_Support.jsp" method="POST">
-					<input type="hidden" name="action" value="i"/>
+					<input type="hidden" name="action" value="ii"/>
                   	<input type="hidden" name="class_id" value="<%=rs.getInt("class_id")%>"/>
                   	<input type="hidden" name="ssn" value="<%=f_ssn%>"/>
 					<td><%=rs.getInt("class_id")%></td>
@@ -132,14 +167,46 @@
 				}
             %>
             </table>
+            
+            <%
+            String s = "SELECT distinct c.class_name FROM Class c, Section s WHERE s.class_id = c.class_id " +
+      					"AND s.instructor_ssn = '" + f_ssn + "'";
+      		rs = statement.executeQuery(s);
+            %>
+            
+            <h4>part iii - Grade of a course given by prof over year </h4>
+          <table border="2">
+            <tr>
+                <th>Class Name</th>
+            </tr>
+            
+            <%
+                // Iterate over the ResultSet
+                while (rs.next()) {
+            %>
+            <tr>
+				<form action="Decision_Support.jsp" method="POST">
+					<input type="hidden" name="action" value="iii"/>
+                  	<input type="hidden" name="class_name" value="<%=rs.getString("class_name")%>"/>
+                  	<input type="hidden" name="ssn" value="<%=f_ssn%>"/>
+					<td><%=rs.getString("class_name")%></td>
+					<!-- Update button -->
+					<td><input type="submit" value="Select"></td>
+				</form>
+			</tr>
+		
+			<%
+				}
+            %>
+            </table>
             <%
               }
           %>
           
-          <%-- -------- i -------- --%>
+          <%-- -------- ii -------- --%>
           <%
               // Check if an insertion is requested
-              if (action != null && action.equals("i")) {
+              if (action != null && action.equals("ii")) {
               	String f_ssn = request.getParameter("ssn");
               	int class_id = Integer.parseInt(request.getParameter("class_id"));
               	
@@ -205,160 +272,146 @@
               }
           %>
           
-          
-          
-          
-          <%-- -------- Grade Report -------- --%>
+          <%-- -------- iii -------- --%>
           <%
-				// Check if an insertion is requested
-				if (action != null && action.equals("grade_report")) {
-				int student_id = Integer.parseInt(request.getParameter("student_id"));
-				  	
+              // Check if an insertion is requested
+              if (action != null && action.equals("iii")) {
+              	String f_ssn = request.getParameter("ssn");
+              	String class_name = request.getParameter("class_name");
+              	
 				conn.setAutoCommit(false);
 				
-				pstmt1 = conn.prepareStatement("DROP VIEW IF EXISTS V");
+				pstmt1 = conn.prepareStatement("DROP VIEW IF EXISTS V1");
 				pstmt1.executeUpdate();
-            	  
-               	String w = "CREATE VIEW V AS (SELECT c.*, sc.grade, se.grade_option " +  
-               			"FROM Class c, Student_Class sc, Section s, Section_Enrolllist se " +  
-               			"WHERE sc.class_id = c.class_id " +  
-               			"AND sc.student_id = " + student_id + 
-               			" AND s.class_id = c.class_id " + 
-               			"AND s.section_id = se.section_id " +  
-               			"AND se.student_id = " + student_id + 
-               			" AND NOT(c.year = 2009 AND c.quarter = 'Spring') " +
-               			"GROUP BY c.class_id, c.year, c.quarter, sc.grade, se.grade_option " + 
-               			"ORDER BY c.year)";
-               	pstmt = conn.prepareStatement(w);
+              	
+              	String w = "CREATE VIEW V1 AS (SELECT sc.* FROM Section sec, Section_Enrolllist se, " + 
+              				"Student_Class sc, Class c " +
+              				"WHERE sec.section_id = se.section_id " +
+              				"AND se.student_id = sc.student_id " + 
+              				"AND sc.class_id = sec.class_id " + 
+              				"AND c.class_name = '" + class_name + "' " +
+              				"AND c.class_id = sec.class_id " +
+              				"AND sec.instructor_ssn = '" + f_ssn + "') ";
+              	pstmt = conn.prepareStatement(w);
                	int rowCount = pstmt.executeUpdate();
                	
-               	String s = "SELECT * FROM V";
-               	rs1 = statement.executeQuery(s);
-           %>
-           <h3>Class Taken</h3> 
-                 <table border="2">
-                 <tr>
-                     <th>Class ID</th>
-                     <th>Class Name</th>
-                     <th>Quarter</th>
-                     <th>Year</th>
-                     <th>Grade</th>
-                     <th>Grade Option</th>
-                 </tr>
-           <%
-              	while (rs1.next()) {
-           %>
-	           <tr>
-					<td><%=rs1.getInt("class_id")%></td>
-					<td><%=rs1.getString("class_name")%></td>
-					<td><%=rs1.getString("quarter")%></td>
-					<td><%=rs1.getInt("year")%></td>
-					<td><%=rs1.getString("grade")%></td>
-					<td><%=rs1.getString("grade_option")%></td>
-				</tr>
-				
-					
-	      <%
+               	int a = 0, b = 0, c = 0, d = 0, o = 0;
+               	String sa = "SELECT count (*) num_A FROM V1 WHERE grade = 'A+' OR grade = 'A' OR grade = 'A-'"; 
+              	rs = statement.executeQuery(sa);
+              	if (rs.next()) a = rs.getInt("num_A");
+              	
+              	String sb = "SELECT count (*) num_B FROM V1 WHERE grade = 'B+' OR grade = 'B' OR grade = 'B-'"; 
+              	rs = statement.executeQuery(sb);
+              	if (rs.next()) b = rs.getInt("num_B");
+              	
+              	String sc = "SELECT count (*) num_C FROM V1 WHERE grade = 'C+' OR grade = 'C' OR grade = 'C-'"; 
+              	rs = statement.executeQuery(sc);
+              	if (rs.next()) c = rs.getInt("num_C");
+              	
+              	String sd = "SELECT count (*) num_D FROM V1 WHERE grade = 'D'"; 
+              	rs = statement.executeQuery(sd);
+              	if (rs.next()) d = rs.getInt("num_D");
+              	
+              	String so = "SELECT count (*) num_O FROM V1 WHERE grade = 'P' OR grade = 'NP' OR grade = 'F'"; 
+              	rs = statement.executeQuery(so);
+              	if (rs.next()) o = rs.getInt("num_O");
+          %>
+          
+          <table border="2">
+            <tr>
+                <th>A+/A/A-</th>
+                <th>B+/B/B-</th>
+                <th>C+/C/C-</th>
+                <th>D</th>
+                <th>Other</th>
+            </tr>
+            
+            <%
+            %>
+            <tr>
+				<td><%= a %></td>
+				<td><%= b %></td>
+				<td><%= c %></td>
+				<td><%= d %></td>
+				<td><%= o %></td>
+			</tr>
+		
+            </table>
+            <%
+	            conn.commit();
+	    		conn.setAutoCommit(true);
               }
           %>
-          	</table>
-          	
-          	<h3>Quarter GPA</h3> 
-          	<table border="2">
-          	<tr>
-          		<th>Quarter</th>
-          		<th>Year</th>
-          		<th>GPA</th>
-          	</tr>
-
-          	<% 
-          	// quarter GPA
-          	rs = statement.executeQuery(s);
-          	Hashtable<String, ArrayList<Double>> quarter_grade = new Hashtable<String, ArrayList<Double>>();
-          	Hashtable<String, Integer> sum_of_grade_option = new Hashtable<String, Integer>();
-          	
-          	while (rs.next()) {
-          		int year = rs.getInt("year");
-          		String quarter = rs.getString("quarter");
-          		String year_quarter = year + "_" + quarter; // key for both hashtable
-          		String grade = rs.getString("grade");
-
-          		if (!(grade.equals("P") || grade.equals("NP"))){
-          			int grade_option = Integer.parseInt(rs.getString("grade_option"));
-          			double converted_gpa = grade_option * gpaTable.get(grade);
-          			
-	          		if (quarter_grade.get(year_quarter) == null) {
-	          			ArrayList<Double> list = new ArrayList<Double>();
-	          			list.add(converted_gpa);
-	          			quarter_grade.put(year_quarter, list);
-	          			sum_of_grade_option.put(year_quarter, grade_option);
-	          		} else {
-	          			quarter_grade.get(year_quarter).add(converted_gpa);
-	          			sum_of_grade_option.put(year_quarter, sum_of_grade_option.get(year_quarter) + grade_option);
-	          		}
-          		}
-          	}
-          	
-          	for (String key : quarter_grade.keySet()){
-          		double total_gpa = 0, quarter_gpa = 0;
-          		for (int i = 0; i < quarter_grade.get(key).size(); ++i) {
-          			total_gpa += quarter_grade.get(key).get(i);
-          		}
-          		if (quarter_grade.get(key).size() > 0) {
-          			quarter_gpa = total_gpa / sum_of_grade_option.get(key);
-          		}
-          	%>	
-          	<tr>
-          		<td><%= key.substring(5) %></td>
-          		<td><%= key.substring(0, 4) %></td>
-				<td><%= quarter_gpa %></td>
-          	</tr>	
-          		
-          	<%	
-          	}
-          	
-          	%>
-          	</table>
-          	
-          	<h3>Culmulative GPA</h3> 
-          	<table border="2">
-          	<tr>
-          		<th>GPA</th>
-          	</tr>
-          	
-          	<% 
-          	// cumulative GPA
-          	rs = statement.executeQuery(s);
-          	float gpa = 0, total_gpa = 0;
-          	int count = 0;
-          	
-          	while (rs.next()) {
-          		String grade = rs.getString("grade");
-          		String grade_option_s = rs.getString("grade_option");
-          		if (!(grade.equals("P") || grade.equals("NP"))){
-          			int grade_option = Integer.parseInt(grade_option_s);
-          			count+= grade_option;
-          			total_gpa += gpaTable.get(grade) * grade_option;
-          		}
-          		
-          	}
-          	if (count != 0) {
-          		System.out.println("count: " + count);
-          		System.out.println("total_gpa: " + total_gpa);
-      			gpa = total_gpa / count;
-      		}
-          	
-          	%>
-          	<tr>
-				<td><%= gpa %></td>
-          	</tr>
-          	</table>
-          <% 
-          	conn.commit();
-    		conn.setAutoCommit(true);
-          }
+          
+          <%-- -------- iv -------- --%>
+          <%
+              // Check if an insertion is requested
+              if (action != null && action.equals("iv")) {
+              	String class_name = request.getParameter("class_name");
+              	
+				conn.setAutoCommit(false);
+				
+				pstmt1 = conn.prepareStatement("DROP VIEW IF EXISTS V2");
+				pstmt1.executeUpdate();
+              	
+				String w = "CREATE VIEW V2 AS (SELECT sc.* FROM Section sec, Section_Enrolllist se, " + 
+          				"Student_Class sc, Class c " +
+          				"WHERE sec.section_id = se.section_id " +
+          				"AND se.student_id = sc.student_id " + 
+          				"AND sc.class_id = sec.class_id " + 
+          				"AND c.class_name = '" + class_name + "' " +
+          				"AND c.class_id = sec.class_id)";
+          		pstmt = conn.prepareStatement(w);
+           		int rowCount = pstmt.executeUpdate();
+               	
+               	int a = 0, b = 0, c = 0, d = 0, o = 0;
+               	String sa = "SELECT count (*) num_A FROM V2 WHERE grade = 'A+' OR grade = 'A' OR grade = 'A-'"; 
+              	rs = statement.executeQuery(sa);
+              	if (rs.next()) a = rs.getInt("num_A");
+              	
+              	String sb = "SELECT count (*) num_B FROM V2 WHERE grade = 'B+' OR grade = 'B' OR grade = 'B-'"; 
+              	rs = statement.executeQuery(sb);
+              	if (rs.next()) b = rs.getInt("num_B");
+              	
+              	String sc = "SELECT count (*) num_C FROM V2 WHERE grade = 'C+' OR grade = 'C' OR grade = 'C-'"; 
+              	rs = statement.executeQuery(sc);
+              	if (rs.next()) c = rs.getInt("num_C");
+              	
+              	String sd = "SELECT count (*) num_D FROM V2 WHERE grade = 'D'"; 
+              	rs = statement.executeQuery(sd);
+              	if (rs.next()) d = rs.getInt("num_D");
+              	
+              	String so = "SELECT count (*) num_O FROM V2 WHERE grade = 'P' OR grade = 'NP' OR grade = 'F'"; 
+              	rs = statement.executeQuery(so);
+              	if (rs.next()) o = rs.getInt("num_O");
           %>
-
+          
+          <table border="2">
+            <tr>
+                <th>A+/A/A-</th>
+                <th>B+/B/B-</th>
+                <th>C+/C/C-</th>
+                <th>D</th>
+                <th>Other</th>
+            </tr>
+            
+            <%
+            %>
+            <tr>
+				<td><%= a %></td>
+				<td><%= b %></td>
+				<td><%= c %></td>
+				<td><%= d %></td>
+				<td><%= o %></td>
+			</tr>
+		
+            </table>
+            <%
+	            conn.commit();
+	    		conn.setAutoCommit(true);
+              }
+          %>
+          
           <%-- -------- Close Connection Code -------- --%>
           <%
           	// Close the ResultSet
