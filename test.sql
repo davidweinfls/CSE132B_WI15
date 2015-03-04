@@ -18,3 +18,11 @@ WHERE c.class_name = cou.course_name AND cou.title IN (SELECT cou.title FROM Cou
 AND sc.class_id = c.class_id AND sc.student_id = s.student_id 
 AND sec.class_id = c.class_id
 AND se.section_id = sec.section_id AND se.student_id = s.student_id;
+
+
+SELECT sc.*
+FROM Section sec, Section_Enrolllist se, Student_Class sc
+WHERE sec.section_id = se.section_id
+AND se.student_id = sc.student_id
+AND sc.class_id = sec.class_id
+AND sc.class_id = 8;
