@@ -11,7 +11,7 @@ DROP TABLE Graduate CASCADE;
 DROP TABLE Prev_Degree;
 DROP TABLE Dept_Requirement CASCADE;
 DROP TABLE Requirement CASCADE;
-DROP TABLE Meeting;
+DROP TABLE Meeting CASCADE;
 DROP TABLE Probation;
 DROP TABLE Thesis_Committee;
 DROP TABLE Section;

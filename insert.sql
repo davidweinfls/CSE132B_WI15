@@ -184,8 +184,8 @@ INSERT INTO Graduate (grad_id, in_dept) values(7, 'Computer_Science');
 INSERT INTO Graduate (grad_id, in_dept) values(8, 'Computer_Science');
 INSERT INTO Graduate (grad_id, in_dept) values(9, 'Computer_Science');
 
-INSERT INTO Master (master_id, con_name) values(6, 'Databases'); 
-INSERT INTO Master (master_id, con_name) values(7, 'Theory');
+INSERT INTO Master (master_id, con_name) values(6, 'Theory'); 
+INSERT INTO Master (master_id, con_name) values(7, 'Databases');
 INSERT INTO Master (master_id, con_name) values(8, 'Theory');
 
 INSERT INTO Phd (phd_id, candidacy) values(9, true);

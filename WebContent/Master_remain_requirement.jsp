@@ -303,6 +303,7 @@
 						<td><%=student_ssn%></td>
 						<td><%=require_name.get(l)%></td>
 					</tr>
+					</table>
                     <%
                      }
                   }
@@ -328,12 +329,13 @@
 						<td><%=nextQuarter.get(m)%></td>
 						<td><%=nextYear.get(m)%></td>
 					</tr>
+					
 					<%
                   }
                     %>
-  
+  </table>
           <% 
-          	
+         
           
           	conn.commit();
     		conn.setAutoCommit(true);
@@ -405,10 +407,7 @@
           		}
           	}
           %>
-      </table>
-      </td>
-  </tr>
-</table>
+
 
 <a href="Welcome.html">Back</a>
 <a href="Master_remain_requirement.jsp">Refresh</a>
