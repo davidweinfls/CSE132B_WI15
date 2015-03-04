@@ -10,3 +10,11 @@ WHERE m.section_id = s.section_id AND s.class_id = c.class_id
 AND c.quarter = 'Spring' AND c.year = 2009  
 AND c.class_id NOT IN (SELECT class_id FROM Student_Class WHERE student_id = 1) 
 ORDER BY c.class_id;
+
+SELECT s.*, se.grade_option 
+FROM Class c, Course cou, Student_class sc, Section sec, Section_Enrolllist se, Student s
+WHERE c.class_name = cou.course_name AND cou.title IN (SELECT cou.title FROM Course cou, Class c  
+													   WHERE cou.course_name = c.class_name AND c.class_id = 1) 
+AND sc.class_id = c.class_id AND sc.student_id = s.student_id 
+AND sec.class_id = c.class_id
+AND se.section_id = sec.section_id AND se.student_id = s.student_id;
