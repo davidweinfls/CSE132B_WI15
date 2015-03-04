@@ -128,18 +128,18 @@
               	}
               	if (clear == count) {
 	              	rs = statement.executeQuery("SELECT * FROM Class WHERE class_name = '" + class_name + "'" + 
-	              			" AND quarter = 'Winter' AND year = 2015");
+	              			" AND quarter = 'Spring' AND year = 2009");
 	              	// open a new class if not exists
 	              	if (!rs.next()) {
 	              		String query = "INSERT INTO Class (class_name, quarter, year) " + 
-							"VALUES ('" + class_name + "', 'Winter', 2015)";
+							"VALUES ('" + class_name + "', 'Spring', 2009)";
 	              		System.out.println("insert into Class: " + query);
 	              		pstmt = conn.prepareStatement(query);
 	              		int rowCount = pstmt.executeUpdate();
 	              	}
 	              	
 	                  String select_query = "Select class_id FROM Class WHERE class_name = '" + class_name + "'" + 
-								" AND quarter = 'Winter' AND year = 2015";
+								" AND quarter = 'Spring' AND year = 2009";
 					  rs = statement.executeQuery(select_query);
 					  rs.next();
 					  int class_id = rs.getInt("class_id");
@@ -385,7 +385,7 @@
               	// only update current class
               	// get class_id
               	String q1 = "SELECT class_id FROM Class WHERE class_name = '" + class_name + "' AND " + 
-              	"quarter = 'Winter' AND year = 2015";
+              	"quarter = 'Spring' AND year = 2009";
               	rs = statement.executeQuery(q1);
               	if (rs.next()) {
 	              	int class_id = rs.getInt("class_id");
