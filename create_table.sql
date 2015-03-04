@@ -14,6 +14,7 @@ CREATE TABLE Student (
     five_year_program   BOOLEAN NOT NULL
 );
 
+
 CREATE TABLE Department (
     dept_name       TEXT    PRIMARY KEY
 );
@@ -196,4 +197,13 @@ CREATE TABLE Faculty_Teach_Class (
 	faculty_ssn		TEXT	NOT NULL	REFERENCES	Faculty (ssn)		ON DELETE CASCADE,
 	class_id		INTEGER	NOT NULL	REFERENCES	Class (class_id)	ON DELETE CASCADE,
 	PRIMARY KEY (faculty_ssn, class_id)
+);
+
+
+CREATE TABLE Enrollment (
+	ssn			TEXT	NOT NULL,
+	quarter		TEXT	NOT NULL,
+	year		INTEGER	NOT NULL,
+	foreign key (ssn) references Student(ssn) ON DELETE CASCADE,
+	PRIMARY KEY (ssn, quarter, year)
 );

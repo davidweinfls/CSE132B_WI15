@@ -134,16 +134,21 @@ INSERT INTO Meeting VALUES (11, 'Lecture', true, true, '01:00 PM', '02:00 PM', N
 INSERT INTO Meeting VALUES (12, 'Lecture', true, true, '01:00 PM', '02:00 PM', NULL, 'CTR', 'Tue', 1);
 INSERT INTO Meeting VALUES (13, 'Lecture', true, true, '01:00 PM', '02:00 PM', NULL, 'CTR', 'Thu', 1);
 
-INSERT INTO Requirement (require_id, units, degree, gpa, description) values(1, 8, 'bs', 2.0, 'bs1');
+INSERT INTO Requirement (require_id, units, degree, gpa, description) values(1, 30, 'bs', 2.0, 'TU');
 INSERT INTO Requirement (require_id, units, degree, gpa, description) values(2, 12, 'ba', 2.0, 'ba2');
 INSERT INTO Requirement (require_id, units, degree, gpa, description) values(3, 16, 'master', 2.0, 'ms3');
 INSERT INTO Requirement (require_id, units, degree, gpa, description) values(4, 14, 'phd', 2.0, 'phd4');
-INSERT INTO Requirement (require_id, units, degree, gpa, description) values(5, 18, 'bs', 2.0, 'bs5');
+INSERT INTO Requirement (require_id, units, degree, gpa, description) values(5, 8, 'bs', 2.0, 'LD');
+INSERT INTO Requirement (require_id, units, degree, gpa, description) values(6, 12, 'bs', 2.0, 'UD');
+INSERT INTO Requirement (require_id, units, degree, gpa, description) values(7, 8, 'bs', 2.0, 'TE');
 
 INSERT INTO Dept_requirement (dept_name, require_id) values('Computer_Science', 1);
 INSERT INTO Dept_requirement (dept_name, require_id) values('Computer_Science', 2);
 INSERT INTO Dept_requirement (dept_name, require_id) values('Computer_Science', 3);
 INSERT INTO Dept_requirement (dept_name, require_id) values('Computer_Science', 4);
+INSERT INTO Dept_requirement (dept_name, require_id) values('Computer_Science', 5);
+INSERT INTO Dept_requirement (dept_name, require_id) values('Computer_Science', 6);
+INSERT INTO Dept_requirement (dept_name, require_id) values('Computer_Science', 7);
 
 INSERT INTO Concentration (name, description, dept_name) values('Database', 'database within cse', 'Computer_Science');
 INSERT INTO Concentration (name, description, dept_name) values('Software', 'software within cse', 'Computer_Science');
@@ -173,8 +178,38 @@ INSERT INTO Undergraduate (u_id, college, major) values(5, 'Marshall', 'Computer
 INSERT INTO Prev_Degree (degree_id, degree, institute) VALUES (10001, 'master', 'UCSD');
 INSERT INTO Prev_Degree (degree_id, degree, institute) VALUES (10002, 'master', 'UCB');
 INSERT INTO Prev_Degree (degree_id, degree, institute) VALUES (10003, 'master', 'UCLA');
-
+INSERT INTO Prev_Degree (degree_id, degree, institute) VALUES (10004, 'bs', 'UCSD');
+INSERT INTO Prev_Degree (degree_id, degree, institute) VALUES (10005, 'bs', 'UCLA');
+INSERT INTO Prev_Degree (degree_id, degree, institute) VALUES (10006, 'ba', 'UCSD');
+INSERT INTO Prev_Degree (degree_id, degree, institute) VALUES (10007, 'ba', 'UCLA');
 
 
 /* last five */
+
+/* Enrollment from TA's data */
+INSERT INTO Enrollment (ssn, quarter, year) VALUES ('222-22-2222', 'Spring', 2009);
+INSERT INTO Enrollment (ssn, quarter, year) VALUES ('111-11-1111', 'Spring', 2009);
+INSERT INTO Enrollment (ssn, quarter, year) VALUES ('555-55-5555', 'Spring', 2009);
+INSERT INTO Enrollment (ssn, quarter, year) VALUES ('999-99-9999', 'Spring', 2009);
+INSERT INTO Enrollment (ssn, quarter, year) VALUES ('777-77-7777', 'Spring', 2009);
+INSERT INTO Enrollment (ssn, quarter, year) VALUES ('222-22-2222', 'Winter', 2009);
+INSERT INTO Enrollment (ssn, quarter, year) VALUES ('111-11-1111', 'Winter', 2009);
+INSERT INTO Enrollment (ssn, quarter, year) VALUES ('777-77-7777', 'Winter', 2009);
+INSERT INTO Enrollment (ssn, quarter, year) VALUES ('333-33-3333', 'Winter', 2009);
+INSERT INTO Enrollment (ssn, quarter, year) VALUES ('444-44-4444', 'Winter', 2009);
+INSERT INTO Enrollment (ssn, quarter, year) VALUES ('444-44-4444', 'Fall', 2008);
+INSERT INTO Enrollment (ssn, quarter, year) VALUES ('111-11-1111', 'Fall', 2008);
+INSERT INTO Enrollment (ssn, quarter, year) VALUES ('555-55-5555', 'Fall', 2008);
+INSERT INTO Enrollment (ssn, quarter, year) VALUES ('777-77-7777', 'Fall', 2008);
+INSERT INTO Enrollment (ssn, quarter, year) VALUES ('888-88-8888', 'Fall', 2008);
+INSERT INTO Enrollment (ssn, quarter, year) VALUES ('111-11-1111', 'Spring', 2008);
+INSERT INTO Enrollment (ssn, quarter, year) VALUES ('222-22-2222', 'Spring', 2008);
+INSERT INTO Enrollment (ssn, quarter, year) VALUES ('555-55-5555', 'Spring', 2008);
+INSERT INTO Enrollment (ssn, quarter, year) VALUES ('444-44-4444', 'Spring', 2008);
+INSERT INTO Enrollment (ssn, quarter, year) VALUES ('666-66-6666', 'Spring', 2008);
+INSERT INTO Enrollment (ssn, quarter, year) VALUES ('111-11-1111', 'Winter', 2008);
+INSERT INTO Enrollment (ssn, quarter, year) VALUES ('222-22-2222', 'Winter', 2008);
+INSERT INTO Enrollment (ssn, quarter, year) VALUES ('555-55-5555', 'Winter', 2008);
+INSERT INTO Enrollment (ssn, quarter, year) VALUES ('444-44-4444', 'Winter', 2008);
+INSERT INTO Enrollment (ssn, quarter, year) VALUES ('888-88-8888', 'Winter', 2008);
 
