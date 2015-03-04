@@ -28,6 +28,8 @@ INSERT INTO Course VALUES (6, 'CSE6', 2, 4, 'L/SU', false, 'Algorithms1', false,
 INSERT INTO Course VALUES (7, 'CSE7', 2, 4, 'L/SU', false, 'Database_Applications', false, 'UD', 'Computer_Science'); /* 7 */
 INSERT INTO Course VALUES (10, 'CSE10', 2, 4, 'L/SU', false, 'Databases1', false, 'UD', 'Computer_Science'); /* 10 */
 INSERT INTO Course VALUES (11, 'CSE11', 2, 4, 'L/SU', false, 'Databases2', false, 'UD', 'Computer_Science'); /* 11 */
+INSERT INTO Course VALUES (12, 'CSE12', 2, 4, 'L/SU', false, 'OS2', false, 'UD', 'Computer_Science'); /* 12 */
+INSERT INTO Course VALUES (13, 'CSE13', 2, 4, 'L/SU', false, 'OS3', false, 'UD', 'Computer_Science'); /* 13 */
 
 INSERT INTO Class (class_name, quarter, year) VALUES ('CSE1', 'Spring', 2009); /* 1 */
 INSERT INTO Class (class_name, quarter, year) VALUES ('CSE2', 'Spring', 2009); /* 2 */
@@ -88,6 +90,9 @@ INSERT INTO Student_class (student_id, class_id, grade) values (2, 10, 'B-');
 INSERT INTO Student_class (student_id, class_id, grade) values (8, 10, 'P');
 INSERT INTO Student_class (student_id, class_id, grade) values (4, 10, 'A');
 
+INSERT INTO Student_class (student_id, class_id, grade) values (7, 9, 'A');
+INSERT INTO Student_class (student_id, class_id, grade) values (7, 10, 'B');
+
 INSERT INTO Section_Enrolllist (student_id, section_id, grade_option, waitlist) values(2, 1, 'P/NP', false);
 INSERT INTO Section_Enrolllist (student_id, section_id, grade_option, waitlist) values(1, 1, 'P/NP', false);
 INSERT INTO Section_Enrolllist (student_id, section_id, grade_option, waitlist) values(5, 2, 'P/NP', false);
@@ -119,6 +124,8 @@ INSERT INTO Section_Enrolllist (student_id, section_id, grade_option, waitlist) 
 INSERT INTO Section_Enrolllist (student_id, section_id, grade_option, waitlist) values(8, 10, '2', false);
 INSERT INTO Section_Enrolllist (student_id, section_id, grade_option, waitlist) values(4, 10, '2', false);
 
+INSERT INTO Section_Enrolllist (student_id, section_id, grade_option, waitlist) values(7, 9, '4', false);
+INSERT INTO Section_Enrolllist (student_id, section_id, grade_option, waitlist) values(7, 10, '4', false);
 
 INSERT INTO Meeting VALUES (1, 'Lecture', true, true, '03:50 PM', '05:50 PM', NULL, 'CTR', 'Mon', 11);
 INSERT INTO Meeting VALUES (2, 'Lecture', true, true, '03:50 PM', '05:50 PM', NULL, 'CTR', 'Wed', 11);
@@ -136,11 +143,14 @@ INSERT INTO Meeting VALUES (13, 'Lecture', true, true, '01:00 PM', '02:00 PM', N
 
 INSERT INTO Requirement (require_id, units, degree, gpa, description) values(1, 30, 'bs', 2.0, 'TU');
 INSERT INTO Requirement (require_id, units, degree, gpa, description) values(2, 12, 'ba', 2.0, 'ba2');
-INSERT INTO Requirement (require_id, units, degree, gpa, description) values(3, 16, 'master', 2.0, 'ms3');
+INSERT INTO Requirement (require_id, units, degree, gpa, description) values(3, 4, 'master', 2.0, 'Systems');
 INSERT INTO Requirement (require_id, units, degree, gpa, description) values(4, 14, 'phd', 2.0, 'phd4');
 INSERT INTO Requirement (require_id, units, degree, gpa, description) values(5, 8, 'bs', 2.0, 'LD');
 INSERT INTO Requirement (require_id, units, degree, gpa, description) values(6, 12, 'bs', 2.0, 'UD');
 INSERT INTO Requirement (require_id, units, degree, gpa, description) values(7, 8, 'bs', 2.0, 'TE');
+INSERT INTO Requirement (require_id, units, degree, gpa, description) values(8, 4, 'master', 3.0, 'Architecture');
+INSERT INTO Requirement (require_id, units, degree, gpa, description) values(9, 8, 'master', 2.5, 'Databases');
+INSERT INTO Requirement (require_id, units, degree, gpa, description) values(10, 12, 'master', 2.0, 'Theory');
 
 INSERT INTO Dept_requirement (dept_name, require_id) values('Computer_Science', 1);
 INSERT INTO Dept_requirement (dept_name, require_id) values('Computer_Science', 2);
@@ -149,23 +159,34 @@ INSERT INTO Dept_requirement (dept_name, require_id) values('Computer_Science', 
 INSERT INTO Dept_requirement (dept_name, require_id) values('Computer_Science', 5);
 INSERT INTO Dept_requirement (dept_name, require_id) values('Computer_Science', 6);
 INSERT INTO Dept_requirement (dept_name, require_id) values('Computer_Science', 7);
+INSERT INTO Dept_requirement (dept_name, require_id) values('Computer_Science', 8);
+INSERT INTO Dept_requirement (dept_name, require_id) values('Computer_Science', 9);
+INSERT INTO Dept_requirement (dept_name, require_id) values('Computer_Science', 10);
 
-INSERT INTO Concentration (name, description, dept_name) values('Database', 'database within cse', 'Computer_Science');
-INSERT INTO Concentration (name, description, dept_name) values('Software', 'software within cse', 'Computer_Science');
+INSERT INTO Concentration (name, description, dept_name, gpa, unit) values('Databases', 'database within cse', 'Computer_Science', 2.0, 12);
+INSERT INTO Concentration (name, description, dept_name, gpa, unit) values('Theory', 'software within cse', 'Computer_Science', 2.0, 12);
+INSERT INTO Concentration (name, description, dept_name, gpa, unit) values('Systems', 'systems within cse', 'Computer_Science', 2.0, 12);
+INSERT INTO Concentration (name, description, dept_name, gpa, unit) values('Architecture', 'architecture within cse', 'Computer_Science', 2.0, 12);
 
-INSERT INTO Concentration_course (con_name, course_id) values('Database', 1);
-INSERT INTO Concentration_course (con_name, course_id) values('Database', 2);
-INSERT INTO Concentration_course (con_name, course_id) values('Software', 3);
-INSERT INTO Concentration_course (con_name, course_id) values('Software', 4);
+INSERT INTO Concentration_course (con_name, course_id) values('Theory', 2);
+INSERT INTO Concentration_course (con_name, course_id) values('Theory', 12);
+INSERT INTO Concentration_course (con_name, course_id) values('Theory', 13);
+INSERT INTO Concentration_course (con_name, course_id) values('Systems', 3);
+INSERT INTO Concentration_course (con_name, course_id) values('Systems', 5);
+INSERT INTO Concentration_course (con_name, course_id) values('Systems', 6);
+INSERT INTO Concentration_course (con_name, course_id) values('Databases', 7);
+INSERT INTO Concentration_course (con_name, course_id) values('Databases', 10);
+INSERT INTO Concentration_course (con_name, course_id) values('Databases', 11);
+INSERT INTO Concentration_course (con_name, course_id) values('Architecture', 4);
 
 INSERT INTO Graduate (grad_id, in_dept) values(6, 'Computer_Science');
 INSERT INTO Graduate (grad_id, in_dept) values(7, 'Computer_Science');
 INSERT INTO Graduate (grad_id, in_dept) values(8, 'Computer_Science');
 INSERT INTO Graduate (grad_id, in_dept) values(9, 'Computer_Science');
 
-INSERT INTO Master (master_id, con_name) values(6, 'Database'); /*not ok*/
-INSERT INTO Master (master_id, con_name) values(7, 'Software'); /*ok*/
-INSERT INTO Master (master_id, con_name) values(8, 'Software'); /*ok*/
+INSERT INTO Master (master_id, con_name) values(6, 'Databases'); 
+INSERT INTO Master (master_id, con_name) values(7, 'Theory');
+INSERT INTO Master (master_id, con_name) values(8, 'Theory');
 
 INSERT INTO Phd (phd_id, candidacy) values(9, true);
 
