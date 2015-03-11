@@ -67,11 +67,11 @@
 				conn.setAutoCommit(false);
 				
 				// TEMP TABLE for 3.a.ii
-				pstmt1 = conn.prepareStatement("DROP TABLE IF EXISTS T1");
-				pstmt1.executeUpdate();
+				pstmt = conn.prepareStatement("DROP TABLE IF EXISTS CPQG");
+				pstmt.executeUpdate();
 				
 				String w = 
-					"CREATE TABLE T1 AS (SELECT sec.class_id, sec.instructor_ssn, c.quarter, c.year, " + 
+					"CREATE TABLE CPQG AS (SELECT sec.class_id, sec.instructor_ssn, c.quarter, c.year, " + 
 					"SUM(CASE WHEN (sc.grade = 'A' OR sc.grade = 'A+' OR sc.grade = 'A-') THEN 1 ELSE 0 END) AS NUM_OF_A, " +  
 					"SUM(CASE WHEN (sc.grade = 'B' OR sc.grade = 'B+' OR sc.grade = 'B-') THEN 1 ELSE 0 END) AS NUM_OF_B, " + 
 					"SUM(CASE WHEN (sc.grade = 'C' OR sc.grade = 'C+' OR sc.grade = 'C-') THEN 1 ELSE 0 END) AS NUM_OF_C, " +
@@ -86,6 +86,28 @@
 					"ORDER BY sec.instructor_ssn)";
 				pstmt = conn.prepareStatement(w);
            		int rowCount = pstmt.executeUpdate();
+           		
+           		// TEMP TABLE for 3.a.iii
+           		pstmt1 = conn.prepareStatement("DROP TABLE IF EXISTS CPG");
+				pstmt1.executeUpdate();
+           				
+           		String w1 = 
+           			"CREATE TABLE CPG AS (SELECT c.class_name, sec.instructor_ssn, " +
+           			"SUM(CASE WHEN (sc.grade = 'A' OR sc.grade = 'A+' OR sc.grade = 'A-') THEN 1 ELSE 0 END) AS NUM_OF_A, " + 
+           			"SUM(CASE WHEN (sc.grade = 'B' OR sc.grade = 'B+' OR sc.grade = 'B-') THEN 1 ELSE 0 END) AS NUM_OF_B, " + 
+           			"SUM(CASE WHEN (sc.grade = 'C' OR sc.grade = 'C+' OR sc.grade = 'C-') THEN 1 ELSE 0 END) AS NUM_OF_C, " +
+           			"SUM(CASE WHEN sc.grade = 'D' THEN 1 ELSE 0 END) AS NUM_OF_D, " +
+           			"SUM(CASE WHEN (sc.grade = 'P' OR sc.grade = 'NP' OR sc.grade = 'F') THEN 1 ELSE 0 END) AS NUM_OF_Other " +
+           			"FROM Section sec, Section_Enrolllist se, Student_Class sc, Class c " +
+           			"WHERE sec.section_id = se.section_id " +
+           			"AND se.student_id = sc.student_id " +
+           			"AND sc.class_id = sec.class_id " +
+           			"AND sec.class_id = c.class_id " +
+           			"GROUP BY sec.instructor_ssn, c.class_name " +
+           			"ORDER BY sec.instructor_ssn)";
+           		
+           		pstmt1 = conn.prepareStatement(w1);
+           		int rowCount1 = pstmt1.executeUpdate();
       	  %>
       	  		<h4>part ii, iii, v (Only display classes from previous quarter)</h4>
                <table border="2">
@@ -269,7 +291,7 @@
               	
 				conn.setAutoCommit(false);
 				
-				String s = "SELECT * FROM T1 WHERE instructor_ssn = '" + f_ssn + "' " +
+				String s = "SELECT * FROM CPQG WHERE instructor_ssn = '" + f_ssn + "' " +
 						"AND class_id = " + class_id;
                	rs = statement.executeQuery(s);
                	if (rs.next()) {
@@ -311,40 +333,10 @@
               	
 				conn.setAutoCommit(false);
 				
-				pstmt1 = conn.prepareStatement("DROP VIEW IF EXISTS V1");
-				pstmt1.executeUpdate();
-              	
-              	String w = "CREATE VIEW V1 AS (SELECT sc.* FROM Section sec, Section_Enrolllist se, " + 
-              				"Student_Class sc, Class c " +
-              				"WHERE sec.section_id = se.section_id " +
-              				"AND se.student_id = sc.student_id " + 
-              				"AND sc.class_id = sec.class_id " + 
-              				"AND c.class_name = '" + class_name + "' " +
-              				"AND c.class_id = sec.class_id " +
-              				"AND sec.instructor_ssn = '" + f_ssn + "') ";
-              	pstmt = conn.prepareStatement(w);
-               	int rowCount = pstmt.executeUpdate();
-               	
-               	int a = 0, b = 0, c = 0, d = 0, o = 0;
-               	String sa = "SELECT count (*) num_A FROM V1 WHERE grade = 'A+' OR grade = 'A' OR grade = 'A-'"; 
-              	rs = statement.executeQuery(sa);
-              	if (rs.next()) a = rs.getInt("num_A");
-              	
-              	String sb = "SELECT count (*) num_B FROM V1 WHERE grade = 'B+' OR grade = 'B' OR grade = 'B-'"; 
-              	rs = statement.executeQuery(sb);
-              	if (rs.next()) b = rs.getInt("num_B");
-              	
-              	String sc = "SELECT count (*) num_C FROM V1 WHERE grade = 'C+' OR grade = 'C' OR grade = 'C-'"; 
-              	rs = statement.executeQuery(sc);
-              	if (rs.next()) c = rs.getInt("num_C");
-              	
-              	String sd = "SELECT count (*) num_D FROM V1 WHERE grade = 'D'"; 
-              	rs = statement.executeQuery(sd);
-              	if (rs.next()) d = rs.getInt("num_D");
-              	
-              	String so = "SELECT count (*) num_O FROM V1 WHERE grade = 'P' OR grade = 'NP' OR grade = 'F'"; 
-              	rs = statement.executeQuery(so);
-              	if (rs.next()) o = rs.getInt("num_O");
+				String s = "SELECT * FROM CPG WHERE instructor_ssn = '" + f_ssn + "' " +
+						"AND class_name = '" + class_name + "'";
+               	rs = statement.executeQuery(s);
+               	if (rs.next()) {
           %>
           
           <table border="2">
@@ -359,15 +351,16 @@
             <%
             %>
             <tr>
-				<td><%= a %></td>
-				<td><%= b %></td>
-				<td><%= c %></td>
-				<td><%= d %></td>
-				<td><%= o %></td>
+				<td><%= rs.getInt("num_of_a") %></td>
+				<td><%= rs.getInt("num_of_b") %></td>
+				<td><%= rs.getInt("num_of_c") %></td>
+				<td><%= rs.getInt("num_of_d") %></td>
+				<td><%= rs.getInt("num_of_other") %></td>
 			</tr>
 		
             </table>
             <%
+               	}
 	            conn.commit();
 	    		conn.setAutoCommit(true);
               }
