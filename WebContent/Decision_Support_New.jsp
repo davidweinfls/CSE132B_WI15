@@ -26,6 +26,7 @@
           Connection conn = null;
           PreparedStatement pstmt = null;
           PreparedStatement pstmt1 = null;
+          PreparedStatement pstmt2 = null;
           ResultSet rs = null;
           ResultSet rs1 = null;
           
@@ -67,10 +68,11 @@
 				conn.setAutoCommit(false);
 				
 				// TEMP TABLE for 3.a.ii
-				pstmt = conn.prepareStatement("DROP TABLE IF EXISTS CPQG");
-				pstmt.executeUpdate();
+				rs1 = statement1.executeQuery("SELECT * FROM PG_CLASS WHERE relname = 'cpqg'");
+						
+				if (!rs1.next()) {		
 				
-				String w = 
+					String w = 
 					"CREATE TABLE CPQG AS (SELECT sec.class_id, sec.instructor_ssn, c.quarter, c.year, " + 
 					"SUM(CASE WHEN (sc.grade = 'A' OR sc.grade = 'A+' OR sc.grade = 'A-') THEN 1 ELSE 0 END) AS NUM_OF_A, " +  
 					"SUM(CASE WHEN (sc.grade = 'B' OR sc.grade = 'B+' OR sc.grade = 'B-') THEN 1 ELSE 0 END) AS NUM_OF_B, " + 
@@ -84,14 +86,15 @@
 					"AND sec.class_id = c.class_id " +
 					"GROUP BY sec.class_id, sec.instructor_ssn, c.quarter, c.year " +
 					"ORDER BY sec.instructor_ssn)";
-				pstmt = conn.prepareStatement(w);
-           		int rowCount = pstmt.executeUpdate();
+					pstmt = conn.prepareStatement(w);
+	           		int rowCount = pstmt.executeUpdate();
            		
+				}
            		// TEMP TABLE for 3.a.iii
-           		pstmt1 = conn.prepareStatement("DROP TABLE IF EXISTS CPG");
-				pstmt1.executeUpdate();
-           				
-           		String w1 = 
+           		rs1 = statement1.executeQuery("SELECT * FROM PG_CLASS WHERE relname = 'cpg'");
+
+           		if (!rs1.next()) {		
+	           		String w1 = 
            			"CREATE TABLE CPG AS (SELECT c.class_name, sec.instructor_ssn, " +
            			"SUM(CASE WHEN (sc.grade = 'A' OR sc.grade = 'A+' OR sc.grade = 'A-') THEN 1 ELSE 0 END) AS NUM_OF_A, " + 
            			"SUM(CASE WHEN (sc.grade = 'B' OR sc.grade = 'B+' OR sc.grade = 'B-') THEN 1 ELSE 0 END) AS NUM_OF_B, " + 
@@ -105,9 +108,10 @@
            			"AND sec.class_id = c.class_id " +
            			"GROUP BY sec.instructor_ssn, c.class_name " +
            			"ORDER BY sec.instructor_ssn)";
-           		
-           		pstmt1 = conn.prepareStatement(w1);
-           		int rowCount1 = pstmt1.executeUpdate();
+	           		
+	           		pstmt1 = conn.prepareStatement(w1);
+	           		int rowCount1 = pstmt1.executeUpdate();
+           		}
       	  %>
       	  		<h4>part ii, iii, v (Only display classes from previous quarter)</h4>
                <table border="2">
