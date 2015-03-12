@@ -165,6 +165,7 @@
                   	<input type="hidden" name="section_id" value="<%=rs.getInt("section_id")%>"/>
                   	<input type="hidden" name="student_id" value="<%=student_id%>"/>
                   	<input type="hidden" name="class_id" value="<%=class_id%>"/>
+                  	<input type="hidden" name="f_ssn" value="<%=rs.getString("instructor_ssn")%>"/>
 					<td><%=rs.getInt("section_id")%></td>
 					<td><%=rs.getInt("enroll_limit")%></td>
 					<td><%=rs.getString("grade_option")%></td>
@@ -189,6 +190,7 @@
           		int section_id = Integer.parseInt(request.getParameter("section_id"));
           		int student_id = Integer.parseInt(request.getParameter("student_id"));
           		int class_id = Integer.parseInt(request.getParameter("class_id"));
+          		String f_ssn = request.getParameter("f_ssn");
           		
           		conn.setAutoCommit(false);
           		
@@ -198,10 +200,7 @@
               	rs = statement.executeQuery(q1);
               	int rowCount = 0;
               	if (!rs.next()) {
-          		String query = "INSERT INTO Section_Enrolllist VALUES (" + 
-          				student_id + ", " + section_id + ", " + "'L', false)";
-          		pstmt = conn.prepareStatement(query);
-          		rowCount = pstmt.executeUpdate();
+					// do nothing
               	} else {
         	    	out.println("<font color='#ff0000'>Failed to enroll in section. Already enrolled. ");
            		}
@@ -213,25 +212,21 @@
               	rs = statement.executeQuery(q2);
               	int rowCount1 = 0;
               	if (!rs.next()) {
-              		String query1 = "INSERT INTO Student_Class VALUES (" + student_id + ", " + class_id + ", " + "'WIP'" + ")";
-              		pstmt1 = conn.prepareStatement(query1);
-              		rowCount1 = pstmt1.executeUpdate();
+					// do nothing
               	} else {
               		out.println("<font color='#ff0000'>Student already enrolled in this class");
               	}
           		
-          		if (rowCount > 0 && rowCount1 > 0) {
-                    %>
-           			<h3>Last step before add class. Select your grade option and input grade</h3>
-            		<form action="Class_taken_past.jsp" method="POST">
-                      <input type="hidden" name="action" value="input_grade"/>
-                      <input type="hidden" value="<%=section_id%>" name="section_id"/>
-                      <input type="hidden" name="student_id" value="<%=student_id%>"/>
-                      <input type="hidden" name="class_id" value="<%=class_id%>"/>
-                      <th><input type="submit" value="Input Grade"/></th>
-               		</form>
-           <% } 
-           %>   
+          %>
+     			<h3>Last step before add class. Select your grade option and input grade</h3>
+      			<form action="Class_taken_past.jsp" method="POST">
+                <input type="hidden" name="action" value="input_grade"/>
+                <input type="hidden" value="<%=section_id%>" name="section_id"/>
+                <input type="hidden" name="student_id" value="<%=student_id%>"/>
+                <input type="hidden" name="class_id" value="<%=class_id%>"/>
+                <input type="hidden" name="f_ssn" value="<%=f_ssn%>"/>
+                <th><input type="submit" value="Input Grade"/></th>
+         		</form> 
                      
           <%
           		conn.commit();
@@ -245,6 +240,7 @@
           		int section_id = Integer.parseInt(request.getParameter("section_id"));
           		int student_id = Integer.parseInt(request.getParameter("student_id"));
           		int class_id = Integer.parseInt(request.getParameter("class_id"));
+          		String f_ssn = request.getParameter("f_ssn");
           		
           		// get grade option
           		String query = "SELECT grade_option FROM Section WHERE section_id = " + section_id;
@@ -292,6 +288,7 @@
                 <input type="hidden" value="<%=section_id%>" name="section_id"/>
                 <input type="hidden" name="student_id" value="<%=student_id%>"/>
                 <input type="hidden" name="class_id" value="<%=class_id%>"/>
+                <input type="hidden" name="f_ssn" value="<%=f_ssn%>"/>
                 <th><%=student_id%></th>
           		<th><%=section_id%></th>
                 <th>
@@ -312,7 +309,7 @@
           	}
           %>
           
-          <%-- -------- Update Grade Form -------- --%>
+          <%-- -------- Add Grade Form -------- --%>
           <%
           	if (action != null && action.equals("add_grade")) {
           		int section_id = Integer.parseInt(request.getParameter("section_id"));
@@ -320,20 +317,19 @@
           		int class_id = Integer.parseInt(request.getParameter("class_id"));
           		String grade_option = request.getParameter("grade_dropdown");
           		String grade = request.getParameter("grade");
+          		String f_ssn = request.getParameter("f_ssn");
 
                 conn.setAutoCommit(false);
 
-                pstmt = conn
-                    .prepareStatement("UPDATE Section_Enrolllist SET grade_option = ?" + 
-                    " WHERE student_id = " + student_id + " AND section_id = " + section_id);
-                pstmt.setString(1, grade_option);
-                int rowCount = pstmt.executeUpdate();
+                String query = "INSERT INTO Section_Enrolllist VALUES (" + 
+  				student_id + ", " + section_id + ", " + "'" + grade_option +  "'," + "false)";
+  				pstmt = conn.prepareStatement(query);
+  				int rowCount = pstmt.executeUpdate();
                 
-                String q = "UPDATE Student_Class SET grade = ? WHERE student_id = " + student_id + 
-                		" AND class_id = " + class_id;
-                pstmt1 = conn.prepareStatement(q);
-                pstmt1.setString(1, grade);
-                int rowCount1 = pstmt1.executeUpdate();
+                String query1 = "INSERT INTO Student_Class VALUES (" 
+  				+ student_id + ", " + class_id + ", '" + grade + "', " + "'" + f_ssn + "' " + ")";
+  				pstmt1 = conn.prepareStatement(query1);
+  				int rowCount1 = pstmt1.executeUpdate();
                 
                 if (rowCount > 0 && rowCount1 > 0) {
                 	out.println("Grade option and grade set!");

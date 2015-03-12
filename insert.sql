@@ -59,40 +59,40 @@ INSERT INTO Section VALUES (8, 200, 'L/SU', '300-00-0000', 8); /* 8 */
 INSERT INTO Section VALUES (9, 100, 'L/SU', '300-00-0000', 9); /* 9 */
 INSERT INTO Section VALUES (10, 100, 'L/SU', '200-00-0000', 10); /* 10 */
 
-INSERT INTO Student_class (student_id, class_id, grade) values (2, 1, 'WIP');
-INSERT INTO Student_class (student_id, class_id, grade) values (1, 1, 'WIP');
-INSERT INTO Student_class (student_id, class_id, grade) values (5, 2, 'WIP');
-INSERT INTO Student_class (student_id, class_id, grade) values (9, 1, 'WIP');
-INSERT INTO Student_class (student_id, class_id, grade) values (5, 1, 'WIP');
-INSERT INTO Student_class (student_id, class_id, grade) values (1, 2, 'WIP');
-INSERT INTO Student_class (student_id, class_id, grade) values (7, 2, 'WIP');
+INSERT INTO Student_class values (2, 1, 'WIP', '100-00-0000');
+INSERT INTO Student_class values (1, 1, 'WIP', '100-00-0000');
+INSERT INTO Student_class values (5, 2, 'WIP', '300-00-0000');
+INSERT INTO Student_class values (9, 1, 'WIP', '200-00-0000');
+INSERT INTO Student_class values (5, 1, 'WIP', '200-00-0000');
+INSERT INTO Student_class values (1, 2, 'WIP', '400-00-0000');
+INSERT INTO Student_class values (7, 2, 'WIP', '400-00-0000');
 
-INSERT INTO Student_class (student_id, class_id, grade) values (2, 4, 'A');
-INSERT INTO Student_class (student_id, class_id, grade) values (3, 4, 'P');
-INSERT INTO Student_class (student_id, class_id, grade) values (1, 4, 'C');
-INSERT INTO Student_class (student_id, class_id, grade) values (3, 5, 'B');
-INSERT INTO Student_class (student_id, class_id, grade) values (4, 5, 'B+');
-INSERT INTO Student_class (student_id, class_id, grade) values (7, 5, 'A');
-INSERT INTO Student_class (student_id, class_id, grade) values (1, 6, 'A-');
-INSERT INTO Student_class (student_id, class_id, grade) values (5, 6, 'F');
-INSERT INTO Student_class (student_id, class_id, grade) values (4, 6, 'F');
-INSERT INTO Student_class (student_id, class_id, grade) values (8, 7, 'A');
-INSERT INTO Student_class (student_id, class_id, grade) values (5, 7, 'A');
-INSERT INTO Student_class (student_id, class_id, grade) values (7, 7, 'D');
-INSERT INTO Student_class (student_id, class_id, grade) values (8, 8, 'A');
-INSERT INTO Student_class (student_id, class_id, grade) values (3, 8, 'A-');
-INSERT INTO Student_class (student_id, class_id, grade) values (6, 8, 'A-');
-INSERT INTO Student_class (student_id, class_id, grade) values (4, 8, 'A');
-INSERT INTO Student_class (student_id, class_id, grade) values (1, 9, 'B+');
-INSERT INTO Student_class (student_id, class_id, grade) values (5, 9, 'B+');
-INSERT INTO Student_class (student_id, class_id, grade) values (8, 9, 'A');
-INSERT INTO Student_class (student_id, class_id, grade) values (2, 10, 'B-');
-INSERT INTO Student_class (student_id, class_id, grade) values (8, 10, 'P');
-INSERT INTO Student_class (student_id, class_id, grade) values (4, 10, 'A');
-
+INSERT INTO Student_class values (2, 4, 'A', '300-00-0000');
+INSERT INTO Student_class values (3, 4, 'P', '300-00-0000');
+INSERT INTO Student_class values (1, 4, 'C', '300-00-0000');
+INSERT INTO Student_class values (3, 5, 'B', '100-00-0000');
+INSERT INTO Student_class values (4, 5, 'B+', '100-00-0000');
+INSERT INTO Student_class values (7, 5, 'A', '100-00-0000');
+INSERT INTO Student_class values (1, 6, 'A-', '400-00-0000');
+INSERT INTO Student_class values (5, 6, 'F', '400-00-0000');
+INSERT INTO Student_class values (4, 6, 'F', '400-00-0000');
+INSERT INTO Student_class values (8, 7, 'A', '200-00-0000');
+INSERT INTO Student_class values (5, 7, 'A', '200-00-0000');
+INSERT INTO Student_class values (7, 7, 'D', '200-00-0000');
+INSERT INTO Student_class values (8, 8, 'A', '100-00-0000');
+INSERT INTO Student_class values (3, 8, 'A-', '100-00-0000');
+INSERT INTO Student_class values (6, 8, 'A-', '300-00-0000');
+INSERT INTO Student_class values (4, 8, 'A', '300-00-0000');
+INSERT INTO Student_class values (1, 9, 'B+', '300-00-0000');
+INSERT INTO Student_class values (5, 9, 'B+', '300-00-0000');
+INSERT INTO Student_class values (8, 9, 'A', '300-00-0000');
+INSERT INTO Student_class values (2, 10, 'B-', '200-00-0000');
+INSERT INTO Student_class values (8, 10, 'P', '200-00-0000');
+INSERT INTO Student_class values (4, 10, 'A', '200-00-0000');
+/*
 INSERT INTO Student_class (student_id, class_id, grade) values (7, 9, 'A');
 INSERT INTO Student_class (student_id, class_id, grade) values (7, 10, 'B');
-
+*/
 INSERT INTO Section_Enrolllist (student_id, section_id, grade_option, waitlist) values(2, 1, 'P/NP', false);
 INSERT INTO Section_Enrolllist (student_id, section_id, grade_option, waitlist) values(1, 1, 'P/NP', false);
 INSERT INTO Section_Enrolllist (student_id, section_id, grade_option, waitlist) values(5, 2, 'P/NP', false);

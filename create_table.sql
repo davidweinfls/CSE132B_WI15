@@ -56,7 +56,8 @@ CREATE TABLE Faculty (
 CREATE TABLE Student_Class (
 	student_id		INTEGER	NOT NULL	REFERENCES Student (student_id) ON DELETE CASCADE,
 	class_id		INTEGER	NOT NULL	REFERENCES Class (class_id) ON DELETE CASCADE,
-	grade			TEXT	NOT NULL,
+	grade			TEXT,
+	instructor_ssn	TEXT,
 	PRIMARY KEY (student_id, class_id)
 );
 
