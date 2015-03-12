@@ -8,6 +8,7 @@ INSERT INTO Faculty (ssn, title, first, last, dept_name) VALUES ('400-00-0000', 
 INSERT INTO Faculty (ssn, title, first, last, dept_name) VALUES ('500-00-0000', 'Associate Professor', 'Fac5', 'E', 'ECE'); /* 5 */
 INSERT INTO Faculty (ssn, title, first, last, dept_name) VALUES ('600-00-0000', 'Professor', 'Fac6', 'F', 'Computer_Science'); /* 6 */
 INSERT INTO Faculty (ssn, title, first, last, dept_name) VALUES ('700-00-0000', 'Lecturer', 'Fac7', 'G', 'Computer_Science'); /* 7 */
+INSERT INTO Faculty (ssn, title, first, last, dept_name) VALUES ('800-00-0000', 'Lecturer', 'Fac7', 'G', 'ECE'); /* 8 */
 
 INSERT INTO Student (student_id, first, last, ssn, enrollment, residency, five_year_program) VALUES (1, 'Stu1', 'Dent', '111-11-1111', true, 'US', false);
 INSERT INTO Student (student_id, first, last, ssn, enrollment, residency, five_year_program) VALUES (2, 'Stu2', 'Dent', '222-22-2222', true, 'INT', false);
@@ -42,22 +43,24 @@ INSERT INTO Class (class_name, quarter, year) VALUES ('CSE7', 'Fall', 2008); /* 
 INSERT INTO Class (class_name, quarter, year) VALUES ('CSE1', 'Spring', 2008); /* 8 */
 INSERT INTO Class (class_name, quarter, year) VALUES ('CSE10', 'Winter', 2008); /* 9 */
 INSERT INTO Class (class_name, quarter, year) VALUES ('CSE11', 'Winter', 2008); /* 10 */
+INSERT INTO Class (class_name, quarter, year) VALUES ('CSE5', 'Winter', 2008); /* 11 */
 
-INSERT INTO Section VALUES (1, 100, 'L', '100-00-0000', 1); /* 1 */
-INSERT INTO Section VALUES (2, 80, 'L', '300-00-0000', 2); /* 2 */
-INSERT INTO Section VALUES (11, 500, 'L', '200-00-0000', 1); /* 11 */
-INSERT INTO Section VALUES (22, 100, 'L', '400-00-0000', 2); /* 22 */
-INSERT INTO Section VALUES (3, 100, 'L', '600-00-0000', 3); /* 3 */
-INSERT INTO Section VALUES (33, 100, 'L', '200-00-0000', 3); /* 33 */
+INSERT INTO Section VALUES (1, 3, 'L', '100-00-0000', 1); /* 1 */
+INSERT INTO Section VALUES (2, 3, 'L', '300-00-0000', 2); /* 2 */
+INSERT INTO Section VALUES (11, 3, 'L', '200-00-0000', 1); /* 11 */
+INSERT INTO Section VALUES (22, 3, 'L', '400-00-0000', 2); /* 22 */
+INSERT INTO Section VALUES (3, 3, 'L', '600-00-0000', 3); /* 3 */
+INSERT INTO Section VALUES (33, 3, 'L', '200-00-0000', 3); /* 33 */
 
-INSERT INTO Section VALUES (12, 100, 'L', '300-00-0000', 4); /* 12 */
-INSERT INTO Section VALUES (4, 100, 'L', '100-00-0000', 5); /* 4 */
-INSERT INTO Section VALUES (5, 100, 'L/SU', '400-00-0000', 6); /* 5 */
-INSERT INTO Section VALUES (6, 100, 'L/SU', '200-00-0000', 7); /* 6 */
-INSERT INTO Section VALUES (7, 100, 'L/SU', '100-00-0000', 8); /* 7 */
-INSERT INTO Section VALUES (8, 200, 'L/SU', '300-00-0000', 8); /* 8 */
-INSERT INTO Section VALUES (9, 100, 'L/SU', '300-00-0000', 9); /* 9 */
-INSERT INTO Section VALUES (10, 100, 'L/SU', '200-00-0000', 10); /* 10 */
+INSERT INTO Section VALUES (12, 3, 'L', '300-00-0000', 4); /* 12 */
+INSERT INTO Section VALUES (4, 3, 'L', '100-00-0000', 5); /* 4 */
+INSERT INTO Section VALUES (5, 3, 'L/SU', '400-00-0000', 6); /* 5 */
+INSERT INTO Section VALUES (6, 3, 'L/SU', '200-00-0000', 7); /* 6 */
+INSERT INTO Section VALUES (7, 3, 'L/SU', '100-00-0000', 8); /* 7 */
+INSERT INTO Section VALUES (8, 3, 'L/SU', '300-00-0000', 8); /* 8 */
+INSERT INTO Section VALUES (9, 3, 'L/SU', '300-00-0000', 9); /* 9 */
+INSERT INTO Section VALUES (10, 3, 'L/SU', '200-00-0000', 10); /* 10 */
+INSERT INTO Section VALUES (44, 3, 'L/SU', '100-00-0000', 11); /* 10 */
 
 INSERT INTO Student_class values (2, 1, 'WIP', '100-00-0000');
 INSERT INTO Student_class values (1, 1, 'WIP', '100-00-0000');
@@ -89,6 +92,9 @@ INSERT INTO Student_class values (8, 9, 'A', '300-00-0000');
 INSERT INTO Student_class values (2, 10, 'B-', '200-00-0000');
 INSERT INTO Student_class values (8, 10, 'P', '200-00-0000');
 INSERT INTO Student_class values (4, 10, 'A', '200-00-0000');
+INSERT INTO Student_class values (1, 11, 'A+', '100-00-0000');
+INSERT INTO Student_class values (2, 11, 'B-', '100-00-0000');
+INSERT INTO Student_class values (8, 11, 'C', '100-00-0000');
 /*
 INSERT INTO Student_class (student_id, class_id, grade) values (7, 9, 'A');
 INSERT INTO Student_class (student_id, class_id, grade) values (7, 10, 'B');
@@ -96,9 +102,9 @@ INSERT INTO Student_class (student_id, class_id, grade) values (7, 10, 'B');
 INSERT INTO Section_Enrolllist (student_id, section_id, grade_option, waitlist) values(2, 1, 'P/NP', false);
 INSERT INTO Section_Enrolllist (student_id, section_id, grade_option, waitlist) values(1, 1, 'P/NP', false);
 INSERT INTO Section_Enrolllist (student_id, section_id, grade_option, waitlist) values(5, 2, 'P/NP', false);
-INSERT INTO Section_Enrolllist (student_id, section_id, grade_option, waitlist) values(9, 11, '4', false);
-INSERT INTO Section_Enrolllist (student_id, section_id, grade_option, waitlist) values(5, 11, '4', false);
-INSERT INTO Section_Enrolllist (student_id, section_id, grade_option, waitlist) values(1, 22, 'P/NP', false);
+INSERT INTO Section_Enrolllist (student_id, section_id, grade_option, waitlist) values(9, 11, 'P/NP', false);
+INSERT INTO Section_Enrolllist (student_id, section_id, grade_option, waitlist) values(5, 11, 'P/NP', false);
+INSERT INTO Section_Enrolllist (student_id, section_id, grade_option, waitlist) values(1, 22, '2', false);
 INSERT INTO Section_Enrolllist (student_id, section_id, grade_option, waitlist) values(7, 22, '4', false);
 
 INSERT INTO Section_Enrolllist (student_id, section_id, grade_option, waitlist) values(2, 12, '4', false);
@@ -108,8 +114,8 @@ INSERT INTO Section_Enrolllist (student_id, section_id, grade_option, waitlist) 
 INSERT INTO Section_Enrolllist (student_id, section_id, grade_option, waitlist) values(4, 4, '2', false);
 INSERT INTO Section_Enrolllist (student_id, section_id, grade_option, waitlist) values(7, 4, '4', false);
 INSERT INTO Section_Enrolllist (student_id, section_id, grade_option, waitlist) values(1, 5, '2', false);
-INSERT INTO Section_Enrolllist (student_id, section_id, grade_option, waitlist) values(5, 5, '4', false);
-INSERT INTO Section_Enrolllist (student_id, section_id, grade_option, waitlist) values(4, 5, '2', false);
+INSERT INTO Section_Enrolllist (student_id, section_id, grade_option, waitlist) values(5, 5, 'P/NP', false);
+INSERT INTO Section_Enrolllist (student_id, section_id, grade_option, waitlist) values(4, 5, 'P/NP', false);
 INSERT INTO Section_Enrolllist (student_id, section_id, grade_option, waitlist) values(8, 6, '2', false);
 INSERT INTO Section_Enrolllist (student_id, section_id, grade_option, waitlist) values(5, 6, '2', false);
 INSERT INTO Section_Enrolllist (student_id, section_id, grade_option, waitlist) values(7, 6, '4', false);
@@ -121,25 +127,30 @@ INSERT INTO Section_Enrolllist (student_id, section_id, grade_option, waitlist) 
 INSERT INTO Section_Enrolllist (student_id, section_id, grade_option, waitlist) values(5, 9, '4', false);
 INSERT INTO Section_Enrolllist (student_id, section_id, grade_option, waitlist) values(8, 9, '4', false);
 INSERT INTO Section_Enrolllist (student_id, section_id, grade_option, waitlist) values(2, 10, '2', false);
-INSERT INTO Section_Enrolllist (student_id, section_id, grade_option, waitlist) values(8, 10, '2', false);
+INSERT INTO Section_Enrolllist (student_id, section_id, grade_option, waitlist) values(8, 10, 'P/NP', false);
 INSERT INTO Section_Enrolllist (student_id, section_id, grade_option, waitlist) values(4, 10, '2', false);
+INSERT INTO Section_Enrolllist (student_id, section_id, grade_option, waitlist) values(1, 44, '2', false);
+INSERT INTO Section_Enrolllist (student_id, section_id, grade_option, waitlist) values(2, 44, '2', false);
+INSERT INTO Section_Enrolllist (student_id, section_id, grade_option, waitlist) values(8, 44, '4', false);
 
-INSERT INTO Section_Enrolllist (student_id, section_id, grade_option, waitlist) values(7, 9, '4', false);
-INSERT INTO Section_Enrolllist (student_id, section_id, grade_option, waitlist) values(7, 10, '4', false);
-
-INSERT INTO Meeting VALUES (1, 'Lecture', true, true, '03:50 PM', '05:50 PM', NULL, 'CTR', 'Mon', 11);
-INSERT INTO Meeting VALUES (2, 'Lecture', true, true, '03:50 PM', '05:50 PM', NULL, 'CTR', 'Wed', 11);
-INSERT INTO Meeting VALUES (3, 'Lecture', true, true, '02:00 PM', '03:30 PM', NULL, 'CTR', 'Mon', 2);
-INSERT INTO Meeting VALUES (4, 'Lecture', true, true, '01:00 PM', '02:30 PM', NULL, 'CTR', 'Thu', 2);
-INSERT INTO Meeting VALUES (5, 'Lecture', true, true, '02:00 PM', '03:30 PM', NULL, 'CTR', 'Mon', 22);
-INSERT INTO Meeting VALUES (6, 'Lecture', true, true, '03:00 PM', '03:50 PM', NULL, 'CTR', 'Wed', 22);
-INSERT INTO Meeting VALUES (7, 'Lecture', true, true, '01:00 PM', '01:50 PM', NULL, 'CTR', 'Fri', 22);
-INSERT INTO Meeting VALUES (8, 'Lecture', true, true, '02:00 PM', '04:00 PM', NULL, 'CTR', 'Mon', 3);
-INSERT INTO Meeting VALUES (9, 'Lecture', true, true, '01:00 PM', '02:00 PM', NULL, 'CTR', 'Wed', 3);
-INSERT INTO Meeting VALUES (10, 'Lecture', true, true, '01:00 PM', '02:00 PM', NULL, 'CTR', 'Mon', 33);
-INSERT INTO Meeting VALUES (11, 'Lecture', true, true, '01:00 PM', '02:00 PM', NULL, 'CTR', 'Wed', 33);
-INSERT INTO Meeting VALUES (12, 'Lecture', true, true, '01:00 PM', '02:00 PM', NULL, 'CTR', 'Tue', 1);
-INSERT INTO Meeting VALUES (13, 'Lecture', true, true, '01:00 PM', '02:00 PM', NULL, 'CTR', 'Thu', 1);
+INSERT INTO Meeting VALUES (1, 'LE', true, true, '03:00 PM', '05:00 PM', NULL, 'CTR01', 'Mon', 11);
+INSERT INTO Meeting VALUES (2, 'LE', true, true, '03:00 PM', '05:00 PM', NULL, 'CTR01', 'Wed', 11);
+INSERT INTO Meeting VALUES (3, 'LE', true, true, '02:00 PM', '03:00 PM', NULL, 'CTR02', 'Mon', 2);
+INSERT INTO Meeting VALUES (4, 'LE', true, true, '02:00 PM', '03:00 PM', NULL, 'CTR02', 'Thu', 2);
+INSERT INTO Meeting VALUES (5, 'LE', true, true, '02:00 PM', '03:00 PM', NULL, 'CTR03', 'Mon', 22);
+INSERT INTO Meeting VALUES (6, 'LE', true, true, '02:00 PM', '03:00 PM', NULL, 'CTR03', 'Thu', 22);
+INSERT INTO Meeting VALUES (7, 'DI', true, true, '11:00 AM', '12:00 PM', NULL, 'CTR13', 'Fri', 22);
+INSERT INTO Meeting VALUES (8, 'LE', true, true, '02:00 PM', '04:00 PM', NULL, 'CTR04', 'Mon', 3);
+INSERT INTO Meeting VALUES (9, 'LE', true, true, '02:00 PM', '04:00 PM', NULL, 'CTR04', 'Wed', 3);
+INSERT INTO Meeting VALUES (10, 'LE', true, true, '02:00 PM', '04:00 PM', NULL, 'CTR05', 'Mon', 33);
+INSERT INTO Meeting VALUES (11, 'LE', true, true, '02:00 PM', '04:00 PM', NULL, 'CTR05', 'Wed', 33);
+INSERT INTO Meeting VALUES (12, 'LE', true, true, '03:00 PM', '05:00 PM', NULL, 'CTR01', 'Tue', 1);
+INSERT INTO Meeting VALUES (13, 'LE', true, true, '03:00 PM', '05:00 PM', NULL, 'CTR01', 'Thu', 1);
+INSERT INTO Meeting VALUES (14, 'DI', true, true, '10:00 AM', '11:00 AM', NULL, 'CTR11', 'Tue', 1);
+INSERT INTO Meeting VALUES (15, 'DI', true, true, '10:00 AM', '11:00 AM', NULL, 'CTR12', 'Tue', 11);
+INSERT INTO Meeting VALUES (16, 'DI', true, true, '11:00 AM', '12:00 PM', NULL, 'CTR11', 'Fri', 2);
+INSERT INTO Meeting VALUES (17, 'LAB', true, true, '10:00 AM', '12:00 PM', NULL, 'EBUB3', 'Wed', 3);
+INSERT INTO Meeting VALUES (18, 'LAB', true, true, '10:00 AM', '12:00 PM', NULL, 'EBUB4', 'Wed', 33);
 
 INSERT INTO Requirement (require_id, units, degree, gpa, description) values(1, 30, 'bs', 2.0, 'TU');
 INSERT INTO Requirement (require_id, units, degree, gpa, description) values(2, 12, 'ba', 2.0, 'ba2');
