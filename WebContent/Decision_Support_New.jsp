@@ -26,8 +26,10 @@
           Connection conn = null;
           PreparedStatement pstmt = null;
           PreparedStatement pstmt1 = null;
+          PreparedStatement pstmt2 = null;
           ResultSet rs = null;
           ResultSet rs1 = null;
+          ResultSet rs2 = null;
           
           Hashtable<String, Double> gpaTable = new Hashtable<String, Double>();
          	
@@ -62,15 +64,14 @@
           <%-- -------- Original Form - Display Professors-------- --%>
           <%            
           	if (action == null) {
-          		rs = statement.executeQuery("SELECT * FROM Faculty");
-          		
 				conn.setAutoCommit(false);
 				
 				// TEMP TABLE for 3.a.ii
-				pstmt = conn.prepareStatement("DROP TABLE IF EXISTS CPQG");
-				pstmt.executeUpdate();
+				rs1 = statement1.executeQuery("SELECT * FROM PG_CLASS WHERE relname = 'cpqg'");
+						
+				if (!rs1.next()) {		
 				
-				String w = 
+					String w = 
 					"CREATE TABLE CPQG AS (SELECT sec.class_id, sec.instructor_ssn, c.quarter, c.year, " + 
 					"SUM(CASE WHEN (sc.grade = 'A' OR sc.grade = 'A+' OR sc.grade = 'A-') THEN 1 ELSE 0 END) AS NUM_OF_A, " +  
 					"SUM(CASE WHEN (sc.grade = 'B' OR sc.grade = 'B+' OR sc.grade = 'B-') THEN 1 ELSE 0 END) AS NUM_OF_B, " + 
@@ -84,14 +85,15 @@
 					"AND sec.class_id = c.class_id " +
 					"GROUP BY sec.class_id, sec.instructor_ssn, c.quarter, c.year " +
 					"ORDER BY sec.instructor_ssn)";
-				pstmt = conn.prepareStatement(w);
-           		int rowCount = pstmt.executeUpdate();
+					pstmt = conn.prepareStatement(w);
+	           		int rowCount = pstmt.executeUpdate();
            		
+				}
            		// TEMP TABLE for 3.a.iii
-           		pstmt1 = conn.prepareStatement("DROP TABLE IF EXISTS CPG");
-				pstmt1.executeUpdate();
-           				
-           		String w1 = 
+           		rs1 = statement1.executeQuery("SELECT * FROM PG_CLASS WHERE relname = 'cpg'");
+
+           		if (!rs1.next()) {		
+	           		String w1 = 
            			"CREATE TABLE CPG AS (SELECT c.class_name, sec.instructor_ssn, " +
            			"SUM(CASE WHEN (sc.grade = 'A' OR sc.grade = 'A+' OR sc.grade = 'A-') THEN 1 ELSE 0 END) AS NUM_OF_A, " + 
            			"SUM(CASE WHEN (sc.grade = 'B' OR sc.grade = 'B+' OR sc.grade = 'B-') THEN 1 ELSE 0 END) AS NUM_OF_B, " + 
@@ -105,9 +107,98 @@
            			"AND sec.class_id = c.class_id " +
            			"GROUP BY sec.instructor_ssn, c.class_name " +
            			"ORDER BY sec.instructor_ssn)";
+	           		
+	           		pstmt1 = conn.prepareStatement(w1);
+	           		int rowCount1 = pstmt1.executeUpdate();
+           		}
            		
-           		pstmt1 = conn.prepareStatement(w1);
-           		int rowCount1 = pstmt1.executeUpdate();
+           		// Trigger for CPQG
+       			String func = 
+       					"CREATE OR REPLACE FUNCTION addGrade() RETURNS trigger AS $addGradeSC$ " +
+       					"BEGIN " + 
+       					"UPDATE CPQG c " +
+       					"SET num_of_a = num_of_a + 1 " +
+       					"WHERE (NEW.grade = 'A' OR NEW.grade = 'A+' OR NEW.grade = 'A-') " +
+       					"AND c.class_id = NEW.class_id " +
+       					"AND c.instructor_ssn = NEW.instructor_ssn; " +
+       					"UPDATE CPQG c " +
+       					"SET num_of_b = num_of_b + 1 " +
+       					"WHERE (NEW.grade = 'B' OR NEW.grade = 'B+' OR NEW.grade = 'B-') " +            					
+       					"AND c.class_id = NEW.class_id " +
+       					"AND c.instructor_ssn = NEW.instructor_ssn; " +
+       					"UPDATE CPQG c " +
+       					"SET num_of_c = num_of_c + 1 " +
+       					"WHERE (NEW.grade = 'C' OR NEW.grade = 'C+' OR NEW.grade = 'C-') " +
+       					"AND c.class_id = NEW.class_id " +
+       					"AND c.instructor_ssn = NEW.instructor_ssn; " +
+       					"UPDATE CPQG c " +
+       					"SET num_of_d = num_of_d + 1 " +
+       					"WHERE NEW.grade = 'D' " +
+       					"AND c.class_id = NEW.class_id " +
+       					"AND c.instructor_ssn = NEW.instructor_ssn; " +
+       					"UPDATE CPQG c " +
+       					"SET num_of_other = num_of_other + 1 " +
+       					"WHERE (NEW.grade = 'P' OR NEW.grade = 'NP' OR NEW.grade = 'F') " +
+       					"AND c.class_id = NEW.class_id " +
+       					"AND c.instructor_ssn = NEW.instructor_ssn; " +
+       					"RETURN NULL; " +
+       				"END;  " +
+       				"$addGradeSC$ LANGUAGE plpgsql; ";
+       				
+       			pstmt1 = conn.prepareStatement(func);
+        		int rowCount2 = pstmt1.executeUpdate();
+        		
+        		String trigger = 
+        				"DROP TRIGGER IF EXISTS addGradeSC ON Student_Class; " +
+        				"CREATE TRIGGER addGradeSC " +
+        				"AFTER INSERT ON Student_Class " +
+        				"FOR EACH ROW EXECUTE PROCEDURE addGrade();";
+        		pstmt1 = conn.prepareStatement(trigger);
+        		int rowCount3 = pstmt1.executeUpdate();
+        		
+        		// Trigger for CPQG
+       			String func1 = 
+       					"CREATE OR REPLACE FUNCTION addGradeYear() RETURNS trigger AS $addGradeYearSC$ " +
+       					"BEGIN " + 
+       					"UPDATE CPQG c " +
+       					"SET num_of_a = num_of_a + 1 " +
+       					"WHERE (NEW.grade = 'A' OR NEW.grade = 'A+' OR NEW.grade = 'A-') " +
+       					"AND c.class_name IN (SELECT cl.class_name FROM Class cl  WHERE cl.class_id = NEW.class_id) " +
+       					"AND c.instructor_ssn = NEW.instructor_ssn; " +
+       					"UPDATE CPQG c " +
+       					"SET num_of_b = num_of_b + 1 " +
+       					"WHERE (NEW.grade = 'B' OR NEW.grade = 'B+' OR NEW.grade = 'B-') " +            					
+       					"AND c.class_name IN (SELECT cl.class_name FROM Class cl  WHERE cl.class_id = NEW.class_id) " +
+       					"AND c.instructor_ssn = NEW.instructor_ssn; " +
+       					"UPDATE CPQG c " +
+       					"SET num_of_c = num_of_c + 1 " +
+       					"WHERE (NEW.grade = 'C' OR NEW.grade = 'C+' OR NEW.grade = 'C-') " +
+       					"AND c.class_name IN (SELECT cl.class_name FROM Class cl  WHERE cl.class_id = NEW.class_id) " +
+       					"AND c.instructor_ssn = NEW.instructor_ssn; " +
+       					"UPDATE CPQG c " +
+       					"SET num_of_d = num_of_d + 1 " +
+       					"WHERE NEW.grade = 'D' " +
+       					"AND c.class_name IN (SELECT cl.class_name FROM Class cl  WHERE cl.class_id = NEW.class_id) " +
+       					"AND c.instructor_ssn = NEW.instructor_ssn; " +
+       					"UPDATE CPQG c " +
+       					"SET num_of_other = num_of_other + 1 " +
+       					"WHERE (NEW.grade = 'P' OR NEW.grade = 'NP' OR NEW.grade = 'F') " +
+       					"AND c.class_name IN (SELECT cl.class_name FROM Class cl  WHERE cl.class_id = NEW.class_id) " +
+       					"AND c.instructor_ssn = NEW.instructor_ssn; " +
+       					"RETURN NULL; " +
+       				"END;  " +
+       				"$addGradeYearSC$ LANGUAGE plpgsql; ";
+       				
+       			pstmt2 = conn.prepareStatement(func);
+        		rowCount2 = pstmt1.executeUpdate();
+        		
+        		String trigger1 = 
+        				"DROP TRIGGER IF EXISTS addGradeYearSC ON Student_Class; " +
+        				"CREATE TRIGGER addGradeYearSC " +
+        				"AFTER INSERT ON Student_Class " +
+        				"FOR EACH ROW EXECUTE PROCEDURE addGradeYear();";
+        		pstmt2 = conn.prepareStatement(trigger);
+        		rowCount3 = pstmt1.executeUpdate();
       	  %>
       	  		<h4>part ii, iii, v (Only display classes from previous quarter)</h4>
                <table border="2">
@@ -118,6 +209,7 @@
                    <th>Last</th>
                </tr>
         <%      
+        	   rs = statement.executeQuery("SELECT * FROM Faculty");
                while (rs.next()) {
         %>
        			<tr>

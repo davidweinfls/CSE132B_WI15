@@ -1,7 +1,7 @@
 DROP TABLE Other_Degree;
 DROP TABLE Prerequisite;
 DROP TABLE Student_Class CASCADE;
-DROP TABLE Section_Enrolllist;
+DROP TABLE Section_Enrolllist CASCADE;
 DROP TABLE Concentration_Course;
 DROP TABLE Concentration CASCADE;
 DROP TABLE Undergraduate;
@@ -24,4 +24,6 @@ DROP TABLE Advisor CASCADE;
 DROP TABLE Faculty_Teach_Class CASCADE;
 DROP TABLE Meeting CASCADE;
 DROP TABLE Enrollment CASCADE;
+DROP TABLE CPQG CASCADE;
+DROP TABLE CPG CASCADE;
 

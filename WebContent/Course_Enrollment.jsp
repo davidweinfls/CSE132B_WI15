@@ -245,7 +245,7 @@
               	rs = statement.executeQuery(q2);
               	int rowCount1 = 0;
               	if (!rs.next()) {
-              		String query1 = "INSERT INTO Student_Class VALUES (" + student_id + ", " + class_id + ", " + "'WIP'" + ")";
+              		String query1 = "INSERT INTO Student_Class (student_id, class_id, grade) VALUES (" + student_id + ", " + class_id + ", " + "'WIP'" + ")";
               		System.out.println("insert into Student_Class: " + query1);
               		pstmt1 = conn.prepareStatement(query1);
               		rowCount1 = pstmt1.executeUpdate();

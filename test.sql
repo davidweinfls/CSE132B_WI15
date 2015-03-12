@@ -63,3 +63,88 @@ AND sc.class_id = sec.class_id
 AND sec.class_id = c.class_id
 GROUP BY sec.instructor_ssn, c.class_name
 ORDER BY sec.instructor_ssn);
+
+/* add grade sc trigger */
+CREATE OR REPLACE FUNCTION addGrade() RETURNS trigger AS $addGradeSC$
+BEGIN 
+	UPDATE CPQG c
+	SET num_of_a = num_of_a + 1
+	WHERE (NEW.grade = 'A' OR NEW.grade = 'A+' OR NEW.grade = 'A-')
+	AND c.class_id = NEW.class_id
+	AND c.instructor_ssn = NEW.instructor_ssn;
+	
+	UPDATE CPQG c
+	SET num_of_b = num_of_b + 1
+	WHERE (NEW.grade = 'B' OR NEW.grade = 'B+' OR NEW.grade = 'B-')
+	AND c.class_id = NEW.class_id
+	AND c.instructor_ssn = NEW.instructor_ssn;
+	
+	UPDATE CPQG c
+	SET num_of_c = num_of_c + 1
+	WHERE (NEW.grade = 'C' OR NEW.grade = 'C+' OR NEW.grade = 'C-')
+	AND c.class_id = NEW.class_id
+	AND c.instructor_ssn = NEW.instructor_ssn;
+	
+	UPDATE CPQG c
+	SET num_of_d = num_of_d + 1
+	WHERE NEW.grade = 'D' 
+	AND c.class_id = NEW.class_id
+	AND c.instructor_ssn = NEW.instructor_ssn;
+	
+	UPDATE CPQG c
+	SET num_of_other = num_of_other + 1
+	WHERE (NEW.grade = 'P' OR NEW.grade = 'NP' OR NEW.grade = 'F')
+	AND c.class_id = NEW.class_id
+	AND c.instructor_ssn = NEW.instructor_ssn;
+	
+	RETURN NULL;
+END; 
+$addGradeSC$ LANGUAGE plpgsql;
+
+CREATE TRIGGER addGradeSC
+AFTER INSERT ON Student_Class
+FOR EACH ROW EXECUTE PROCEDURE addGrade();
+
+/* check function exists */
+select pg_get_functiondef('addgrade()'::regprocedure);
+
+CREATE OR REPLACE FUNCTION addGradeYear() RETURNS trigger AS $addGradeYearSC$
+BEGIN 
+	UPDATE CPG c
+	SET num_of_a = num_of_a + 1
+	WHERE (NEW.grade = 'A' OR NEW.grade = 'A+' OR NEW.grade = 'A-')
+	AND c.class_name IN (SELECT cl.class_name FROM Class cl  WHERE cl.class_id = NEW.class_id)
+	AND c.instructor_ssn = NEW.instructor_ssn;
+	
+	UPDATE CPG c
+	SET num_of_b = num_of_b + 1
+	WHERE (NEW.grade = 'B' OR NEW.grade = 'B+' OR NEW.grade = 'B-')
+	AND c.class_name IN (SELECT cl.class_name FROM Class cl  WHERE cl.class_id = NEW.class_id)
+	AND c.instructor_ssn = NEW.instructor_ssn;
+	
+	UPDATE CPG c
+	SET num_of_c = num_of_c + 1
+	WHERE (NEW.grade = 'C' OR NEW.grade = 'C+' OR NEW.grade = 'C-')
+	AND c.class_name IN (SELECT cl.class_name FROM Class cl  WHERE cl.class_id = NEW.class_id)
+	AND c.instructor_ssn = NEW.instructor_ssn;
+	
+	UPDATE CPG c
+	SET num_of_d = num_of_d + 1
+	WHERE NEW.grade = 'D' 
+	AND c.class_name IN (SELECT cl.class_name FROM Class cl  WHERE cl.class_id = NEW.class_id)
+	AND c.instructor_ssn = NEW.instructor_ssn;
+	
+	UPDATE CPG c
+	SET num_of_other = num_of_other + 1
+	WHERE (NEW.grade = 'P' OR NEW.grade = 'NP' OR NEW.grade = 'F')
+	AND c.class_name IN (SELECT cl.class_name FROM Class cl  WHERE cl.class_id = NEW.class_id)
+	AND c.instructor_ssn = NEW.instructor_ssn;
+	
+	RETURN NULL;
+END; 
+$addGradeYearSC$ LANGUAGE plpgsql;
+
+CREATE TRIGGER addGradeYearSC
+AFTER INSERT ON Student_Class
+FOR EACH ROW EXECUTE PROCEDURE addGradeYear();
+
