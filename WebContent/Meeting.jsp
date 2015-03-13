@@ -82,7 +82,7 @@
                 		"CREATE TRIGGER MeetingOverlapUpdate " +
                 		"BEFORE INSERT ON Meeting " +
                 		"FOR EACH ROW EXECUTE PROCEDURE checkOverlapUpdate();";
-                pstmt = conn.prepareStatement(trigger);
+                pstmt = conn.prepareStatement(trigger2);
                 int rowCount5 = pstmt.executeUpdate();
                 
             %>
@@ -93,9 +93,59 @@
                 // Check if an insertion is requested
                 if (action != null && action.equals("insert")) {
 
+                
                     // Begin transaction
                     conn.setAutoCommit(false);
 
+                    // Create triggers
+                    func = "CREATE OR REPLACE FUNCTION checkOverlap() RETURNS TRIGGER AS $retMeeting$ " +
+                    		"BEGIN " +
+                    		"IF EXISTS (SELECT * FROM Meeting " +
+                    		"WHERE New.day = Meeting.day " +
+                    		"AND New.section_id = Meeting.section_id "+
+                    	    "AND (New.start_time, New.end_time) OVERLAPS (Meeting.start_time, Meeting.end_time)) " +
+                    		"THEN " +
+                    		"RETURN NULL; " +
+                    		"ELSE RETURN NEW; " +
+                    		"END IF; " +
+                    		"END; " +
+                    		"$retMeeting$ LANGUAGE plpgsql; ";
+                    pstmt = conn.prepareStatement(func);
+                    rowCount2 = pstmt.executeUpdate();
+                    
+                    trigger = 
+            				"DROP TRIGGER IF EXISTS MeetingOverlap ON Meeting; " +
+            				"CREATE TRIGGER MeetingOverlap " +
+            				"BEFORE INSERT ON Meeting " +
+            				"FOR EACH ROW EXECUTE PROCEDURE checkOverlap();";
+            		pstmt = conn.prepareStatement(trigger);
+            		rowCount3 = pstmt.executeUpdate();
+            		
+            		func2 = "CREATE OR REPLACE FUNCTION checkOverlapUpdate() " +
+            				"RETURNS TRIGGER AS $retMeetingUpdate$ " +
+            				"BEGIN " +
+            				"IF EXISTS (SELECT * FROM Meeting " +
+            				"WHERE New.day = Meeting.day " +
+            				"AND New.meeting_id <> Meeting.meeting_id " +
+            				"AND New.section_id = Meeting.section_id " +
+            				"AND (New.start_time, New.end_time) OVERLAPS (Meeting.start_time, Meeting.end_time)) " +
+            				"THEN " +
+            				"RETURN OLD; " +
+            				"ELSE RETURN NEW; " +
+            				"END IF; " +
+            				"END; " +
+            				"$retMeetingUpdate$ LANGUAGE plpgsql;";
+            		pstmt = conn.prepareStatement(func2);
+                    rowCount4 = pstmt.executeUpdate();
+                            
+                    trigger2 = 
+                    		"DROP TRIGGER IF EXISTS MeetingOverlapUpdate ON Meeting; " +
+                    		"CREATE TRIGGER MeetingOverlapUpdate " +
+                    		"BEFORE INSERT ON Meeting " +
+                    		"FOR EACH ROW EXECUTE PROCEDURE checkOverlapUpdate();";
+                    pstmt = conn.prepareStatement(trigger2);
+                    rowCount5 = pstmt.executeUpdate();
+                    
                     // Create the prepared statement and use it to
                     // INSERT student values INTO the students table.
                     int beforeCount = 0;
@@ -137,46 +187,58 @@
             <%
                 // Check if an update is requested
                 if (action != null && action.equals("update")) {
-                	func2 = 
-                			"CREATE OR REPLACE FUNCTION checkTeachingOverlapUpdate() RETURNS TRIGGER AS $retTeachingUpdate$ " +
-                			"BEGIN " +
-                			"DROP TABLE IF EXISTS New_Faculty_Section; " +
-                			"CREATE TABLE New_Faculty_Section AS ( " +
-                			"SELECT NEW.faculty_ssn, Meeting.meeting_id, " +
-                			"Meeting.start_time, Meeting.end_time, Meeting.day, Meeting.section_id " +
-                			"FROM Meeting " +
-                			"WHERE NEW.section_id = Meeting.section_id); " +
-                			"DROP TABLE IF EXISTS Faculty_Section; " +
-                			"CREATE TABLE Faculty_Section AS ( " +
-                			"SELECT Faculty_Teach_Section.faculty_ssn, Meeting.meeting_id, " + 
-                			"Meeting.start_time, Meeting.end_time, Meeting.day, Meeting.section_id " +
-                			"FROM Meeting, Faculty_Teach_Section " +
-                			"WHERE Faculty_Teach_Section.section_id = Meeting.section_id); " +
-                			"IF EXISTS( SELECT * " +
-                			"FROM New_Faculty_Section, Faculty_Section " +
-                			"WHERE New_Faculty_Section.section_id <> Faculty_Section.section_id " +
-                			"AND New_Faculty_Section.day = Faculty_Section.day " +
-                			"AND New_Faculty_Section.faculty_ssn = Faculty_Section.faculty_ssn " +
-                			"AND (Faculty_Section.start_time, Faculty_Section.end_time)  " +
-                			"OVERLAPS (New_Faculty_Section.start_time, New_Faculty_Section.end_time)) " +
-                			"THEN RETURN NULL; " +
-                			"ELSE RETURN NEW; " +
-                			"END IF; " +
-                			"END; " +
-                			"$retTeachingUpdate$ LANGUAGE plpgsql;";
-                		pstmt = conn.prepareStatement(func2);
-                        rowCount4 = pstmt.executeUpdate();
-                                
-                        trigger2 = 
-                        	"DROP TRIGGER IF EXISTS TeachingOverlapUpdate ON Faculty_Teach_Section;" +
-                        	"CREATE TRIGGER TeachingOverlapUpdate " +
-        					"BEFORE Update ON Faculty_Teach_Section " +
-        					"FOR EACH ROW EXECUTE PROCEDURE checkTeachingOverlapUpdate();";
-                        pstmt = conn.prepareStatement(trigger);
-                       rowCount5 = pstmt.executeUpdate();
-                	
+ 
                     // Begin transaction
                     conn.setAutoCommit(false);
+                    
+                 // Create triggers
+                    func = "CREATE OR REPLACE FUNCTION checkOverlap() RETURNS TRIGGER AS $retMeeting$ " +
+                    		"BEGIN " +
+                    		"IF EXISTS (SELECT * FROM Meeting " +
+                    		"WHERE New.day = Meeting.day " +
+                    		"AND New.section_id = Meeting.section_id "+
+                    	    "AND (New.start_time, New.end_time) OVERLAPS (Meeting.start_time, Meeting.end_time)) " +
+                    		"THEN " +
+                    		"RETURN NULL; " +
+                    		"ELSE RETURN NEW; " +
+                    		"END IF; " +
+                    		"END; " +
+                    		"$retMeeting$ LANGUAGE plpgsql; ";
+                    pstmt = conn.prepareStatement(func);
+                    rowCount2 = pstmt.executeUpdate();
+                    
+                    trigger = 
+            				"DROP TRIGGER IF EXISTS MeetingOverlap ON Meeting; " +
+            				"CREATE TRIGGER MeetingOverlap " +
+            				"BEFORE INSERT ON Meeting " +
+            				"FOR EACH ROW EXECUTE PROCEDURE checkOverlap();";
+            		pstmt = conn.prepareStatement(trigger);
+            		rowCount3 = pstmt.executeUpdate();
+            		
+            		func2 = "CREATE OR REPLACE FUNCTION checkOverlapUpdate() " +
+            				"RETURNS TRIGGER AS $retMeetingUpdate$ " +
+            				"BEGIN " +
+            				"IF EXISTS (SELECT * FROM Meeting " +
+            				"WHERE New.day = Meeting.day " +
+            				"AND New.meeting_id <> Meeting.meeting_id " +
+            				"AND New.section_id = Meeting.section_id " +
+            				"AND (New.start_time, New.end_time) OVERLAPS (Meeting.start_time, Meeting.end_time)) " +
+            				"THEN " +
+            				"RETURN OLD; " +
+            				"ELSE RETURN NEW; " +
+            				"END IF; " +
+            				"END; " +
+            				"$retMeetingUpdate$ LANGUAGE plpgsql;";
+            		pstmt = conn.prepareStatement(func2);
+                    rowCount4 = pstmt.executeUpdate();
+                            
+                    trigger2 = 
+                    		"DROP TRIGGER IF EXISTS MeetingOverlapUpdate ON Meeting; " +
+                    		"CREATE TRIGGER MeetingOverlapUpdate " +
+                    		"BEFORE INSERT ON Meeting " +
+                    		"FOR EACH ROW EXECUTE PROCEDURE checkOverlapUpdate();";
+                    pstmt = conn.prepareStatement(trigger2);
+                    rowCount5 = pstmt.executeUpdate();
 
                     rs = stmt.executeQuery( "SELECT * FROM Meeting WHERE meeting_id = " +
                     		Integer.parseInt(request.getParameter("m_id")) );

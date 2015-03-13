@@ -111,7 +111,7 @@
                 	"CREATE TRIGGER TeachingOverlapUpdate " +
 					"BEFORE Update ON Faculty_Teach_Section " +
 					"FOR EACH ROW EXECUTE PROCEDURE checkTeachingOverlapUpdate();";
-                pstmt = conn.prepareStatement(trigger);
+                pstmt = conn.prepareStatement(trigger2);
                 int rowCount5 = pstmt.executeUpdate();
                 
             %>
@@ -225,7 +225,7 @@
                     	"CREATE TRIGGER TeachingOverlapUpdate " +
     					"BEFORE Update ON Faculty_Teach_Section " +
     					"FOR EACH ROW EXECUTE PROCEDURE checkTeachingOverlapUpdate();";
-                    pstmt = conn.prepareStatement(trigger);
+                    pstmt = conn.prepareStatement(trigger2);
                     rowCount5 = pstmt.executeUpdate();
                     
                     // Commit transaction
@@ -346,7 +346,7 @@
                     	"CREATE TRIGGER TeachingOverlapUpdate " +
     					"BEFORE Update ON Faculty_Teach_Section " +
     					"FOR EACH ROW EXECUTE PROCEDURE checkTeachingOverlapUpdate();";
-                    pstmt = conn.prepareStatement(trigger);
+                    pstmt = conn.prepareStatement(trigger2);
                     rowCount5 = pstmt.executeUpdate();
                     
                     
@@ -448,7 +448,7 @@
                     	"CREATE TRIGGER TeachingOverlapUpdate " +
     					"BEFORE Update ON Faculty_Teach_Section " +
     					"FOR EACH ROW EXECUTE PROCEDURE checkTeachingOverlapUpdate();";
-                    pstmt = conn.prepareStatement(trigger);
+                    pstmt = conn.prepareStatement(trigger2);
                     rowCount5 = pstmt.executeUpdate();
                     
                     // Commit transaction
