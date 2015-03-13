@@ -481,7 +481,7 @@
 						<td><%=course_id%></td>
 						<td><%=class_id%></td>
 						<td><%=section_id%></td>
-						<td><%=grade%></td>
+						<td><input value=<%=grade%> name="grade" size="5"/></td>
 						<th>
 	                	<select name = "grade_option_dropdown">
 	                	<option value = <%=grade_taken%>><%=grade_taken%></option>
