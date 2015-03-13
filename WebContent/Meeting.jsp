@@ -170,7 +170,7 @@
                     if( rs1.next() && 
                     		typ.equals( rs1.getString("type") ) &&
                     		sta.equals( rs1.getString("start_time") ) &&
-                    		end.equals(rs1.getString("end_time") ) &&
+                    		end.equals( rs1.getString("end_time") ) &&
                     		bui.equals( rs1.getString("building_room") ) &&
                     		day.equals( rs1.getString("day") ) &&
                     		sec == rs1.getInt("section_id") ){

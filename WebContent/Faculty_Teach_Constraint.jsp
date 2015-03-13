@@ -165,12 +165,12 @@
                     // Begin transaction
                     conn.setAutoCommit(false);
 
-                    rs1 = stmt.executeQuery( "SELECT * FROM Faculty_teach_section WHERE faculty_ssn = '" +
+/*                    rs2 = stmt.executeQuery( "SELECT * FROM Faculty_teach_section WHERE faculty_ssn = '" +
                     		request.getParameter("faculty_ssn") + "' and section_id = " + 
                     		Integer.parseInt(request.getParameter("section_id")));
-                    rs1.next();
-                    String fac = rs1.getString("faculty_ssn");
-                    int sec = rs1.getInt("section_id");
+                    rs2.next();
+                    String fac = rs2.getString("faculty_ssn");
+                    int sec = rs2.getInt("section_id");*/
                     // Create the prepared statement and use it to
                     // UPDATE student values in the Students table.			
                     pstmt = conn
@@ -179,16 +179,16 @@
                             
                     pstmt.setString(1, request.getParameter("faculty_ssn"));
                     pstmt.setInt(2, Integer.parseInt(request.getParameter("section_id")));
-                    String newSsn = request.getParameter("f_ssn");
-                    pstmt.setString(3, newSsn);
-                    int newSid = Integer.parseInt(request.getParameter("s_id"));
-                    pstmt.setInt(4, newSid);
+                    String oldSsn = request.getParameter("f_ssn");
+                    pstmt.setString(3, oldSsn);
+                    int oldSid = Integer.parseInt(request.getParameter("s_id"));
+                    pstmt.setInt(4, oldSid);
                     int rowCount = pstmt.executeUpdate();
                     
-                    rs2 = stmt.executeQuery( "SELECT faculty_ssn, section_id FROM Faculty_teach_section WHERE faculty_ssn = '" +
-                    		newSsn + "' and section_id = " + newSid);       
+                    rs2 = stmt.executeQuery( "SELECT * FROM Faculty_teach_section WHERE faculty_ssn = '" +
+                    		oldSsn + "' and section_id = " + oldSid);       
                                         
-                    if( !rs2.next() ){
+                    if( rs2.next() ){
                     	%>
                     	<p>Error when updating, time conflicts for another class the professor teaches.</p>
                     	<%
