@@ -80,7 +80,7 @@
                 String trigger2 = 
                 		"DROP TRIGGER IF EXISTS MeetingOverlapUpdate ON Meeting; " +
                 		"CREATE TRIGGER MeetingOverlapUpdate " +
-                		"BEFORE INSERT ON Meeting " +
+                		"BEFORE UPDATE ON Meeting " +
                 		"FOR EACH ROW EXECUTE PROCEDURE checkOverlapUpdate();";
                 pstmt = conn.prepareStatement(trigger2);
                 int rowCount5 = pstmt.executeUpdate();
@@ -141,7 +141,7 @@
                     trigger2 = 
                     		"DROP TRIGGER IF EXISTS MeetingOverlapUpdate ON Meeting; " +
                     		"CREATE TRIGGER MeetingOverlapUpdate " +
-                    		"BEFORE INSERT ON Meeting " +
+                    		"BEFORE UPDATE ON Meeting " +
                     		"FOR EACH ROW EXECUTE PROCEDURE checkOverlapUpdate();";
                     pstmt = conn.prepareStatement(trigger2);
                     rowCount5 = pstmt.executeUpdate();
@@ -235,7 +235,7 @@
                     trigger2 = 
                     		"DROP TRIGGER IF EXISTS MeetingOverlapUpdate ON Meeting; " +
                     		"CREATE TRIGGER MeetingOverlapUpdate " +
-                    		"BEFORE INSERT ON Meeting " +
+                    		"BEFORE UPDATE ON Meeting " +
                     		"FOR EACH ROW EXECUTE PROCEDURE checkOverlapUpdate();";
                     pstmt = conn.prepareStatement(trigger2);
                     rowCount5 = pstmt.executeUpdate();
