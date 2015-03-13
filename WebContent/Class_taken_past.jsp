@@ -516,6 +516,7 @@
           		int class_id = Integer.parseInt(request.getParameter("class_id"));
           		int student_id = Integer.parseInt(request.getParameter("student_id"));
           		String grade_option = request.getParameter("grade_option_dropdown");
+          		String grade = request.getParameter("grade");
           		
                 conn.setAutoCommit(false);
 
@@ -525,7 +526,12 @@
                 pstmt.setString(1, grade_option);
                 int rowCount = pstmt.executeUpdate();
                 
-                if (rowCount > 0) {
+                String s = "UPDATE Student_Class SET grade = '" + grade + "' " + 
+                			"WHERE student_id = " + student_id + " AND class_id = " + class_id;
+                pstmt1 = conn.prepareStatement(s);
+                int rowCount1 = pstmt1.executeUpdate();
+                
+                if (rowCount > 0 && rowCount1 > 0) {
                 	out.println("Grade option set!");
                 } else {
                 	out.println("<font color='#ff0000'>Something went wrong.");
