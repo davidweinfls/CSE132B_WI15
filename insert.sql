@@ -8,7 +8,7 @@ INSERT INTO Faculty (ssn, title, first, last, dept_name) VALUES ('400-00-0000', 
 INSERT INTO Faculty (ssn, title, first, last, dept_name) VALUES ('500-00-0000', 'Associate Professor', 'Fac5', 'E', 'ECE'); /* 5 */
 INSERT INTO Faculty (ssn, title, first, last, dept_name) VALUES ('600-00-0000', 'Professor', 'Fac6', 'F', 'Computer_Science'); /* 6 */
 INSERT INTO Faculty (ssn, title, first, last, dept_name) VALUES ('700-00-0000', 'Lecturer', 'Fac7', 'G', 'Computer_Science'); /* 7 */
-INSERT INTO Faculty (ssn, title, first, last, dept_name) VALUES ('800-00-0000', 'Lecturer', 'Fac7', 'G', 'ECE'); /* 8 */
+INSERT INTO Faculty (ssn, title, first, last, dept_name) VALUES ('800-00-0000', 'Lecturer', 'Fac8', 'G', 'ECE'); /* 8 */
 
 INSERT INTO Student (student_id, first, last, ssn, enrollment, residency, five_year_program) VALUES (1, 'Stu1', 'Dent', '111-11-1111', true, 'US', false);
 INSERT INTO Student (student_id, first, last, ssn, enrollment, residency, five_year_program) VALUES (2, 'Stu2', 'Dent', '222-22-2222', true, 'INT', false);
@@ -244,4 +244,19 @@ INSERT INTO Enrollment (ssn, quarter, year) VALUES ('222-22-2222', 'Winter', 200
 INSERT INTO Enrollment (ssn, quarter, year) VALUES ('555-55-5555', 'Winter', 2008);
 INSERT INTO Enrollment (ssn, quarter, year) VALUES ('444-44-4444', 'Winter', 2008);
 INSERT INTO Enrollment (ssn, quarter, year) VALUES ('888-88-8888', 'Winter', 2008);
+
+INSERT INTO Faculty_Teach_Section(Faculty_ssn, section_id) VALUES ('100-00-0000', 1);
+INSERT INTO Faculty_Teach_Section(Faculty_ssn, section_id) VALUES ('300-00-0000', 2);
+INSERT INTO Faculty_Teach_Section(Faculty_ssn, section_id) VALUES ('200-00-0000', 11);
+INSERT INTO Faculty_Teach_Section(Faculty_ssn, section_id) VALUES ('400-00-0000', 22);
+INSERT INTO Faculty_Teach_Section(Faculty_ssn, section_id) VALUES ('600-00-0000', 3);
+INSERT INTO Faculty_Teach_Section(Faculty_ssn, section_id) VALUES ('300-00-0000', 12);
+INSERT INTO Faculty_Teach_Section(Faculty_ssn, section_id) VALUES ('100-00-0000', 4);
+INSERT INTO Faculty_Teach_Section(Faculty_ssn, section_id) VALUES ('400-00-0000', 5);
+INSERT INTO Faculty_Teach_Section(Faculty_ssn, section_id) VALUES ('200-00-0000', 6);
+INSERT INTO Faculty_Teach_Section(Faculty_ssn, section_id) VALUES ('100-00-0000', 7);
+INSERT INTO Faculty_Teach_Section(Faculty_ssn, section_id) VALUES ('300-00-0000', 8);
+INSERT INTO Faculty_Teach_Section(Faculty_ssn, section_id) VALUES ('300-00-0000', 9);
+INSERT INTO Faculty_Teach_Section(Faculty_ssn, section_id) VALUES ('200-00-0000', 10);
+INSERT INTO Faculty_Teach_Section(Faculty_ssn, section_id) VALUES ('100-00-0000', 44);
 
