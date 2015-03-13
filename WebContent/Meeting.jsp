@@ -137,7 +137,44 @@
             <%
                 // Check if an update is requested
                 if (action != null && action.equals("update")) {
-
+                	func2 = 
+                			"CREATE OR REPLACE FUNCTION checkTeachingOverlapUpdate() RETURNS TRIGGER AS $retTeachingUpdate$ " +
+                			"BEGIN " +
+                			"DROP TABLE IF EXISTS New_Faculty_Section; " +
+                			"CREATE TABLE New_Faculty_Section AS ( " +
+                			"SELECT NEW.faculty_ssn, Meeting.meeting_id, " +
+                			"Meeting.start_time, Meeting.end_time, Meeting.day, Meeting.section_id " +
+                			"FROM Meeting " +
+                			"WHERE NEW.section_id = Meeting.section_id); " +
+                			"DROP TABLE IF EXISTS Faculty_Section; " +
+                			"CREATE TABLE Faculty_Section AS ( " +
+                			"SELECT Faculty_Teach_Section.faculty_ssn, Meeting.meeting_id, " + 
+                			"Meeting.start_time, Meeting.end_time, Meeting.day, Meeting.section_id " +
+                			"FROM Meeting, Faculty_Teach_Section " +
+                			"WHERE Faculty_Teach_Section.section_id = Meeting.section_id); " +
+                			"IF EXISTS( SELECT * " +
+                			"FROM New_Faculty_Section, Faculty_Section " +
+                			"WHERE New_Faculty_Section.section_id <> Faculty_Section.section_id " +
+                			"AND New_Faculty_Section.day = Faculty_Section.day " +
+                			"AND New_Faculty_Section.faculty_ssn = Faculty_Section.faculty_ssn " +
+                			"AND (Faculty_Section.start_time, Faculty_Section.end_time)  " +
+                			"OVERLAPS (New_Faculty_Section.start_time, New_Faculty_Section.end_time)) " +
+                			"THEN RETURN NULL; " +
+                			"ELSE RETURN NEW; " +
+                			"END IF; " +
+                			"END; " +
+                			"$retTeachingUpdate$ LANGUAGE plpgsql;";
+                		pstmt = conn.prepareStatement(func2);
+                        rowCount4 = pstmt.executeUpdate();
+                                
+                        trigger2 = 
+                        	"DROP TRIGGER IF EXISTS TeachingOverlapUpdate ON Faculty_Teach_Section;" +
+                        	"CREATE TRIGGER TeachingOverlapUpdate " +
+        					"BEFORE Update ON Faculty_Teach_Section " +
+        					"FOR EACH ROW EXECUTE PROCEDURE checkTeachingOverlapUpdate();";
+                        pstmt = conn.prepareStatement(trigger);
+                       rowCount5 = pstmt.executeUpdate();
+                	
                     // Begin transaction
                     conn.setAutoCommit(false);
 
