@@ -191,7 +191,7 @@
        				"END;  " +
        				"$addGradeYearSC$ LANGUAGE plpgsql; ";
        				
-       			pstmt2 = conn.prepareStatement(func);
+       			pstmt2 = conn.prepareStatement(func1);
         		rowCount2 = pstmt2.executeUpdate();
         		
         		String trigger1 = 
@@ -199,7 +199,7 @@
         				"CREATE TRIGGER addGradeYearSC " +
         				"AFTER INSERT ON Student_Class " +
         				"FOR EACH ROW EXECUTE PROCEDURE addGradeYear();";
-        		pstmt2 = conn.prepareStatement(trigger);
+        		pstmt2 = conn.prepareStatement(trigger1);
         		rowCount3 = pstmt2.executeUpdate();
         		
         		// Trigger for CPQG update
@@ -254,8 +254,63 @@
         				"CREATE TRIGGER updateGradeSC " +
         				"AFTER UPDATE ON Student_Class " +
         				"FOR EACH ROW EXECUTE PROCEDURE updateGrade(); ";
-        		pstmt3 = conn.prepareStatement(trigger);
+        		pstmt3 = conn.prepareStatement(ut1);
         		rowCount3 = pstmt3.executeUpdate();
+        		
+        		// Trigger for CPG update
+        		String u2 = 
+        		"CREATE OR REPLACE FUNCTION updateGradeYear() RETURNS trigger AS $updateGradeYearSC$ " +
+				"BEGIN UPDATE CPG c SET num_of_a = num_of_a + 1 " +
+				"WHERE (NEW.grade = 'A' OR NEW.grade = 'A+' OR NEW.grade = 'A-') " +
+				"AND c.class_name IN (SELECT cl.class_name FROM Class cl WHERE cl.class_id = NEW.class_id) " + 
+				"AND c.instructor_ssn = NEW.instructor_ssn AND NEW.grade <> OLD.grade; " +
+				"UPDATE CPG c SET num_of_b = num_of_b + 1 " +
+				"WHERE (NEW.grade = 'B' OR NEW.grade = 'B+' OR NEW.grade = 'B-') " +
+				"AND c.class_name IN (SELECT cl.class_name FROM Class cl WHERE cl.class_id = NEW.class_id) " + 
+				"AND c.instructor_ssn = NEW.instructor_ssn AND NEW.grade <> OLD.grade; " +
+				"UPDATE CPG c SET num_of_c = num_of_c + 1 " +
+				"WHERE (NEW.grade = 'C' OR NEW.grade = 'C+' OR NEW.grade = 'C-') " +
+				"AND c.class_name IN (SELECT cl.class_name FROM Class cl WHERE cl.class_id = NEW.class_id) " + 
+				"AND c.instructor_ssn = NEW.instructor_ssn AND NEW.grade <> OLD.grade; " +
+				"UPDATE CPG c SET num_of_d = num_of_d + 1 " +
+				"WHERE NEW.grade = 'D'  " +
+				"AND c.class_name IN (SELECT cl.class_name FROM Class cl WHERE cl.class_id = NEW.class_id) " + 
+				"AND c.instructor_ssn = NEW.instructor_ssn AND NEW.grade <> OLD.grade; " +
+				"UPDATE CPG c SET num_of_other = num_of_other + 1 " +
+				"WHERE (NEW.grade = 'P' OR NEW.grade = 'NP' OR NEW.grade = 'F') " +
+				"AND c.class_name IN (SELECT cl.class_name FROM Class cl WHERE cl.class_id = NEW.class_id) " + 
+				"AND c.instructor_ssn = NEW.instructor_ssn AND NEW.grade <> OLD.grade; " +
+				"UPDATE CPG c SET num_of_a = num_of_a - 1 " +
+				"WHERE (OLD.grade = 'A' OR OLD.grade = 'A+' OR OLD.grade = 'A-') " +
+				"AND c.class_name IN (SELECT cl.class_name FROM Class cl WHERE cl.class_id = OLD.class_id) " + 
+				"AND c.instructor_ssn = OLD.instructor_ssn AND NEW.grade <> OLD.grade; " +
+				"UPDATE CPG c SET num_of_b = num_of_b - 1 " +
+				"WHERE (OLD.grade = 'B' OR OLD.grade = 'B+' OR OLD.grade = 'B-') " +
+				"AND c.class_name IN (SELECT cl.class_name FROM Class cl WHERE cl.class_id = OLD.class_id) " + 
+				"AND c.instructor_ssn = OLD.instructor_ssn AND NEW.grade <> OLD.grade; " +
+				"UPDATE CPG c SET num_of_c = num_of_c - 1 " +
+				"WHERE (OLD.grade = 'C' OR OLD.grade = 'C+' OR OLD.grade = 'C-') " +
+				"AND c.class_name IN (SELECT cl.class_name FROM Class cl WHERE cl.class_id = OLD.class_id) " + 
+				"AND c.instructor_ssn = OLD.instructor_ssn AND NEW.grade <> OLD.grade; " +
+				"UPDATE CPG c SET num_of_d = num_of_d - 1 WHERE OLD.grade = 'D' " +
+				"AND c.class_name IN (SELECT cl.class_name FROM Class cl WHERE cl.class_id = OLD.class_id) " + 
+				"AND c.instructor_ssn = OLD.instructor_ssn AND NEW.grade <> OLD.grade; " +
+				"UPDATE CPG c SET num_of_other = num_of_other - 1 " +
+				"WHERE (OLD.grade = 'P' OR OLD.grade = 'NP' OR OLD.grade = 'F') " +
+				"AND c.class_name IN (SELECT cl.class_name FROM Class cl WHERE cl.class_id = OLD.class_id) " +
+				"AND c.instructor_ssn = OLD.instructor_ssn AND NEW.grade <> OLD.grade; " +
+				"RETURN NULL; END; $updateGradeYearSC$ LANGUAGE plpgsql; ";
+        		
+        		pstmt4 = conn.prepareStatement(u2);
+        		rowCount3 = pstmt4.executeUpdate();
+        		
+        		String ut2 = 
+        				"DROP TRIGGER IF EXISTS updateGradeYearSC ON Student_Class; " + 
+        				"CREATE TRIGGER updateGradeYearSC " +
+						"AFTER UPDATE ON Student_Class " +
+						"FOR EACH ROW EXECUTE PROCEDURE updateGradeYear(); ";
+        		pstmt4 = conn.prepareStatement(ut2);
+        		rowCount3 = pstmt4.executeUpdate();
       	  %>
       	  		<h4>part ii, iii, v (Only display classes from previous quarter)</h4>
                <table border="2">
