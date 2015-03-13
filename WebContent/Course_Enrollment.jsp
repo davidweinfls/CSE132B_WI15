@@ -27,6 +27,9 @@
           PreparedStatement pstmt1 = null;
           ResultSet rs = null;
           ResultSet rs1 = null;
+          ResultSet rs2 = null;
+          ResultSet rs3 = null;
+          
           
           try {
               // Registering Postgresql JDBC driver with the DriverManager
@@ -208,6 +211,7 @@
           		int section_id = Integer.parseInt(request.getParameter("id"));
           		int student_id = Integer.parseInt(request.getParameter("student_id"));
           		int class_id = Integer.parseInt(request.getParameter("class_id"));
+          		/*
           		rs = statement.executeQuery("SELECT * FROM Section WHERE section_id = " + section_id);
           		rs.next();
           		int limit = rs.getInt("enroll_limit");
@@ -220,23 +224,74 @@
           		if (num > limit) {
           			waitlist = "true";
           		}
+          		*/
           		
           		conn.setAutoCommit(false);
+          		
+          		String func = 
+          				"CREATE OR REPLACE FUNCTION checkEnrollLimit" + section_id +
+          				"() RETURNS TRIGGER AS $retLimit"+ section_id + "$ " +
+          				"BEGIN " +
+          				"IF EXISTS ( SELECT enroll_limit From Section WHERE section_id = " + 
+          				section_id + 
+          				"AND enroll_limit > (SELECT count(*) num From  Section_Enrolllist " +
+          				"WHERE section_id = " + section_id + ")) " +
+          				"THEN RETURN NEW; " +
+          				"ELSE RETURN NULL; " +
+          				"END IF; " +
+          			"END; " +
+          			"$retLimit"+ section_id + "$ LANGUAGE plpgsql;";
+
+                pstmt = conn.prepareStatement(func);
+                int rowCount2 = pstmt.executeUpdate();
+                
+                String trigger = 
+        				"DROP TRIGGER IF EXISTS EnrollLimit" + section_id + 
+                		" ON Section_Enrolllist; " +
+        				"CREATE TRIGGER EnrollLimit" + section_id + " " +
+        				"BEFORE INSERT ON Section_Enrolllist " +
+        				"FOR EACH ROW WHEN (NEW.section_id = " + section_id + ") " +
+        				"EXECUTE PROCEDURE checkEnrollLimit" + section_id + "();";
+        				
+        		pstmt = conn.prepareStatement(trigger);
+        		int rowCount3 = pstmt.executeUpdate();
+          		
+          		
+          		String waitlist = "false";
           		
           		// check if student already enrolled
               	String q1 = "Select * FROM Section_Enrolllist Where student_id = " + student_id + " AND " + 
               	"section_id = " + section_id;
               	rs = statement.executeQuery(q1);
               	int rowCount = 0;
+              	int beforeInsert = 0;
+              	int afterInsert = 0;
+              	rs1 = statement1.executeQuery(
+              			"Select count(*) FROM Section_Enrolllist Where student_id = " + student_id + " AND " + 
+              	              	"section_id = " + section_id);
+              	rs1.next();
+              	beforeInsert = rs1.getInt("count");
               	if (!rs.next()) {
           		String query = "INSERT INTO Section_Enrolllist VALUES (" + 
           				student_id + ", " + section_id + ", " + "'4', " + waitlist + ")";
           		System.out.println("insert into Student_Enrolllist: " + query);
           		pstmt = conn.prepareStatement(query);
           		rowCount = pstmt.executeUpdate();
+          		rs1 = statement1.executeQuery(
+              			"Select count(*) FROM Section_Enrolllist Where student_id = " + student_id + " AND " + 
+              	              	"section_id = " + section_id);
+              	rs1.next();
+                afterInsert = rs1.getInt("count");
               	} else {
         	    	out.println("<font color='#ff0000'>Failed to enroll in section. Already enrolled. ");
            		}
+              	
+              	boolean conflict = false;
+              	
+              	if(beforeInsert == afterInsert){
+              		conflict = true;
+              		out.println("<font color='#ff0000'>Failed to enroll in section. Section enroll limit reached. ");
+              	}
               	
              	// add relationship to Student_Class table
               	// check if student already enrolled
@@ -253,7 +308,7 @@
               		out.println("<font color='#ff0000'>Student already enrolled in this class");
               	}
           		
-          		if (rowCount > 0 && rowCount1 > 0) {
+          		if (rowCount > 0 && rowCount1 > 0 && !conflict) {
                     %>
            			<h3>Last step before enroll. Select your grade option</h3>
             		<form action="Course_Enrollment.jsp" method="POST">
